@@ -15,6 +15,13 @@
       "when": 1791607548589,
       "tag": "0001_signoff",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791608527746,
+      "tag": "0002_auth",
+      "breakpoints": true
     }
   ]
 }

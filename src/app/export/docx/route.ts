@@ -1,10 +1,12 @@
 import { getSignoff, getTimetableData } from "@/lib/data";
 import { buildTimetableDocx } from "@/lib/export/docx";
+import { getCurrentUser } from "@/lib/auth/session";
 
 export const dynamic = "force-dynamic";
 
 /** GET /export/docx — the official timetable as a Word file, built from the current data. */
-export async function GET() {
+export async function GET(req: Request) {
+  if (!(await getCurrentUser())) return Response.redirect(new URL("/login?next=/export/docx", req.url), 303);
   const [data, signoff] = await Promise.all([getTimetableData(), getSignoff()]);
   const buf = await buildTimetableDocx(data, signoff);
   const name = data.semester

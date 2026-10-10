@@ -17,6 +17,7 @@ import {
 import { DAYS, DEPARTMENTS, SLOTS, categoryOf, codesOf, fitsInBlock } from "@/lib/timetable";
 import { clashesByBooking, findClashes, type Clash, type CourseInfo } from "@/lib/clash";
 import type { BookingDTO, TimetableData } from "@/lib/types";
+import { canEditBooking, canEditTimetable, type Actor } from "@/lib/permissions";
 import { moveBooking } from "@/app/actions";
 import { useToast } from "./Toast";
 import { BookingDrawer, type DrawerState } from "./BookingDrawer";
@@ -27,7 +28,7 @@ type Focus = { type: "all" | "level" | "dept" | "lecturer"; value: string };
 /** Grid column (1-based) for a slot: venue = 1, day = 2, morning slots 3–8, break 9, afternoon 10–13. */
 const colOf = (slot: number) => (slot < 6 ? 3 + slot : 4 + slot);
 
-export function TimetableBoard({ data, showId }: { data: TimetableData; showId?: string }) {
+export function TimetableBoard({ data, showId, actor }: { data: TimetableData; showId?: string; actor: Actor }) {
   const router = useRouter();
   const toast = useToast();
   const [, startTransition] = useTransition();
@@ -51,6 +52,9 @@ export function TimetableBoard({ data, showId }: { data: TimetableData; showId?:
   }, [data.courses, data.lecturers]);
 
   const clashes = useMemo(() => findClashes(bookings, ctx), [bookings, ctx]);
+  const deptOf = (code: string) => ctx.courses.get(code)?.dept ?? code.replace(/\d+$/, "");
+  const canEdit = (b: { kind: BookingDTO["kind"]; label: string }) => canEditBooking(actor, b, deptOf);
+  const canAdd = canEditTimetable(actor);
   const byBooking = useMemo(() => clashesByBooking(clashes), [clashes]);
 
   // Scroll to and flash a booking linked from the Clashes page (/?show=<id>).
@@ -186,6 +190,8 @@ export function TimetableBoard({ data, showId }: { data: TimetableData; showId?:
               ctx={ctx}
               flashId={flashId}
               dragId={dragId}
+              canEdit={canEdit}
+              canAdd={canAdd}
               onOpen={(b) => setDrawer({ mode: "edit", booking: b })}
               onAdd={(venue, day, start) =>
                 setDrawer({ mode: "new", booking: { id: "", venueCode: venue, day, start, span: 1, label: "", kind: "course", note: "" } })
@@ -203,8 +209,11 @@ export function TimetableBoard({ data, showId }: { data: TimetableData; showId?:
         </aside>
       </div>
       <p className="hint">
-        Drag a course onto an empty slot to move it (on a phone, press and hold first). Click a course to edit it, or click an
-        empty slot to add a booking.
+        {actor.role === "admin"
+          ? "Drag a course onto an empty slot to move it (on a phone, press and hold first). Click a course to edit it, or click an empty slot to add a booking."
+          : actor.role === "dept_officer"
+            ? `You can move, edit and add ${actor.dept} course lectures. Other bookings are view-only for you — click any block to see its details.`
+            : "You have view-only access. Click any block to see its details."}
       </p>
 
       {drawer && (
@@ -214,6 +223,8 @@ export function TimetableBoard({ data, showId }: { data: TimetableData; showId?:
           venues={data.venues}
           bookings={bookings}
           ctx={ctx}
+          actor={actor}
+          canEdit={canEdit}
           onClose={() => setDrawer(null)}
         />
       )}
@@ -263,9 +274,11 @@ interface GridProps {
   dragId: string | null;
   onOpen: (b: BookingDTO) => void;
   onAdd: (venue: string, day: number, start: number) => void;
+  canEdit: (b: BookingDTO) => boolean;
+  canAdd: boolean;
 }
 
-function Grid({ data, bookings, byBooking, matches, ctx, flashId, dragId, onOpen, onAdd }: GridProps) {
+function Grid({ data, bookings, byBooking, matches, ctx, flashId, dragId, onOpen, onAdd, canEdit, canAdd }: GridProps) {
   const rows: string[] = ["auto", "auto"];
   const parts: React.ReactNode[] = [];
   let r = 3;
@@ -283,7 +296,7 @@ function Grid({ data, bookings, byBooking, matches, ctx, flashId, dragId, onOpen
         </div>,
       );
       for (let s = 0; s < 10; s++) {
-        parts.push(<Cell key={`c-${v.code}-${d}-${s}`} venue={v.code} day={d} start={s} row={r} first={!!first} onAdd={onAdd} />);
+        parts.push(<Cell key={`c-${v.code}-${d}-${s}`} venue={v.code} day={d} start={s} row={r} first={!!first} onAdd={canAdd ? onAdd : null} />);
       }
       for (const b of rowBookings) {
         const lecturers = [...new Set(codesOf(b.label).flatMap((c) => ctx.courses.get(c)?.lecturerIds ?? []))]
@@ -300,6 +313,7 @@ function Grid({ data, bookings, byBooking, matches, ctx, flashId, dragId, onOpen
             flash={flashId === b.id}
             dragging={dragId === b.id}
             lecturers={lecturers}
+            editable={canEdit(b)}
             onOpen={onOpen}
           />,
         );
@@ -334,16 +348,16 @@ function Grid({ data, bookings, byBooking, matches, ctx, flashId, dragId, onOpen
   );
 }
 
-function Cell(props: { venue: string; day: number; start: number; row: number; first: boolean; onAdd: GridProps["onAdd"] }) {
+function Cell(props: { venue: string; day: number; start: number; row: number; first: boolean; onAdd: GridProps["onAdd"] | null }) {
   const { venue, day, start, row, first, onAdd } = props;
   const { setNodeRef, isOver } = useDroppable({ id: `cell:${venue}:${day}:${start}`, data: { venue, day, start } });
   return (
     <div
       ref={setNodeRef}
-      className={`cell can-add${first ? " first" : ""}${isOver ? " drop" : ""}`}
+      className={`cell${onAdd ? " can-add" : ""}${first ? " first" : ""}${isOver ? " drop" : ""}`}
       style={{ gridRow: row, gridColumn: colOf(start) }}
-      onClick={() => onAdd(venue, day, start)}
-      aria-label={`Add a booking in ${venue}, ${DAYS[day]} ${SLOTS[start]}`}
+      onClick={onAdd ? () => onAdd(venue, day, start) : undefined}
+      aria-label={onAdd ? `Add a booking in ${venue}, ${DAYS[day]} ${SLOTS[start]}` : `${venue}, ${DAYS[day]} ${SLOTS[start]}`}
     />
   );
 }
@@ -357,10 +371,11 @@ function Block(props: {
   flash: boolean;
   dragging: boolean;
   lecturers: string[];
+  editable: boolean;
   onOpen: (b: BookingDTO) => void;
 }) {
-  const { booking: b, row, lane, clashes, dim, flash, dragging, lecturers, onOpen } = props;
-  const { setNodeRef, attributes, listeners } = useDraggable({ id: b.id });
+  const { booking: b, row, lane, clashes, dim, flash, dragging, lecturers, editable, onOpen } = props;
+  const { setNodeRef, attributes, listeners } = useDraggable({ id: b.id, disabled: !editable });
   const label = b.kind === "pt" ? "PART-TIME (PT)" : b.label;
   const hasError = clashes?.some((c) => c.severity === "error");
   const title = [
@@ -374,7 +389,7 @@ function Block(props: {
   const cls = [
     "blk",
     categoryOf(b),
-    "draggable",
+    editable ? "draggable" : "",
     b.span === 1 && label.length > 8 ? "tight" : "",
     hasError ? "clash" : "",
     dim ? "dim" : "",
@@ -387,8 +402,8 @@ function Block(props: {
   return (
     <div
       ref={setNodeRef}
-      {...attributes}
-      {...listeners}
+      // View-only blocks still open their details, so they stay ordinary buttons (not "disabled").
+      {...(editable ? { ...attributes, ...listeners } : { role: "button", tabIndex: 0 })}
       data-booking={b.id}
       className={cls}
       title={title}

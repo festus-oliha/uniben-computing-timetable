@@ -14,6 +14,8 @@ Officers drag courses around a venue × day grid, and the app flags clashes as t
 - **Lecturers** — the teaching staff list, with each person's courses and weekly hours.
 - **Exports** — *Download Word* gives the official timetable as a `.docx` (A4 landscape, 2 pages, faculty design);
   *Print / PDF* opens the same layout for printing or "Save as PDF". Other faculties' bookings print as blanks.
+- **Logins and roles** — *Faculty Time-Table Officer* (everything, accounts, sign-off), *Department Officer*
+  (their own department's course lectures, courses and lecturers), *Viewer* (look and export only).
 - **Sign-off** — the Faculty Time-Table Officer sets the signing date and adds a signature (drawn on screen or
   uploaded as a scan). Both print on the exports; until it's signed, exports show a blank date and signature line.
 - Loaded with the **2026/2027 First Semester** timetable.
@@ -40,9 +42,19 @@ npm run dev          # starts the app
 
 Open **http://localhost:3000** in your browser. Stop the app with `Ctrl + C` in the terminal.
 
+**The first time**, the app shows **First-time setup**: create the Faculty Time-Table Officer account (you).
+Then use the **Users** tab to create accounts for department officers and viewers — each gets a temporary
+password to pass on privately, and chooses their own password at first sign-in.
+
 > **No database setup needed for local work.** When `DATABASE_URL` is empty the app uses a built-in
 > Postgres database stored in the `.data/` folder on your computer. Delete that folder and run
-> `npm run db:setup` again to start fresh.
+> `npm run db:setup` again to start fresh (this also deletes the accounts).
+>
+> ⚠️ The built-in database can only be used by **one program at a time**. Stop the app (`Ctrl + C`)
+> before running any `npm run db:…` or `npm run user:…` command, then start it again.
+>
+> Keep the project folder **outside OneDrive/Dropbox** (e.g. `C:\Users\<you>\Projects`) — syncing the
+> `.data` folder while the app writes to it can damage the database.
 
 ## 2. Everyday work
 
@@ -63,6 +75,7 @@ npm run dev          # start the app at http://localhost:3000
 | `npm run db:setup` | Creates tables and loads the timetable (safe to re-run) |
 | `npm run db:seed -- --reset` | Puts the 2026/2027 timetable back to the original, discarding moves |
 | `npm run db:generate` | After changing `src/lib/db/schema.ts`, writes a new migration into `drizzle/` |
+| `npm run user:reset-password -- you@example.com` | Locked out? Prints a new temporary password (run with no email to list accounts) |
 
 Every push to GitHub runs the tests and a build on **GitHub Actions** (free, separate from Netlify credits).
 
@@ -88,11 +101,10 @@ Use this when you're ready to deploy, or when several people need to share one d
 
 1. On **app.netlify.com**: **Add new site → Import an existing project → GitHub** → pick this repository.
    Netlify reads `netlify.toml`, so leave the build settings as they are.
-2. Before deploying, open **Site configuration → Environment variables** and add:
-   - `DATABASE_URL` — your Supabase transaction-pooler URI (step 3 above)
-   - `SITE_PASSWORD` — a password officers will type to open the site (**required**: until proper logins
-     are built, this is what stops strangers from editing the timetable)
-3. Deploy, open the site, and check it loads.
+2. Before deploying, open **Site configuration → Environment variables** and add
+   `DATABASE_URL` — your Supabase transaction-pooler URI (step 3 above).
+3. Deploy, open the site **straight away**, and complete **First-time setup** to create the Faculty
+   Time-Table Officer account. (Until that account exists, whoever opens the site first could create it.)
 
 **Then pause automatic builds** so pushes to GitHub don't use credits:
 **Site configuration → Build & deploy → Continuous deployment → Build settings → Configure → Stop builds**.
@@ -131,7 +143,11 @@ src/
     data.ts             Database reads for the pages
     db/schema.ts        Database tables
     db/client.ts        Picks Supabase (DATABASE_URL) or the local database
-  middleware.ts         SITE_PASSWORD protection
+  middleware.ts         Sends visitors without a sign-in cookie to /login
+  app/login, app/setup  Sign-in and first-time setup (outside the signed-in layout)
+  app/(app)/            Everything behind sign-in: timetable, courses, users, account …
+  lib/auth/             Password hashing (scrypt) and sessions (cookie + sessions table)
+  lib/permissions.ts    ★ Who may change what — used by both the screens and the server actions
 drizzle/                SQL migrations (generated — don't edit by hand)
 seed/                   The 2026/2027 First Semester timetable as data
 scripts/                migrate and seed commands
@@ -149,6 +165,6 @@ The "Signed" date and signature come from the **Sign-off** tab (stored per semes
 
 1. ✅ Timetable grid, drag-and-drop, clash checks, courses, lecturers
 2. ✅ Word/PDF export in the official faculty timetable design, with online sign-off
-3. Logins with roles — Faculty Officer (everything), Department Officer (own department), Viewer
+3. ✅ Logins with roles — Faculty Officer (everything), Department Officer (own department), Viewer
 4. Public read-only view for students and lecturers, filtered by level, department or lecturer
 5. Change history, and "copy this semester" to start the next one

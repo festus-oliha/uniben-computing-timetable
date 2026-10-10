@@ -7,6 +7,7 @@ import { courseInfo, findClashes, type CourseInfo } from "@/lib/clash";
 import type { BookingDTO, VenueDTO } from "@/lib/types";
 import { deleteBooking, saveBooking } from "@/app/actions";
 import { useToast } from "./Toast";
+import { outsideDeptMessage, type Actor } from "@/lib/permissions";
 
 export type DrawerState = { mode: "new" | "edit"; booking: BookingDTO };
 
@@ -16,11 +17,13 @@ interface Props {
   venues: VenueDTO[];
   bookings: BookingDTO[];
   ctx: { courses: Map<string, CourseInfo>; lecturerName: (id: string) => string | undefined };
+  actor: Actor;
+  canEdit: (b: { kind: Kind; label: string }) => boolean;
   onClose: () => void;
 }
 
 /** Side panel for adding or editing one booking, with a live clash preview. */
-export function BookingDrawer({ state, semesterId, venues, bookings, ctx, onClose }: Props) {
+export function BookingDrawer({ state, semesterId, venues, bookings, ctx, actor, canEdit, onClose }: Props) {
   const router = useRouter();
   const toast = useToast();
   const [pending, startTransition] = useTransition();
@@ -42,6 +45,10 @@ export function BookingDrawer({ state, semesterId, venues, bookings, ctx, onClos
 
   const set = <K extends keyof BookingDTO>(k: K, v: BookingDTO[K]) => setDraft((d) => ({ ...d, [k]: v }));
   const fits = fitsInBlock(draft.start, draft.span);
+  // Can this person change the booking as it was, and save it as it now reads?
+  const mayEditOriginal = state.mode === "new" || canEdit(state.booking);
+  const mayKeepDraft = !draft.label.trim() || canEdit(draft);
+  const readOnly = !mayEditOriginal;
   const codes = codesOf(draft.label);
 
   const preview = useMemo(() => {
@@ -79,12 +86,15 @@ export function BookingDrawer({ state, semesterId, venues, bookings, ctx, onClos
   return (
     <div className="drawer" role="dialog" aria-modal="false" aria-labelledby="drawer-title">
       <header>
-        <h3 id="drawer-title">{state.mode === "new" ? "New booking" : "Edit booking"}</h3>
+        <h3 id="drawer-title">{state.mode === "new" ? "New booking" : readOnly ? "Booking details" : "Edit booking"}</h3>
         <button type="button" className="xbtn" onClick={onClose} aria-label="Close">
           ×
         </button>
       </header>
       <div className="body">
+        {readOnly && <p className="readonly-note">{outsideDeptMessage(actor)}</p>}
+        {!readOnly && !mayKeepDraft && <p className="issue">{outsideDeptMessage(actor)}</p>}
+        <fieldset disabled={readOnly} className="plain">
         <label className="fld">
           <span>Course code(s)</span>
           <input
@@ -179,6 +189,7 @@ export function BookingDrawer({ state, semesterId, venues, bookings, ctx, onClos
           )}
         </div>
 
+        </fieldset>
         {preview.map((c, i) => (
           <div key={i} className={`issue${c.severity === "warning" ? " warn" : ""}`}>
             {c.message}
@@ -186,13 +197,15 @@ export function BookingDrawer({ state, semesterId, venues, bookings, ctx, onClos
         ))}
       </div>
       <div className="actions">
-        <button type="button" className="btn primary" onClick={save} disabled={pending || !fits || !draft.label.trim()}>
-          {pending ? "Saving…" : "Save"}
-        </button>
+        {!readOnly && (
+          <button type="button" className="btn primary" onClick={save} disabled={pending || !fits || !draft.label.trim() || !mayKeepDraft}>
+            {pending ? "Saving…" : "Save"}
+          </button>
+        )}
         <button type="button" className="btn" onClick={onClose}>
-          Cancel
+          {readOnly ? "Close" : "Cancel"}
         </button>
-        {state.mode === "edit" && (
+        {state.mode === "edit" && !readOnly && (
           <button type="button" className={`btn danger${confirmDelete ? " sure" : ""}`} onClick={remove} disabled={pending}>
             {confirmDelete ? "Confirm delete" : "Delete"}
           </button>

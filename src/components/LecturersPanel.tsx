@@ -7,13 +7,14 @@ import { hoursByCourse } from "@/lib/clash";
 import type { TimetableData } from "@/lib/types";
 import { addLecturer, deleteLecturer } from "@/app/actions";
 import { useToast } from "./Toast";
+import { canManageLecturer, type Actor } from "@/lib/permissions";
 
-export function LecturersPanel({ data }: { data: TimetableData }) {
+export function LecturersPanel({ data, actor }: { data: TimetableData; actor: Actor }) {
   const router = useRouter();
   const toast = useToast();
   const [, startTransition] = useTransition();
   const [name, setName] = useState("");
-  const [dept, setDept] = useState<string>(FACULTY_DEPTS[0]);
+  const [dept, setDept] = useState<string>(actor.role === "dept_officer" && actor.dept ? actor.dept : FACULTY_DEPTS[0]);
   const [confirming, setConfirming] = useState<string | null>(null);
   const hours = useMemo(() => hoursByCourse(data.bookings), [data.bookings]);
 
@@ -76,9 +77,11 @@ export function LecturersPanel({ data }: { data: TimetableData }) {
                   <td className="code">{cs.length ? cs.join(", ") : <span className="hint">None yet</span>}</td>
                   <td className="num">{h}</td>
                   <td>
-                    <button type="button" className={`btn danger${confirming === l.id ? " sure" : ""}`} onClick={() => remove(l.id)}>
-                      {confirming === l.id ? "Confirm remove" : "Remove"}
-                    </button>
+                    {canManageLecturer(actor, l) && (
+                      <button type="button" className={`btn danger${confirming === l.id ? " sure" : ""}`} onClick={() => remove(l.id)}>
+                        {confirming === l.id ? "Confirm remove" : "Remove"}
+                      </button>
+                    )}
                   </td>
                 </tr>
               );
@@ -86,6 +89,9 @@ export function LecturersPanel({ data }: { data: TimetableData }) {
           </tbody>
         </table>
       </div>
+      {actor.role === "viewer" ? (
+        <p className="readonly-note">You have view-only access.</p>
+      ) : (
       <form
         className="addrow"
         onSubmit={(e) => {
@@ -99,7 +105,7 @@ export function LecturersPanel({ data }: { data: TimetableData }) {
         </label>
         <label className="fld">
           <span>Department</span>
-          <select id="lecturer-dept" value={dept} onChange={(e) => setDept(e.target.value)}>
+          <select id="lecturer-dept" value={dept} onChange={(e) => setDept(e.target.value)} disabled={actor.role !== "admin"}>
             {FACULTY_DEPTS.map((d) => (
               <option key={d} value={d}>
                 {DEPARTMENTS[d]}
@@ -111,6 +117,7 @@ export function LecturersPanel({ data }: { data: TimetableData }) {
           Add lecturer
         </button>
       </form>
+      )}
     </section>
   );
 }

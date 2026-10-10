@@ -94,3 +94,40 @@ export type Course = typeof courses.$inferSelect;
 export type Lecturer = typeof lecturers.$inferSelect;
 export type Booking = typeof bookings.$inferSelect;
 export type BookingKind = (typeof bookingKind.enumValues)[number];
+
+/* ---------- people & sign-in ---------- */
+
+/**
+ * admin        — Faculty Time-Table Officer: everything, including accounts and sign-off.
+ * dept_officer — Departmental Time-Table Officer: their own department's courses, bookings and lecturers.
+ * viewer       — can look and export, not change.
+ */
+export const userRole = pgEnum("user_role", ["admin", "dept_officer", "viewer"]);
+
+export const users = pgTable("users", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  email: text("email").notNull().unique(), // stored lower-case
+  name: text("name").notNull(),
+  role: userRole("role").notNull().default("viewer"),
+  /** For dept_officer: the department code they manage (CSC, CYB, DTS, ICT, IFT, INS, SEN). */
+  dept: text("dept"),
+  passwordHash: text("password_hash").notNull(),
+  /** Set when an admin creates or resets the account, so the person picks their own password. */
+  mustChangePassword: boolean("must_change_password").notNull().default(true),
+  isActive: boolean("is_active").notNull().default(true),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  lastLoginAt: timestamp("last_login_at", { withTimezone: true }),
+});
+
+/** Signed-in browsers. The cookie holds a random token; only its SHA-256 hash is stored here. */
+export const sessions = pgTable("sessions", {
+  tokenHash: text("token_hash").primaryKey(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export type User = typeof users.$inferSelect;
+export type UserRole = (typeof userRole.enumValues)[number];

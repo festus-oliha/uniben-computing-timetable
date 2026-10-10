@@ -1,12 +1,22 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { bookings, courseLecturers, courses, lecturers, semesters, venues } from "@/lib/db/schema";
 import { codesOf, fitsInBlock, isCourseCode, levelOf, prefixOf, type Kind } from "@/lib/timetable";
 import { validateSignoff, type Signoff } from "@/lib/signoff";
 import { getCurrentSemester } from "@/lib/data";
+import { getCurrentUser, type CurrentUser } from "@/lib/auth/session";
+import {
+  canChangeCourseScope,
+  canEditBooking,
+  canEditCourse,
+  canManageLecturer,
+  canSignOff,
+  outsideDeptMessage,
+  type DeptOf,
+} from "@/lib/permissions";
 import type { ActionResult } from "@/lib/types";
 
 const KINDS: Kind[] = ["course", "activity", "pt", "shared"];
@@ -20,9 +30,12 @@ function fail(error: string): ActionResult {
   return { ok: false, error };
 }
 
-async function guard(fn: () => Promise<ActionResult>): Promise<ActionResult> {
+/** Runs an action for the signed-in person; anyone not signed in is refused. */
+async function guard(fn: (me: CurrentUser) => Promise<ActionResult>): Promise<ActionResult> {
   try {
-    return await fn();
+    const me = await getCurrentUser();
+    if (!me) return fail("Your session has ended. Sign in again.");
+    return await fn(me);
   } catch (err) {
     console.error(err);
     return fail("The change could not be saved. Check the database connection and try again.");
@@ -41,6 +54,14 @@ async function venueExists(code: string) {
   return !!v;
 }
 
+/** Department lookup for the course codes in some labels, using the recorded department when there is one. */
+async function deptLookup(...labels: string[]): Promise<DeptOf> {
+  const codes = [...new Set(labels.flatMap(codesOf))];
+  const rows = codes.length ? await db.select({ code: courses.code, dept: courses.dept }).from(courses).where(inArray(courses.code, codes)) : [];
+  const m = new Map(rows.map((r) => [r.code, r.dept]));
+  return (code) => m.get(code) ?? prefixOf(code);
+}
+
 /** Adds any course codes in a label that aren't on the course list yet. */
 async function ensureCourses(label: string) {
   const codes = codesOf(label);
@@ -52,9 +73,10 @@ async function ensureCourses(label: string) {
 }
 
 export async function moveBooking(id: string, venueCode: string, day: number, start: number): Promise<ActionResult> {
-  return guard(async () => {
+  return guard(async (me) => {
     const [b] = await db.select().from(bookings).where(eq(bookings.id, id));
     if (!b) return fail("That booking no longer exists. The page will refresh.");
+    if (!canEditBooking(me, b, await deptLookup(b.label))) return fail(outsideDeptMessage(me));
     const bad = validSlot(day, start, b.span);
     if (bad) return fail(bad);
     if (!(await venueExists(venueCode))) return fail(`Venue ${venueCode} doesn't exist.`);
@@ -76,7 +98,7 @@ export interface BookingInput {
 }
 
 export async function saveBooking(input: BookingInput): Promise<ActionResult> {
-  return guard(async () => {
+  return guard(async (me) => {
     const label = input.label.trim().replace(/\s*\/\s*/g, "/");
     if (!label) return fail("Type a course code or a label.");
     if (!KINDS.includes(input.kind)) return fail("Pick a booking type.");
@@ -96,6 +118,11 @@ export async function saveBooking(input: BookingInput): Promise<ActionResult> {
       note: input.note.trim(),
       updatedAt: new Date(),
     };
+    const [existing] = input.id ? await db.select().from(bookings).where(eq(bookings.id, input.id)) : [];
+    if (input.id && !existing) return fail("That booking no longer exists. The page will refresh.");
+    const deptOf = await deptLookup(values.label, existing?.label ?? "");
+    if ((existing && !canEditBooking(me, existing, deptOf)) || !canEditBooking(me, values, deptOf)) return fail(outsideDeptMessage(me));
+
     if (input.kind === "course") await ensureCourses(values.label);
 
     if (input.id) {
@@ -108,7 +135,10 @@ export async function saveBooking(input: BookingInput): Promise<ActionResult> {
 }
 
 export async function deleteBooking(id: string): Promise<ActionResult> {
-  return guard(async () => {
+  return guard(async (me) => {
+    const [b] = await db.select().from(bookings).where(eq(bookings.id, id));
+    if (!b) return done("Booking deleted.");
+    if (!canEditBooking(me, b, await deptLookup(b.label))) return fail(outsideDeptMessage(me));
     await db.delete(bookings).where(eq(bookings.id, id));
     return done("Booking deleted.");
   });
@@ -124,9 +154,16 @@ export interface CourseInput {
 }
 
 export async function saveCourse(input: CourseInput): Promise<ActionResult> {
-  return guard(async () => {
+  return guard(async (me) => {
     const code = input.code.trim().toUpperCase();
     if (!isCourseCode(code)) return fail("Course codes look like CSC305.");
+    const [current] = await db.select().from(courses).where(eq(courses.code, code));
+    if (!current) return fail(`${code} is not on the course list.`);
+    if (!canEditCourse(me, current)) return fail(outsideDeptMessage(me));
+    // Only the Faculty Officer changes a course's department or whether it is common.
+    if (!canChangeCourseScope(me)) {
+      input = { ...input, dept: current.dept, isCommon: current.isCommon };
+    }
     if (!Number.isInteger(input.level) || input.level < 1 || input.level > 8) return fail("Pick a level from 100 to 800.");
     if (input.units != null && (!Number.isInteger(input.units) || input.units < 0 || input.units > 12))
       return fail("Units must be a whole number from 0 to 12.");
@@ -143,9 +180,10 @@ export async function saveCourse(input: CourseInput): Promise<ActionResult> {
 }
 
 export async function addCourse(rawCode: string): Promise<ActionResult> {
-  return guard(async () => {
+  return guard(async (me) => {
     const code = rawCode.trim().toUpperCase();
     if (!isCourseCode(code)) return fail("Type a course code like CSC305.");
+    if (!canEditCourse(me, { code, dept: prefixOf(code) })) return fail(outsideDeptMessage(me));
     const [exists] = await db.select({ code: courses.code }).from(courses).where(eq(courses.code, code));
     if (exists) return fail(`${code} is already on the list.`);
     await db.insert(courses).values({ code, level: levelOf(code) ?? 1, dept: prefixOf(code) });
@@ -154,16 +192,21 @@ export async function addCourse(rawCode: string): Promise<ActionResult> {
 }
 
 export async function addLecturer(name: string, dept: string): Promise<ActionResult> {
-  return guard(async () => {
+  return guard(async (me) => {
     const n = name.trim();
     if (!n) return fail("Type the lecturer's name.");
-    await db.insert(lecturers).values({ name: n, dept: dept || null });
+    const d = me.role === "dept_officer" ? me.dept : dept || null;
+    if (!canManageLecturer(me, { dept: d })) return fail(outsideDeptMessage(me));
+    await db.insert(lecturers).values({ name: n, dept: d });
     return done(`${n} added.`);
   });
 }
 
 export async function deleteLecturer(id: string): Promise<ActionResult> {
-  return guard(async () => {
+  return guard(async (me) => {
+    const [l] = await db.select().from(lecturers).where(eq(lecturers.id, id));
+    if (!l) return done("Lecturer removed.");
+    if (!canManageLecturer(me, l)) return fail(outsideDeptMessage(me));
     await db.delete(lecturers).where(eq(lecturers.id, id)); // course links cascade
     return done("Lecturer removed.");
   });
@@ -172,10 +215,11 @@ export async function deleteLecturer(id: string): Promise<ActionResult> {
 /**
  * Saves the Faculty Time-Table Officer's sign-off for the current semester.
  * The signing date and signature are printed on the Word and PDF exports.
- * (Once logins exist, this will be limited to the Faculty Time-Table Officer.)
+ * Only the Faculty Time-Table Officer can sign.
  */
 export async function saveSignoff(input: Signoff): Promise<ActionResult> {
-  return guard(async () => {
+  return guard(async (me) => {
+    if (!canSignOff(me)) return fail("Only the Faculty Time-Table Officer can sign off the timetable.");
     const bad = validateSignoff(input);
     if (bad) return fail(bad);
     const sem = await getCurrentSemester();
@@ -195,7 +239,8 @@ export async function saveSignoff(input: Signoff): Promise<ActionResult> {
 }
 
 export async function clearSignoff(): Promise<ActionResult> {
-  return guard(async () => {
+  return guard(async (me) => {
+    if (!canSignOff(me)) return fail("Only the Faculty Time-Table Officer can sign off the timetable.");
     const sem = await getCurrentSemester();
     if (!sem) return fail("No semester has been set up yet.");
     await db

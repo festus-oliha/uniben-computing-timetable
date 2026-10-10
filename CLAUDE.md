@@ -17,3 +17,8 @@ Next.js 15 (App Router, server actions) · React 19 · TypeScript · Tailwind 4 
 - Netlify builds are usually paused to save credits; GitHub Actions runs checks for free. Work on localhost.
 - Before committing: `npm run check` and `npm run build`.
 - The printed "Signed" date and signature come from the semester's sign-off (Sign-off tab), never the export date.
+- Permissions live only in `src/lib/permissions.ts` (pure, tested). Every server action calls `guard()` (signed-in check)
+  and the matching permission function; screens use the same functions to hide/disable controls.
+- Roles: admin = Faculty Time-Table Officer; dept_officer edits only course lectures whose courses are all in their dept
+  (never COS/common, tutorials, PT or other-faculty bookings); viewer is read-only.
+- PGlite allows one process at a time: stop `npm run dev` before running db/user scripts.

@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import { getTimetableData, clashesFor } from "@/lib/data";
-import { Nav } from "@/components/Nav";
 import { ToastProvider } from "@/components/Toast";
 import "./globals.css";
 
@@ -12,10 +10,7 @@ export const metadata: Metadata = {
 // Always read fresh data: several officers edit the same timetable.
 export const dynamic = "force-dynamic";
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const data = await getTimetableData();
-  const errors = clashesFor(data).filter((c) => c.severity === "error").length;
-
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
@@ -28,26 +23,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         />
       </head>
       <body>
-        <ToastProvider>
-          <div className="top">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/crest.png" alt="University of Benin crest" />
-            <div className="brand">
-              <small>University of Benin</small>
-              <h1>
-                Faculty of Computing <span>Timetable</span>
-              </h1>
-            </div>
-            {data.semester && (
-              <div className="session">
-                {data.semester.name}
-                <b>{data.semester.session}</b>
-              </div>
-            )}
-          </div>
-          <Nav clashCount={errors} />
-          <main>{children}</main>
-        </ToastProvider>
+        <ToastProvider>{children}</ToastProvider>
       </body>
     </html>
   );
