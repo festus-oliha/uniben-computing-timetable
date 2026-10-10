@@ -20,9 +20,14 @@ const t = (o: Partial<ExamTimetableDTO> = {}): ExamTimetableDTO => ({
   isPublished: false,
   signedOn: null,
   hasSignature: false,
+  invigilatorPool: null,
+  assistantsPerPaper: 3,
+  maxDutiesPerDay: 2,
+  invigilationPublished: false,
+  invSignedOn: null,
   ...o,
 });
-const p = (o: Partial<ExamPaperDTO>): ExamPaperDTO => ({ id: "x", date: "2026-07-27", session: 0, label: "CSC421", kind: "paper", venues: [], year: null, note: "", chiefId: null, invigilatorIds: [], ...o });
+const p = (o: Partial<ExamPaperDTO>): ExamPaperDTO => ({ id: "x", date: "2026-07-27", session: 0, label: "CSC421", kind: "paper", venues: [], year: null, note: "", chiefId: null, invigilatorIds: [], assistantsNeeded: null, ...o });
 const venues = [
   { code: "T", name: "1000 LT" },
   { code: "W", name: "500 LT" },

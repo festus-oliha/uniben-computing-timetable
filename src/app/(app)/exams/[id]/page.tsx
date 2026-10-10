@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireUser } from "@/lib/auth/session";
-import { examSignoff, getExamBoard, getExamRow } from "@/lib/exam-data";
+import { examSignoff, getExamBoard, getExamRow, invigilationSignoff } from "@/lib/exam-data";
 import { canManageExamTimetable } from "@/lib/permissions";
 import { PROGRAMMES, isProgramme } from "@/lib/programmes";
 import { DEPARTMENTS } from "@/lib/timetable";
@@ -10,10 +10,12 @@ import { ExamBoard } from "@/components/exams/ExamBoard";
 import { ExamSetup } from "@/components/exams/ExamSetup";
 import { SignoffPanel } from "@/components/SignoffPanel";
 import { clearExamSignoff, saveExamSignoff } from "@/app/exam-actions";
+import { clearInvigilationSignoff, saveInvigilationSignoff } from "@/app/invigilation-actions";
+import { InvigilationBoard } from "@/components/exams/InvigilationBoard";
 
 export const metadata = { title: "Examination timetable — Faculty of Computing" };
 
-type Tab = "board" | "setup" | "sign";
+type Tab = "board" | "invigilation" | "setup" | "sign";
 
 export default async function ExamPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ tab?: string }> }) {
   const [{ id }, { tab: rawTab }, me] = await Promise.all([params, searchParams, requireUser()]);
@@ -21,28 +23,42 @@ export default async function ExamPage({ params, searchParams }: { params: Promi
   if (!data) notFound();
   const t = data.timetable;
   const manage = canManageExamTimetable(me, t);
-  const tab: Tab = rawTab === "setup" || rawTab === "sign" ? rawTab : "board";
+  const tab: Tab = rawTab === "setup" || rawTab === "sign" || rawTab === "invigilation" ? rawTab : "board";
   const name = `${isProgramme(t.programme) ? PROGRAMMES[t.programme].label : t.programme}${t.dept ? ` · ${DEPARTMENTS[t.dept] ?? t.dept}` : ""}`;
   const base = `/exams/${t.id}`;
 
   let body: React.ReactNode;
   if (tab === "setup" && manage) {
     body = <ExamSetup t={t} usedDates={[...new Set(data.papers.map((p) => p.date))]} />;
+  } else if (tab === "invigilation") {
+    body = <InvigilationBoard data={data} canManage={manage} />;
   } else if (tab === "sign") {
     const row = (await getExamRow(t.id))!;
     body = manage ? (
-      <SignoffPanel
-        heading="Sign-off"
-        initial={examSignoff(row)}
-        semesterLabel={`${name} examinations`}
-        signatory={{ name: t.signatoryName || "—", role: t.signatoryRole }}
-        onSave={saveExamSignoff.bind(null, t.id)}
-        onClear={clearExamSignoff.bind(null, t.id)}
-      />
+      <>
+        <SignoffPanel
+          heading="Examination timetable sign-off"
+          initial={examSignoff(row)}
+          semesterLabel={name}
+          signatory={{ name: t.signatoryName || "—", role: t.signatoryRole }}
+          onSave={saveExamSignoff.bind(null, t.id)}
+          onClear={clearExamSignoff.bind(null, t.id)}
+        />
+        <SignoffPanel
+          heading="Invigilation schedule sign-off"
+          idPrefix="inv-"
+          initial={invigilationSignoff(row)}
+          semesterLabel={name}
+          signatory={{ name: t.signatoryName || "—", role: t.signatoryRole }}
+          onSave={saveInvigilationSignoff.bind(null, t.id)}
+          onClear={clearInvigilationSignoff.bind(null, t.id)}
+        />
+      </>
     ) : (
       <section className="card narrow signoff">
         <h2>Sign-off</h2>
-        <p className={`status ${t.signedOn ? "on" : "off"}`}>{t.signedOn ? `Signed ${formatSignedDate(t.signedOn)}` : "Not signed yet"}</p>
+        <p className={`status ${t.signedOn ? "on" : "off"}`}>Examination timetable: {t.signedOn ? `signed ${formatSignedDate(t.signedOn)}` : "not signed yet"}</p>
+        <p className={`status ${t.invSignedOn ? "on" : "off"}`}>Invigilation schedule: {t.invSignedOn ? `signed ${formatSignedDate(t.invSignedOn)}` : "not signed yet"}</p>
       </section>
     );
   } else {
@@ -62,6 +78,9 @@ export default async function ExamPage({ params, searchParams }: { params: Promi
         <Link className={`btn${tab === "board" ? " on" : ""}`} href={base}>
           Timetable
         </Link>
+        <Link className={`btn${tab === "invigilation" ? " on" : ""}`} href={`${base}?tab=invigilation`}>
+          Invigilation
+        </Link>
         {manage && (
           <Link className={`btn${tab === "setup" ? " on" : ""}`} href={`${base}?tab=setup`}>
             Set-up &amp; publish
@@ -71,12 +90,16 @@ export default async function ExamPage({ params, searchParams }: { params: Promi
           Sign-off
         </Link>
         <span className="grow" />
-        <a className="btn" href={`/export/exam/${t.id}`}>
-          Download Word
-        </a>
-        <a className="btn" href={`/exams/${t.id}/print`}>
-          Print / PDF
-        </a>
+        {tab !== "invigilation" && (
+          <>
+            <a className="btn" href={`/export/exam/${t.id}`}>
+              Download Word
+            </a>
+            <a className="btn" href={`/exams/${t.id}/print`}>
+              Print / PDF
+            </a>
+          </>
+        )}
       </nav>
       {body}
     </>

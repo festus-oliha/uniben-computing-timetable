@@ -38,6 +38,17 @@ Officers drag courses around a venue × day grid, and the app flags clashes as t
   Each timetable has its own set-up (dates, session times, notes, signatory), sign-off, publish switch,
   Word download (A4 portrait) and Print / PDF. Department officers run their own department's timetables and add
   their own papers to the Faculty one. Students look them up at `/view/exams`.
+- **Invigilation** (Invigilation tab on each exam timetable) — for every paper, the officer in charge picks the
+  **chief invigilator** (never suggested by the app, and never a lecturer of that course) and the assistants.
+  *Fill empty places* suggests assistants for empty places only — fewest duties first, never someone busy in that
+  session, unavailable, or over the day's limit (undergraduate papers avoid the course's own lecturer; M.Sc. papers
+  put them first, as lecturers collect their own scripts). Nothing already assigned is changed.
+  Flexible: assistants per paper (and per big paper), duties-a-day limit, who is on the invigilators list,
+  *Unavailable* dates (optionally taking the person off duties they already have), *Hand over duties* from one person
+  to another, and *Clear assistants*. Checks and a duties-per-person table keep it fair. Word (A4 landscape, in the
+  Faculty's "PAPER (Y2, T) **CHIEF**: ASSISTANTS" style, plus each person's duties), Print / PDF, its own sign-off,
+  and a publish switch — invigilators then look up their own duties by name at `/view/invigilation`.
+  On the Lecturers tab you can paste a whole staff list and set each person's print name (e.g. EGWALI).
 - Loaded with the **2026/2027 First Semester** timetable.
 
 ---
@@ -155,6 +166,7 @@ src/
     (app)/exams/        Examination timetables: list, board (?tab=setup|sign), print
     export/exam/[id]/   Examination Word download (public once published)
     exam-actions.ts     All examination saves (server actions)
+    invigilation-actions.ts  All invigilation saves (assign, fill, clear, unavailable, hand over, settings)
     sign/               Sign-off: signing date + drawn or uploaded signature
     actions.ts          All saves/moves/deletes (server actions, validated on the server)
   components/           Screen pieces: TimetableBoard (grid + drag-and-drop), BookingDrawer, tables …
@@ -164,6 +176,7 @@ src/
     public-view.ts      Which lectures a class / lecturer / venue sees on the public page + tests
     semester.ts         Session format, next-semester suggestion, copy options + tests
     exam.ts             ★ Examination rules: dates, session numbering, clash checks, public lists + tests
+    invigilation.ts     ★ Invigilation rules: print names, who may be chief, checks, fair assistant suggestions + tests
     programmes.ts       Programmes (UG, PT, M.Sc., Ph.D., PGD) and their default sessions, days and notes
     exam-data.ts        Database reads for the examination pages
     signoff.ts          Sign-off rules (date format, image checks, print sizing) + tests
@@ -200,5 +213,5 @@ The "Signed" date and signature come from the **Sign-off** tab (stored per semes
 5. ✅ Settings: start the next semester, publish, venues
 6. ✅ Public read-only view for students and lecturers, filtered by level, department, lecturer or venue
 7. ✅ Examination timetables (Undergraduate, Part-time, M.Sc.) with clash checks, Word/PDF, sign-off and public look-up
-8. ⏳ Invigilation schedules — chief invigilator + assistants per paper, fair suggestions, duty counts
+8. ✅ Invigilation schedules — chief chosen by the officer, fair assistant suggestions, availability, hand-overs, duty counts
 9. ⏳ Part-time and M.Sc. lecture timetables (per department)

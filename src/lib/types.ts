@@ -33,6 +33,8 @@ export interface LecturerDTO {
   id: string;
   name: string;
   dept: string | null;
+  /** How the name prints on invigilation schedules; empty = surname in capitals. */
+  shortName?: string | null;
 }
 
 export interface SemesterDTO {
@@ -73,6 +75,12 @@ export interface ExamTimetableDTO {
   isPublished: boolean;
   signedOn: string | null;
   hasSignature: boolean;
+  /* invigilation */
+  invigilatorPool: string[] | null;
+  assistantsPerPaper: number;
+  maxDutiesPerDay: number;
+  invigilationPublished: boolean;
+  invSignedOn: string | null;
 }
 
 export interface ExamPaperDTO {
@@ -86,6 +94,15 @@ export interface ExamPaperDTO {
   note: string;
   chiefId: string | null;
   invigilatorIds: string[];
+  assistantsNeeded: number | null;
+}
+
+export interface UnavailableDTO {
+  id: string;
+  lecturerId: string;
+  date: string;
+  session: number | null;
+  reason: string;
 }
 
 export interface ExamVenueDTO extends VenueDTO {
@@ -101,4 +118,5 @@ export interface ExamBoardData {
   lecturers: LecturerDTO[];
   /** Courses on this semester's lecture timetable — each should get an examination. */
   taughtCodes: string[];
+  unavailable: UnavailableDTO[];
 }

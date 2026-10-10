@@ -189,6 +189,18 @@ export const examTimetables = pgTable("exam_timetables", {
   signatureWidth: integer("signature_width"),
   signatureHeight: integer("signature_height"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+
+  /* Invigilation schedule for this timetable */
+  /** Who may be suggested as an assistant invigilator (lecturer ids). null = the usual list (the department's staff, or everyone for undergraduate). */
+  invigilatorPool: jsonb("invigilator_pool").$type<string[] | null>(),
+  assistantsPerPaper: integer("assistants_per_paper").notNull().default(3),
+  maxDutiesPerDay: integer("max_duties_per_day").notNull().default(2),
+  invigilationPublished: boolean("invigilation_published").notNull().default(false),
+  invigilationPublishedAt: timestamp("invigilation_published_at", { withTimezone: true }),
+  invSignedOn: text("inv_signed_on"),
+  invSignatureImage: text("inv_signature_image"),
+  invSignatureWidth: integer("inv_signature_width"),
+  invSignatureHeight: integer("inv_signature_height"),
 });
 
 /**
@@ -210,7 +222,23 @@ export const examPapers = pgTable("exam_papers", {
   note: text("note").notNull().default(""),
   chiefId: uuid("chief_id").references(() => lecturers.id, { onDelete: "set null" }),
   invigilatorIds: jsonb("invigilator_ids").$type<string[]>().notNull().default([]),
+  /** Assistant invigilators this paper needs; null = the timetable's usual number. */
+  assistantsNeeded: integer("assistants_needed"),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+/** Someone who cannot invigilate on a date (session null = the whole day). */
+export const examUnavailability = pgTable("exam_unavailability", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  timetableId: integer("timetable_id")
+    .notNull()
+    .references(() => examTimetables.id, { onDelete: "cascade" }),
+  lecturerId: uuid("lecturer_id")
+    .notNull()
+    .references(() => lecturers.id, { onDelete: "cascade" }),
+  date: text("date").notNull(),
+  session: integer("session"),
+  reason: text("reason").notNull().default(""),
 });
 
 export type ExamTimetable = typeof examTimetables.$inferSelect;

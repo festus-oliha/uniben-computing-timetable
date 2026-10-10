@@ -28,4 +28,8 @@ Next.js 15 (App Router, server actions) · React 19 · TypeScript · Tailwind 4 
   An exam timetable has `dept = null` (Faculty-wide undergraduate) or a department (PT, M.Sc. …). Venues with
   `in_lecture_grid = false` are exam-only and never appear on the lecture grid. Venues are not clash-checked in exams
   (big halls hold several papers at once).
-- Upcoming modules: invigilation schedules (uses exam_papers.chief_id / invigilator_ids), PT and M.Sc. lecture timetables.
+- Invigilation: rules in `src/lib/invigilation.ts` (pure, tested); writes in `src/app/invigilation-actions.ts`.
+  The chief invigilator is ALWAYS chosen by the officer in charge — never auto-filled — and can never be a lecturer
+  of the paper's course. Suggestions fill empty assistant places only; never overwrite anyone assigned.
+  exam_papers.invigilator_ids holds assistants only (chief is chief_id). Only canManageExamTimetable may change it.
+- Upcoming modules: PT and M.Sc. lecture timetables (per department).

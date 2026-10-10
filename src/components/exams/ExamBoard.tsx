@@ -94,7 +94,7 @@ export function ExamBoard({ data, actor }: { data: ExamBoardData; actor: Actor }
           ? ["Y1", "Y2", "Y3", "Y4", "Y5", "Y6"].map((y) => [y, y])
           : [];
 
-  const blank = (date: string, session: number, label = ""): ExamPaperDTO => ({ id: "", date, session, label, kind: "paper", venues: [], year: null, note: "", chiefId: null, invigilatorIds: [] });
+  const blank = (date: string, session: number, label = ""): ExamPaperDTO => ({ id: "", date, session, label, kind: "paper", venues: [], year: null, note: "", chiefId: null, invigilatorIds: [], assistantsNeeded: null });
   const dragged = dragId ? papers.find((p) => p.id === dragId) : null;
   const errors = issues.filter((i) => i.severity === "error");
   const warnings = issues.filter((i) => i.severity === "warning");

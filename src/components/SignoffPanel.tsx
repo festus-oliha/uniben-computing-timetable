@@ -51,6 +51,8 @@ export function SignoffPanel(props: {
   onSave?: (s: Signoff) => Promise<ActionResult>;
   onClear?: () => Promise<ActionResult>;
   heading?: string;
+  /** Keeps element ids unique when two panels share a page. */
+  idPrefix?: string;
 }) {
   const { initial, semesterLabel, signatory } = props;
   const doSave = props.onSave ?? saveSignoff;
@@ -109,7 +111,7 @@ export function SignoffPanel(props: {
           <div>
             <label className="fld">
               <span>Signing date</span>
-              <input id="signed-on" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+              <input id={`${props.idPrefix ?? ""}signed-on`} type="date" value={date} onChange={(e) => setDate(e.target.value)} />
             </label>
 
             <div className="seg" role="tablist" aria-label="How to add the signature">
@@ -121,7 +123,7 @@ export function SignoffPanel(props: {
               </button>
             </div>
 
-            {mode === "draw" ? <DrawPad onDone={setImg} /> : <Upload onDone={setImg} />}
+            {mode === "draw" ? <DrawPad onDone={setImg} /> : <Upload idPrefix={props.idPrefix} onDone={setImg} />}
 
             <div className="actions" style={{ padding: 0 }}>
               <button type="button" className="btn primary" onClick={save} disabled={pending || !date}>
@@ -234,14 +236,14 @@ function DrawPad({ onDone }: { onDone: (img: Img) => void }) {
 }
 
 /** Upload a photo or scan of a signature (PNG or JPEG). Large images are scaled down before saving. */
-function Upload({ onDone }: { onDone: (img: Img) => void }) {
+function Upload({ onDone, idPrefix = "" }: { onDone: (img: Img) => void; idPrefix?: string }) {
   const [err, setErr] = useState<string | null>(null);
   return (
     <div className="pad-wrap">
       <label className="fld">
         <span>Signature image (PNG or JPEG)</span>
         <input
-          id="signature-file"
+          id={`${idPrefix}signature-file`}
           type="file"
           accept="image/png,image/jpeg"
           onChange={(e) => {

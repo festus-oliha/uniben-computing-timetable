@@ -43,6 +43,13 @@
       "when": 1791614768121,
       "tag": "0005_exams",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1791640308033,
+      "tag": "0006_invigilation",
+      "breakpoints": true
     }
   ]
 }

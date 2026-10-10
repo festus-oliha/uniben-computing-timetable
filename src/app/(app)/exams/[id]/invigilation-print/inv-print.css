@@ -1,0 +1,50 @@
+/* Invigilation schedule on paper — A4 landscape, always light. Mirrors the Word export. */
+@page xinv { size: A4 landscape; margin: 8mm 9mm; }
+.ip-root { --p-navy: #0b2545; --p-teal: #0e7c7b; --p-ink: #1e293b; --p-mute: #64748b; --p-line: #cbd5e1; color-scheme: light; font-family: Calibri, Carlito, "IBM Plex Sans", Arial, sans-serif; page: xinv; }
+.ip-root .print-toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 14px; }
+.ip-root .print-toolbar .btn { text-decoration: none; color: var(--ink); }
+.ip-root .print-toolbar .btn.primary { color: #fff; }
+.ip-sheet { background: #fff; color: var(--p-ink); max-width: 1120px; margin: 0 auto 18px; padding: 18px 22px; box-shadow: 0 2px 14px rgba(0,0,0,.12); overflow-x: auto; }
+.ip-title { display: grid; grid-template-columns: 56px 1fr 56px; gap: 10px; align-items: center; text-align: center; border-bottom: 2px solid var(--p-teal); padding-bottom: 5px; margin-bottom: 7px; }
+.ip-title img { width: 52px; }
+.ip-title h1 { margin: 0; font-size: 17px; color: var(--p-navy); letter-spacing: .04em; }
+.ip-title small { display: block; font-size: 9px; font-weight: 700; letter-spacing: .18em; color: var(--p-mute); }
+.ip-title p { margin: 3px 0 0; font-size: 11px; font-weight: 700; color: var(--p-teal); }
+.ip-grid { width: 100%; min-width: 860px; border-collapse: collapse; table-layout: fixed; font-size: 9.5px; }
+.ip-grid th { background: var(--p-navy); color: #fff; padding: 3px; border: 1px solid #3a5578; font-size: 9px; letter-spacing: .05em; }
+.ip-grid th small { display: block; font-weight: 500; color: #d5deea; }
+.ip-grid td { border: 1px solid var(--p-line); padding: 3px 5px; vertical-align: top; }
+.ip-grid td.d { background: #f5f7fa; vertical-align: middle; text-align: center; }
+.ip-grid td.d b { display: block; color: var(--p-navy); }
+.ip-grid td.d span { font-size: 9px; color: var(--p-mute); }
+.ip-grid .ln { display: block; margin-bottom: 3px; line-height: 1.3; }
+.ip-grid .pp { font-family: "IBM Plex Mono", Consolas, monospace; font-size: 9px; }
+.ip-grid .blk { display: block; text-align: center; font-weight: 700; letter-spacing: .3em; background: #fcefd2; color: #6e4300; }
+.ip-grid tr.wk td { background: var(--p-teal); color: #fff; font-weight: 700; letter-spacing: .2em; font-size: 9px; text-align: center; padding: 2px; }
+.ip-grid tr { break-inside: avoid; }
+.ip-foot { display: grid; grid-template-columns: 1.2fr 1fr 1.2fr 1.2fr; gap: 18px; font-size: 9px; margin-top: 10px; break-inside: avoid; }
+.ip-foot h2 { font-size: 9.5px; letter-spacing: .18em; color: var(--p-navy); border-bottom: 1px solid var(--p-teal); margin: 0 0 4px; padding-bottom: 2px; }
+.ip-foot ul { list-style: none; padding: 0; margin: 0; }
+.ip-foot ul.cols { columns: 2; }
+.ip-foot p { margin: 0 0 2px; }
+.ip-sign .signed, .ip-sign .for { color: var(--p-mute); font-style: italic; }
+.ip-sign .space { height: 24px; }
+.ip-sign .name { border-top: 1px solid var(--p-navy); padding-top: 3px; font-weight: 700; color: var(--p-navy); font-size: 10px; }
+.ip-duties { break-before: page; }
+.ip-duties h2 { font-size: 11px; letter-spacing: .2em; color: var(--p-navy); border-bottom: 1px solid var(--p-teal); margin: 0 0 6px; }
+.ip-duties table { width: 100%; border-collapse: collapse; font-size: 9px; }
+.ip-duties th { background: var(--p-navy); color: #fff; text-align: left; padding: 3px 5px; }
+.ip-duties td { border-bottom: 1px solid var(--p-line); padding: 3px 5px; vertical-align: top; }
+.ip-duties td small { display: block; color: var(--p-mute); }
+.ip-duties td.n { text-align: center; }
+.ip-duties tr { break-inside: avoid; }
+
+@media print {
+  html, body { background: #fff !important; }
+  .top, .tabs, .print-toolbar, .toast { display: none !important; }
+  main { padding: 0 !important; }
+  .ip-sheet { box-shadow: none; padding: 0; margin: 0; max-width: none; overflow: visible; }
+  .ip-grid { min-width: 0; }
+  .ip-grid thead { display: table-header-group; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

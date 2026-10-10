@@ -6,10 +6,14 @@ import { DAYS, SLOTS } from "./timetable";
 /** The kinds of change recorded on the History page, grouped for filtering. */
 export const AUDIT_GROUPS: Record<string, { label: string; actions: string[] }> = {
   timetable: { label: "Timetable", actions: ["booking.add", "booking.edit", "booking.move", "booking.delete"] },
-  courses: { label: "Courses & lecturers", actions: ["course.add", "course.edit", "course.delete", "lecturer.add", "lecturer.remove"] },
+  courses: { label: "Courses & lecturers", actions: ["course.add", "course.edit", "course.delete", "lecturer.add", "lecturer.edit", "lecturer.remove"] },
   exams: {
     label: "Examinations",
     actions: ["exam.create", "exam.setup", "exam.publish", "exam.delete", "exam.signoff", "exam.paper.add", "exam.paper.edit", "exam.paper.move", "exam.paper.delete"],
+  },
+  invigilation: {
+    label: "Invigilation",
+    actions: ["inv.assign", "inv.suggest", "inv.clear", "inv.replace", "inv.unavailable", "inv.settings", "inv.publish", "inv.signoff"],
   },
   signoff: { label: "Sign-off", actions: ["signoff.save", "signoff.clear"] },
   accounts: { label: "Accounts", actions: ["user.create", "user.update", "user.reset"] },

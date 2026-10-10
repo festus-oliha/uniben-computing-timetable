@@ -63,3 +63,12 @@
 .pv-links { margin: 12px 0 0; font-size: 13px; }
 .pv-links a { color: var(--teal); font-weight: 600; }
 .pv-day .t small { font-weight: 500; opacity: .85; }
+.pv-duties { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 8px; }
+.pv-duties li { display: grid; grid-template-columns: 11em 1fr; gap: 2px 12px; padding: 10px 12px; border-radius: 8px; background: var(--comp); color: var(--comp-ink); border-left: 4px solid var(--comp-bar); }
+.pv-duties li.chief { background: var(--gen); color: var(--gen-ink); border-left-color: var(--gen-bar); }
+.pv-duties .t { font-weight: 700; font-size: 13px; grid-row: span 3; }
+.pv-duties .t small { font-weight: 500; }
+.pv-duties .c b { font-family: var(--font-mono); font-size: 15px; }
+.pv-duties .c em { font-style: normal; font-size: 11px; font-weight: 700; margin-left: 8px; text-transform: uppercase; letter-spacing: .06em; }
+.pv-duties .v, .pv-duties .l { font-size: 13px; opacity: .9; }
+@media (max-width: 480px) { .pv-duties li { grid-template-columns: 1fr; } .pv-duties .t { grid-row: auto; } }

@@ -339,3 +339,40 @@ table.t input.seats-in { width: 84px; }
 .date-chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .date-chips span { display: inline-flex; gap: 6px; align-items: center; background: var(--soft); border-radius: 4px; padding: 3px 4px 3px 8px; font-size: 12px; font-variant-numeric: tabular-nums; }
 .date-chips button { border: 0; background: none; cursor: pointer; color: var(--mute); font-size: 15px; line-height: 1; }
+table.t input.pname { width: 130px; font-family: var(--font-mono); text-transform: uppercase; }
+.addrow textarea { background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 8px; width: 100%; }
+
+/* ---------- invigilation ---------- */
+.inv { all: unset; box-sizing: border-box; display: grid; gap: 1px; width: 100%; padding: 5px 7px; border-radius: 4px; border-left: 4px solid var(--comp-bar); background: var(--comp); color: var(--comp-ink); cursor: pointer; font-size: 12px; line-height: 1.3; }
+.inv:hover { filter: brightness(.97); }
+.inv:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+.inv .pp { font-family: var(--font-mono); font-weight: 700; }
+.inv .chief { font-weight: 800; letter-spacing: .02em; }
+.inv .chief::before { content: "Chief: "; font-weight: 500; opacity: .75; }
+.inv .chief.none { color: var(--warn); }
+.inv .chief.none::before { content: ""; }
+.inv .asst { font-size: 11px; }
+.inv .asst em { font-style: normal; font-weight: 700; opacity: .7; }
+.inv .asst em.short { color: var(--warn); opacity: 1; }
+.inv.clash { box-shadow: 0 0 0 2px var(--bad) inset; }
+.inv.warnc { box-shadow: 0 0 0 2px var(--warn) inset; }
+.inv.flash { animation: flash 1.2s ease 2; }
+.warn-t { color: var(--warn); }
+.bad-t { color: var(--bad); }
+.release { margin: -4px 0 12px; }
+table.duties { width: 100%; border-collapse: collapse; font-size: 12px; }
+table.duties th { text-align: left; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--mute); border-bottom: 1px solid var(--line); padding: 3px 4px; }
+table.duties td { padding: 3px 4px; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+table.duties td:first-child { font-family: var(--font-mono); font-weight: 600; }
+table.duties tr.zero td { color: var(--mute); }
+.people { display: flex; flex-wrap: wrap; gap: 4px; }
+.person { display: inline-flex; align-items: center; gap: 4px; font-family: var(--font-mono); font-weight: 600; font-size: 12px; background: var(--soft); border-radius: 4px; padding: 3px 4px 3px 8px; }
+.person.bad { background: var(--bad-soft); color: var(--bad); }
+.person.soft { background: var(--warn-soft); color: var(--warn); }
+.person button { border: 0; background: none; cursor: pointer; color: inherit; font-size: 15px; line-height: 1; }
+.inv-settings { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 0 16px; margin-top: 16px; align-items: start; }
+.pool { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px 16px; max-height: 320px; overflow: auto; }
+.pool > div { display: grid; gap: 4px; align-content: start; }
+.pool b { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--mute); }
+.offlist { list-style: none; padding: 0; margin: 0 0 12px; display: grid; gap: 4px; font-size: 13px; }
+.offlist .linkbtn { margin-left: 8px; }

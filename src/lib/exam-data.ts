@@ -1,7 +1,7 @@
 import "server-only";
 import { and, asc, eq } from "drizzle-orm";
 import { db } from "./db";
-import { bookings, courseLecturers, courses, examPapers, examTimetables, lecturers, semesters, venues } from "./db/schema";
+import { bookings, courseLecturers, courses, examPapers, examTimetables, examUnavailability, lecturers, semesters, venues } from "./db/schema";
 import type { ExamTimetable } from "./db/schema";
 import { codesOf } from "./timetable";
 import { PROGRAMME_ORDER, isProgramme } from "./programmes";
@@ -24,6 +24,11 @@ export function toExamDTO(t: ExamTimetable): ExamTimetableDTO {
     isPublished: t.isPublished,
     signedOn: t.signedOn,
     hasSignature: !!t.signatureImage,
+    invigilatorPool: t.invigilatorPool ?? null,
+    assistantsPerPaper: t.assistantsPerPaper,
+    maxDutiesPerDay: t.maxDutiesPerDay,
+    invigilationPublished: t.invigilationPublished,
+    invSignedOn: t.invSignedOn,
   };
 }
 
@@ -53,7 +58,7 @@ export function examSignoff(t: ExamTimetable): Signoff {
 export async function getExamBoard(id: number): Promise<ExamBoardData | null> {
   const t = await getExamRow(id);
   if (!t) return null;
-  const [semRows, paperRows, venueRows, courseRows, lecturerRows, links, lectureRows] = await Promise.all([
+  const [semRows, paperRows, venueRows, courseRows, lecturerRows, links, lectureRows, offRows] = await Promise.all([
     db.select().from(semesters).where(eq(semesters.id, t.semesterId)),
     db.select().from(examPapers).where(eq(examPapers.timetableId, id)),
     db.select().from(venues).orderBy(asc(venues.sortOrder), asc(venues.code)),
@@ -63,6 +68,7 @@ export async function getExamBoard(id: number): Promise<ExamBoardData | null> {
     t.programme === "ug"
       ? db.select({ label: bookings.label }).from(bookings).where(and(eq(bookings.semesterId, t.semesterId), eq(bookings.kind, "course")))
       : Promise.resolve([] as { label: string }[]),
+    db.select().from(examUnavailability).where(eq(examUnavailability.timetableId, id)),
   ]);
   const sem = semRows[0];
   const byCourse = new Map<string, string[]>();
@@ -82,8 +88,11 @@ export async function getExamBoard(id: number): Promise<ExamBoardData | null> {
       isCommon: c.isCommon,
       lecturerIds: byCourse.get(c.code) ?? [],
     })),
-    lecturers: lecturerRows.map((l) => ({ id: l.id, name: l.name, dept: l.dept })),
+    lecturers: lecturerRows.map((l) => ({ id: l.id, name: l.name, dept: l.dept, shortName: l.shortName })),
     taughtCodes: [...new Set(lectureRows.flatMap((b) => codesOf(b.label)))].sort(),
+    unavailable: offRows
+      .map((u) => ({ id: u.id, lecturerId: u.lecturerId, date: u.date, session: u.session, reason: u.reason }))
+      .sort((a, b) => a.date.localeCompare(b.date) || (a.session ?? -1) - (b.session ?? -1)),
   };
 }
 
@@ -99,6 +108,7 @@ export function toPaperDTO(p: typeof examPapers.$inferSelect): ExamPaperDTO {
     note: p.note,
     chiefId: p.chiefId,
     invigilatorIds: p.invigilatorIds,
+    assistantsNeeded: p.assistantsNeeded,
   };
 }
 
@@ -107,6 +117,24 @@ export function examContext(data: Pick<ExamBoardData, "courses" | "lecturers">) 
   const m = new Map<string, ExamCourseInfo>(data.courses.map((c) => [c.code, { level: c.level, dept: c.dept, isCommon: c.isCommon }]));
   const names = new Map(data.lecturers.map((l) => [l.id, l.name]));
   return { course: (c: string) => m.get(c), lecturerName: (id: string) => names.get(id) };
+}
+
+export { resolvePool } from "./invigilation";
+
+/** Published invigilation schedules (for the public look-up), newest semester first. */
+export async function getReleasedInvigilation() {
+  const rows = await db
+    .select({ t: examTimetables, s: semesters })
+    .from(examTimetables)
+    .innerJoin(semesters, eq(semesters.id, examTimetables.semesterId))
+    .where(eq(examTimetables.invigilationPublished, true));
+  return rows
+    .sort((a, b) => Number(b.s.isCurrent) - Number(a.s.isCurrent) || b.s.id - a.s.id || order(a.t) - order(b.t))
+    .map((r) => ({ ...toExamDTO(r.t), semesterLabel: `${r.s.session} ${r.s.name}` }));
+}
+
+export function invigilationSignoff(t: ExamTimetable): Signoff {
+  return { signedOn: t.invSignedOn, image: t.invSignatureImage, width: t.invSignatureWidth, height: t.invSignatureHeight };
 }
 
 export const examIssuesFor = (data: ExamBoardData) => examIssues(data.papers, examContext(data));

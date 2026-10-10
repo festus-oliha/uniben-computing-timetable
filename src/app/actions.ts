@@ -19,6 +19,8 @@ import {
 } from "@/lib/permissions";
 import type { ActionResult } from "@/lib/types";
 import { logChange, slotText } from "@/lib/audit";
+import { forgetInvigilator } from "@/lib/invigilation-db";
+import { printName } from "@/lib/invigilation";
 import { KIND_LABELS, levelName } from "@/lib/timetable";
 
 const KINDS: Kind[] = ["course", "activity", "pt", "shared"];
@@ -263,12 +265,45 @@ export async function addLecturer(name: string, dept: string): Promise<ActionRes
   });
 }
 
+/** Adds several lecturers at once — one name per line (pasted from a staff list). Names already listed are skipped. */
+export async function addLecturers(text: string, dept: string): Promise<ActionResult> {
+  return guard(async (me) => {
+    const d = me.role === "dept_officer" ? me.dept : dept || null;
+    if (!canManageLecturer(me, { dept: d })) return fail(outsideDeptMessage(me));
+    const names = [...new Set(text.split(/\r?\n/).map((n) => n.replace(/^\s*\d+[.)]\s*/, "").trim()).filter(Boolean))];
+    if (!names.length) return fail("Paste or type the names, one per line.");
+    if (names.length > 200) return fail("Add at most 200 names at a time.");
+    if (names.some((n) => n.length > 120)) return fail("One of the lines is too long to be a name.");
+    const existing = new Set((await db.select({ name: lecturers.name }).from(lecturers)).map((l) => l.name.toLowerCase()));
+    const fresh = names.filter((n) => !existing.has(n.toLowerCase()));
+    if (fresh.length) await db.insert(lecturers).values(fresh.map((name) => ({ name, dept: d })));
+    if (fresh.length) await logChange(me, "lecturer.add", `Added ${fresh.length} lecturers${d ? ` (${d})` : ""}: ${fresh.join(", ")}.`);
+    const skipped = names.length - fresh.length;
+    return done(`${fresh.length} added${skipped ? `; ${skipped} already on the list` : ""}.`);
+  });
+}
+
+/** How a lecturer's name prints on invigilation schedules, e.g. "EGWALI". Empty = surname in capitals. */
+export async function saveLecturerPrintName(id: string, shortName: string): Promise<ActionResult> {
+  return guard(async (me) => {
+    const [l] = await db.select().from(lecturers).where(eq(lecturers.id, id));
+    if (!l) return fail("That lecturer is no longer on the list.");
+    if (!canManageLecturer(me, l)) return fail(outsideDeptMessage(me));
+    const v = shortName.trim().toUpperCase().slice(0, 40) || null;
+    if ((l.shortName ?? null) === v) return done();
+    await db.update(lecturers).set({ shortName: v }).where(eq(lecturers.id, id));
+    await logChange(me, "lecturer.edit", `${l.name} now prints as ${v ?? printName({ name: l.name })} on invigilation schedules.`);
+    return done("Print name saved.");
+  });
+}
+
 export async function deleteLecturer(id: string): Promise<ActionResult> {
   return guard(async (me) => {
     const [l] = await db.select().from(lecturers).where(eq(lecturers.id, id));
     if (!l) return done("Lecturer removed.");
     if (!canManageLecturer(me, l)) return fail(outsideDeptMessage(me));
-    await db.delete(lecturers).where(eq(lecturers.id, id)); // course links cascade
+    await forgetInvigilator(id);
+    await db.delete(lecturers).where(eq(lecturers.id, id)); // course links, chief places and unavailability clear via foreign keys
     await logChange(me, "lecturer.remove", `Removed lecturer ${l.name}.`);
     return done("Lecturer removed.");
   });

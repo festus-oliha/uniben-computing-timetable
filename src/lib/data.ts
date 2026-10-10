@@ -52,7 +52,7 @@ export async function getTimetableData(semesterId?: number): Promise<TimetableDa
       isCommon: c.isCommon,
       lecturerIds: byCourse.get(c.code) ?? [],
     })),
-    lecturers: lecturerRows.map((l) => ({ id: l.id, name: l.name, dept: l.dept })),
+    lecturers: lecturerRows.map((l) => ({ id: l.id, name: l.name, dept: l.dept, shortName: l.shortName })),
   };
 }
 

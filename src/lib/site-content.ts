@@ -76,6 +76,6 @@ export const PROGRAMMES: ProgrammeSection[] = [
     id: "invigilation",
     title: "Invigilation",
     subtitle: "For invigilators and examination officers",
-    schedules: [{ label: "Invigilation schedule", hint: "Who invigilates which examination, when and where", status: "soon", staffOnly: true }],
+    schedules: [{ label: "Invigilation schedule", hint: "Look up your invigilation duties by name", href: "/view/invigilation", status: "live", staffOnly: true }],
   },
 ];
