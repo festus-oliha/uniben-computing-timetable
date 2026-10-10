@@ -4,6 +4,7 @@ import { db } from "./db";
 import { bookings, courseLecturers, courses, lecturers, semesters, venues } from "./db/schema";
 import { findClashes, type CourseInfo } from "./clash";
 import type { TimetableData } from "./types";
+import { EMPTY_SIGNOFF, type Signoff } from "./signoff";
 
 /** The semester marked current, or the most recent one. */
 export async function getCurrentSemester() {
@@ -51,6 +52,13 @@ export async function getTimetableData(): Promise<TimetableData> {
     })),
     lecturers: lecturerRows.map((l) => ({ id: l.id, name: l.name, dept: l.dept })),
   };
+}
+
+/** The current semester's sign-off (signature + signing date). Kept out of getTimetableData so the image isn't sent to every page. */
+export async function getSignoff(): Promise<Signoff> {
+  const sem = await getCurrentSemester();
+  if (!sem) return EMPTY_SIGNOFF;
+  return { signedOn: sem.signedOn, image: sem.signatureImage, width: sem.signatureWidth, height: sem.signatureHeight };
 }
 
 /** Builds the lookup the clash engine needs from loaded data. */

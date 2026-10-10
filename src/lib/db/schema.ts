@@ -16,6 +16,13 @@ export const semesters = pgTable("semesters", {
   session: text("session").notNull(), // "2026/2027"
   name: text("name").notNull(), // "First Semester"
   isCurrent: boolean("is_current").notNull().default(false),
+  /** Sign-off by the Faculty Time-Table Officer: the date printed after "Signed" (YYYY-MM-DD). */
+  signedOn: text("signed_on"),
+  /** The signature as a PNG/JPEG data URL (drawn on screen or uploaded), with its pixel size. */
+  signatureImage: text("signature_image"),
+  signatureWidth: integer("signature_width"),
+  signatureHeight: integer("signature_height"),
+  signatureUpdatedAt: timestamp("signature_updated_at", { withTimezone: true }),
 });
 
 /** Lecture halls and labs: T, W, E, P1, P2, P4 … */

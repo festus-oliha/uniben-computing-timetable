@@ -1,12 +1,12 @@
-import { getTimetableData } from "@/lib/data";
+import { getSignoff, getTimetableData } from "@/lib/data";
 import { buildTimetableDocx } from "@/lib/export/docx";
 
 export const dynamic = "force-dynamic";
 
 /** GET /export/docx — the official timetable as a Word file, built from the current data. */
 export async function GET() {
-  const data = await getTimetableData();
-  const buf = await buildTimetableDocx(data);
+  const [data, signoff] = await Promise.all([getTimetableData(), getSignoff()]);
+  const buf = await buildTimetableDocx(data, signoff);
   const name = data.semester
     ? `Faculty_of_Computing_${data.semester.name.replace(/\s+/g, "_")}_Timetable_${data.semester.session.replace("/", "-")}.docx`
     : "Faculty_of_Computing_Timetable.docx";

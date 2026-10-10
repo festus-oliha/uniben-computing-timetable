@@ -8,6 +8,7 @@ const TABS = [
   { href: "/courses", label: "Courses" },
   { href: "/lecturers", label: "Lecturers" },
   { href: "/clashes", label: "Clashes" },
+  { href: "/sign", label: "Sign-off" },
 ];
 
 export function Nav({ clashCount }: { clashCount: number }) {

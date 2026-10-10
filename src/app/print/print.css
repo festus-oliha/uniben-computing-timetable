@@ -70,7 +70,9 @@
 .dist .cc { font-weight: 700; margin-bottom: 2px; }
 .sign { margin-top: 10px; }
 .sign .signed, .sign .for { color: var(--p-mute); font-style: italic; }
-.sign .name { margin-top: 22px; padding-top: 4px; border-top: 1px solid var(--p-navy); width: 220px; font-weight: 700; color: var(--p-navy); font-size: 10px; }
+.sign .sig { display: block; margin-top: 4px; }
+.sign .sig-space { height: 22px; }
+.sign .name { margin-top: 0; padding-top: 4px; border-top: 1px solid var(--p-navy); width: 220px; font-weight: 700; color: var(--p-navy); font-size: 10px; }
 
 @media print {
   html, body { background: #fff !important; }

@@ -220,3 +220,25 @@ table.t input.units { width: 60px; }
 .exports { display: flex; gap: 8px; }
 .exports .btn, .print-toolbar .btn { text-decoration: none; color: var(--ink); font-size: 13px; padding: 6px 12px; }
 .print-toolbar .btn.primary { color: #fff; }
+
+/* ---------- sign-off ---------- */
+.signoff .status { font-weight: 600; padding: 8px 12px; border-radius: 6px; display: inline-block; margin: 4px 0 14px; }
+.signoff .status.on { background: color-mix(in srgb, var(--ok) 14%, transparent); color: var(--ok); }
+.signoff .status.off { background: var(--warn-soft); color: var(--warn); }
+.sign-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+@media (max-width: 860px) { .sign-grid { grid-template-columns: minmax(0, 1fr); } }
+.sign-grid .fld { margin-bottom: 12px; max-width: 260px; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; margin-bottom: 10px; }
+.seg button { background: var(--panel); border: 0; padding: 7px 14px; font-weight: 600; cursor: pointer; color: var(--mute); }
+.seg button[aria-selected="true"] { background: var(--teal); color: #fff; }
+.pad-wrap { margin-bottom: 12px; }
+.pad-wrap .fld { max-width: none; }
+.pad { width: 100%; max-width: 600px; aspect-ratio: 3 / 1; background: #fff; border: 2px dashed var(--line); border-radius: 8px; touch-action: none; cursor: crosshair; display: block; }
+.pad-foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; max-width: 600px; margin-top: 6px; flex-wrap: wrap; }
+.fld-label { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--mute); display: block; margin-bottom: 6px; }
+.sign-preview { background: #fff; color: #1e293b; border: 1px solid var(--line); border-radius: 8px; padding: 16px 18px; font-family: Calibri, Carlito, Arial, sans-serif; font-size: 13px; }
+.sign-preview p { margin: 0 0 2px; }
+.sign-preview .signed { color: #64748b; font-style: italic; margin-bottom: 6px; }
+.sign-preview .sig-box { height: 64px; display: flex; align-items: flex-end; }
+.sign-preview .sig-box img { max-height: 60px; max-width: 200px; }
+.sign-preview .name { border-top: 1px solid #0b2545; width: 240px; padding-top: 4px; margin-top: 2px; font-weight: 700; color: #0b2545; }

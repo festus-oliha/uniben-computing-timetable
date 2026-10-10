@@ -3,8 +3,10 @@
 import { revalidatePath } from "next/cache";
 import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { bookings, courseLecturers, courses, lecturers, venues } from "@/lib/db/schema";
+import { bookings, courseLecturers, courses, lecturers, semesters, venues } from "@/lib/db/schema";
 import { codesOf, fitsInBlock, isCourseCode, levelOf, prefixOf, type Kind } from "@/lib/timetable";
+import { validateSignoff, type Signoff } from "@/lib/signoff";
+import { getCurrentSemester } from "@/lib/data";
 import type { ActionResult } from "@/lib/types";
 
 const KINDS: Kind[] = ["course", "activity", "pt", "shared"];
@@ -164,5 +166,42 @@ export async function deleteLecturer(id: string): Promise<ActionResult> {
   return guard(async () => {
     await db.delete(lecturers).where(eq(lecturers.id, id)); // course links cascade
     return done("Lecturer removed.");
+  });
+}
+
+/**
+ * Saves the Faculty Time-Table Officer's sign-off for the current semester.
+ * The signing date and signature are printed on the Word and PDF exports.
+ * (Once logins exist, this will be limited to the Faculty Time-Table Officer.)
+ */
+export async function saveSignoff(input: Signoff): Promise<ActionResult> {
+  return guard(async () => {
+    const bad = validateSignoff(input);
+    if (bad) return fail(bad);
+    const sem = await getCurrentSemester();
+    if (!sem) return fail("No semester has been set up yet.");
+    await db
+      .update(semesters)
+      .set({
+        signedOn: input.signedOn,
+        signatureImage: input.image,
+        signatureWidth: input.image ? input.width : null,
+        signatureHeight: input.image ? input.height : null,
+        signatureUpdatedAt: new Date(),
+      })
+      .where(eq(semesters.id, sem.id));
+    return done(input.image ? "Signature and date saved." : "Signing date saved.");
+  });
+}
+
+export async function clearSignoff(): Promise<ActionResult> {
+  return guard(async () => {
+    const sem = await getCurrentSemester();
+    if (!sem) return fail("No semester has been set up yet.");
+    await db
+      .update(semesters)
+      .set({ signedOn: null, signatureImage: null, signatureWidth: null, signatureHeight: null, signatureUpdatedAt: new Date() })
+      .where(eq(semesters.id, sem.id));
+    return done("Sign-off removed. Exports now show a blank signature line.");
   });
 }

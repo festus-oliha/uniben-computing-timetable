@@ -25,7 +25,8 @@ import { DAYS } from "../timetable";
 import type { Category } from "../timetable";
 import type { TimetableData } from "../types";
 import { CREST_PNG_BASE64 } from "./crest";
-import { DOCUMENT_TEXT as T, signedDate } from "./document-text";
+import { DOCUMENT_TEXT as T } from "./document-text";
+import { EMPTY_SIGNOFF, fitSignature, formatSignedDate, imageTypeOf, type Signoff } from "../signoff";
 import { printLayout, type PrintCell } from "./layout";
 
 /* Official timetable as a Word document: A4 landscape, timetable + key on page 1,
@@ -369,16 +370,43 @@ function distribution() {
   });
 }
 
-function signature(date: string) {
+/** "Signed (date)", the signature image if there is one (or room to sign by hand), then the signatory. */
+function signature(signoff: Signoff) {
+  const date = formatSignedDate(signoff.signedOn) ?? "____/____/______";
+  const sig: Paragraph[] = [];
+  if (signoff.image && signoff.width && signoff.height) {
+    const size = fitSignature(signoff.width, signoff.height, 180, 60);
+    sig.push(
+      new Paragraph({
+        keepNext: true,
+        spacing: { before: 60, after: 0 },
+        children: [
+          new ImageRun({
+            type: imageTypeOf(signoff.image),
+            data: Buffer.from(signoff.image.slice(signoff.image.indexOf(",") + 1), "base64"),
+            transformation: size,
+            altText: { title: "Signature", description: `Signature of ${T.signatory.name}`, name: "signature" },
+          }),
+        ],
+      }),
+    );
+  }
   return [
     new Paragraph({ keepNext: true, spacing: { before: 160, after: 0 }, children: [R(`Signed (${date})`, { size: 17, italics: true, color: C.mute })] }),
-    new Paragraph({ keepNext: true, spacing: { before: 300, after: 40 }, border: { top: { style: BorderStyle.SINGLE, size: 6, color: C.navy, space: 4 } }, indent: { right: 11500 }, children: [R(T.signatory.name, { size: 20, bold: true, color: C.navy })] }),
+    ...sig,
+    new Paragraph({
+      keepNext: true,
+      spacing: { before: sig.length ? 20 : 300, after: 40 },
+      border: { top: { style: BorderStyle.SINGLE, size: 6, color: C.navy, space: 4 } },
+      indent: { right: 11500 },
+      children: [R(T.signatory.name, { size: 20, bold: true, color: C.navy })],
+    }),
     Tx([R(T.signatory.role, { size: 17 })], { after: 0, keepNext: true }),
     Tx([R(T.signatory.forWhom, { size: 17, italics: true, color: C.mute })]),
   ];
 }
 
-export async function buildTimetableDocx(data: TimetableData, opts: { date?: Date } = {}): Promise<Buffer> {
+export async function buildTimetableDocx(data: TimetableData, signoff: Signoff = EMPTY_SIGNOFF): Promise<Buffer> {
   const sessionLabel = data.semester ? `${data.semester.name} Lecture Time-Table ${data.semester.session}` : "Lecture Time-Table";
   const footer = new Footer({
     children: [
@@ -424,7 +452,7 @@ export async function buildTimetableDocx(data: TimetableData, opts: { date?: Dat
           notesAndKey(data),
           H("DISTRIBUTION"),
           distribution(),
-          ...signature(signedDate(opts.date)),
+          ...signature(signoff),
         ],
       },
     ],

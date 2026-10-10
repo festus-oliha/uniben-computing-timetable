@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { getTimetableData } from "@/lib/data";
+import { getSignoff, getTimetableData } from "@/lib/data";
 import { printLayout, type PrintCell } from "@/lib/export/layout";
 import { CREST_PNG_BASE64 } from "@/lib/export/crest";
-import { DOCUMENT_TEXT as T, signedDate } from "@/lib/export/document-text";
+import { DOCUMENT_TEXT as T } from "@/lib/export/document-text";
+import { fitSignature, formatSignedDate } from "@/lib/signoff";
 import { DAYS, SLOTS } from "@/lib/timetable";
 import { PrintButton } from "@/components/PrintButton";
 import "./print.css";
@@ -11,7 +12,8 @@ export const metadata = { title: "Print timetable — Faculty of Computing" };
 
 /** The official timetable laid out for paper (A4 landscape). Use the browser's print dialog → "Save as PDF". */
 export default async function PrintPage() {
-  const data = await getTimetableData();
+  const [data, signoff] = await Promise.all([getTimetableData(), getSignoff()]);
+  const sigSize = signoff.image && signoff.width && signoff.height ? fitSignature(signoff.width, signoff.height, 180, 60) : null;
   const venues = printLayout(data);
 
   const rowCells = (cells: PrintCell[], lo: number, hi: number, first: boolean) => {
@@ -182,7 +184,13 @@ export default async function PrintPage() {
         </div>
 
         <div className="sign">
-          <p className="signed">Signed ({signedDate()})</p>
+          <p className="signed">Signed ({formatSignedDate(signoff.signedOn) ?? "____/____/______"})</p>
+          {signoff.image && sigSize ? (
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img className="sig" src={signoff.image} alt={`Signature of ${T.signatory.name}`} width={sigSize.width} height={sigSize.height} />
+          ) : (
+            <div className="sig-space" />
+          )}
           <p className="name">{T.signatory.name}</p>
           <p>{T.signatory.role}</p>
           <p className="for">{T.signatory.forWhom}</p>

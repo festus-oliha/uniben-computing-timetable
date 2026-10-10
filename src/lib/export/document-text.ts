@@ -44,9 +44,3 @@ export const DOCUMENT_TEXT = {
     forWhom: "For: Dean, Faculty of Computing.",
   },
 } as const;
-
-/** "10/10/2026" — the date printed after "Signed". */
-export function signedDate(d = new Date()) {
-  const p = (n: number) => String(n).padStart(2, "0");
-  return `${p(d.getDate())}/${p(d.getMonth() + 1)}/${d.getFullYear()}`;
-}

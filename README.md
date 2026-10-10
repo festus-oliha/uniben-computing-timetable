@@ -14,6 +14,8 @@ Officers drag courses around a venue × day grid, and the app flags clashes as t
 - **Lecturers** — the teaching staff list, with each person's courses and weekly hours.
 - **Exports** — *Download Word* gives the official timetable as a `.docx` (A4 landscape, 2 pages, faculty design);
   *Print / PDF* opens the same layout for printing or "Save as PDF". Other faculties' bookings print as blanks.
+- **Sign-off** — the Faculty Time-Table Officer sets the signing date and adds a signature (drawn on screen or
+  uploaded as a scan). Both print on the exports; until it's signed, exports show a blank date and signature line.
 - Loaded with the **2026/2027 First Semester** timetable.
 
 ---
@@ -47,6 +49,7 @@ Open **http://localhost:3000** in your browser. Stop the app with `Ctrl + C` in 
 ```bash
 git pull             # get the latest changes
 npm install          # only needed if package.json changed
+npm run db:migrate   # only needed if a new file appeared in drizzle/ (safe to run any time)
 npm run dev          # start the app at http://localhost:3000
 ```
 
@@ -115,11 +118,13 @@ src/
     clashes/            Full clash list
     print/              Paper layout for Print / Save as PDF
     export/docx/        Word download (GET /export/docx)
+    sign/               Sign-off: signing date + drawn or uploaded signature
     actions.ts          All saves/moves/deletes (server actions, validated on the server)
   components/           Screen pieces: TimetableBoard (grid + drag-and-drop), BookingDrawer, tables …
   lib/
     clash.ts            ★ The clash engine — pure functions, no database
     clash.test.ts       Tests for the clash engine
+    signoff.ts          Sign-off rules (date format, image checks, print sizing) + tests
     timetable.ts        Days, time slots, departments, colour rules
     export/             Word builder, print layout, and the fixed wording on page 2
                         (notes, distribution list, signatory → export/document-text.ts)
@@ -135,15 +140,15 @@ scripts/                migrate and seed commands
 **Slots** are numbered 0–9: `0` = 8–9 a.m. … `5` = 1–2 p.m., `6` = 2:30–3:30 … `9` = 5:30–6:30.
 **Days** are 0 (Monday) – 4 (Friday). A booking never crosses the 2:00–2:30 break.
 
-**Changing the printed notes, distribution list or signatory:** edit `src/lib/export/document-text.ts`.
-The "Signed" date is the day the file is exported.
+**Changing the printed notes, distribution list or signatory name:** edit `src/lib/export/document-text.ts`.
+The "Signed" date and signature come from the **Sign-off** tab (stored per semester), not the export date.
 
 **Changing the clash rules:** edit `src/lib/clash.ts`, add a test in `src/lib/clash.test.ts`, run `npm test`.
 
 ## 6. Roadmap
 
 1. ✅ Timetable grid, drag-and-drop, clash checks, courses, lecturers
-2. ✅ Word/PDF export in the official faculty timetable design
+2. ✅ Word/PDF export in the official faculty timetable design, with online sign-off
 3. Logins with roles — Faculty Officer (everything), Department Officer (own department), Viewer
 4. Public read-only view for students and lecturers, filtered by level, department or lecturer
 5. Change history, and "copy this semester" to start the next one

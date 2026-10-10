@@ -16,3 +16,4 @@ Next.js 15 (App Router, server actions) · React 19 · TypeScript · Tailwind 4 
 - Schema change → edit `src/lib/db/schema.ts`, run `npm run db:generate`, commit the new file in `drizzle/`.
 - Netlify builds are usually paused to save credits; GitHub Actions runs checks for free. Work on localhost.
 - Before committing: `npm run check` and `npm run build`.
+- The printed "Signed" date and signature come from the semester's sign-off (Sign-off tab), never the export date.
