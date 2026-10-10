@@ -13,6 +13,9 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
     <AuthShell title="Timetable sign in">
       <LoginForm next={next ?? "/"} />
       <p className="hint">No account yet? Ask the Faculty Time-Table Officer to create one for you.</p>
+      <p className="hint">
+        Students and lecturers: <a href="/view">see the published timetable</a> — no sign-in needed.
+      </p>
     </AuthShell>
   );
 }

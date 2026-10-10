@@ -15,8 +15,10 @@ export async function getCurrentSemester() {
 }
 
 /** Everything the screens need for one semester, in plain objects. */
-export async function getTimetableData(): Promise<TimetableData> {
-  const semester = await getCurrentSemester();
+export async function getTimetableData(semesterId?: number): Promise<TimetableData> {
+  const semester = semesterId
+    ? ((await db.select().from(semesters).where(eq(semesters.id, semesterId)))[0] ?? null)
+    : await getCurrentSemester();
   const [venueRows, bookingRows, courseRows, lecturerRows, links] = await Promise.all([
     db.select().from(venues).orderBy(asc(venues.sortOrder), asc(venues.code)),
     semester ? db.select().from(bookings).where(eq(bookings.semesterId, semester.id)) : Promise.resolve([]),
@@ -52,6 +54,12 @@ export async function getTimetableData(): Promise<TimetableData> {
     })),
     lecturers: lecturerRows.map((l) => ({ id: l.id, name: l.name, dept: l.dept })),
   };
+}
+
+/** Semesters shown on the public page: the current one first if published, then others newest first. */
+export async function getPublishedSemesters() {
+  const rows = await db.select().from(semesters).where(eq(semesters.isPublished, true)).orderBy(desc(semesters.publishedAt));
+  return rows.sort((a, b) => Number(b.isCurrent) - Number(a.isCurrent));
 }
 
 /** The current semester's sign-off (signature + signing date). Kept out of getTimetableData so the image isn't sent to every page. */

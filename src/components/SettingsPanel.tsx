@@ -61,7 +61,10 @@ export function SettingsPanel({ semesters, venues }: { semesters: SemesterRow[];
         <h2>Semesters</h2>
         <p className="hint">
           The <b>current</b> semester is the one everyone sees and edits in the app. <b>Published</b> semesters appear on the
-          public timetable page for students and lecturers.
+          public timetable page for students and lecturers.{" "}
+          <a href="/view" target="_blank" rel="noreferrer">
+            Open the public timetable page ↗
+          </a>
         </p>
         <div className="tblwrap">
           <table className="t">

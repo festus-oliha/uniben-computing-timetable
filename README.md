@@ -18,6 +18,9 @@ Officers drag courses around a venue × day grid, and the app flags clashes as t
   (their own department's course lectures, courses and lecturers), *Viewer* (look and export only).
 - **Settings** (Faculty Officer) — start the next semester (copy everything, only fixed periods, or nothing),
   choose the current semester, publish a semester to the public page, and add or edit venues.
+- **Public timetable** (`/view`, no sign-in) — students pick level + department and see their week (their courses
+  plus the level's common courses) as a phone-friendly list; lecturers by name; or by venue. Only semesters the
+  Faculty Officer has **published** appear. Links are shareable, e.g. `/view?by=class&level=4&dept=CSC`.
 - **History** — every change (moves, edits, deletions, courses, lecturers, sign-off, accounts) with who and when.
 - **Sign-off** — the Faculty Time-Table Officer sets the signing date and adds a signature (drawn on screen or
   uploaded as a scan). Both print on the exports; until it's signed, exports show a blank date and signature line.
@@ -133,12 +136,15 @@ src/
     clashes/            Full clash list
     print/              Paper layout for Print / Save as PDF
     export/docx/        Word download (GET /export/docx)
+    view/               Public timetable (no sign-in) — only published semesters
     sign/               Sign-off: signing date + drawn or uploaded signature
     actions.ts          All saves/moves/deletes (server actions, validated on the server)
   components/           Screen pieces: TimetableBoard (grid + drag-and-drop), BookingDrawer, tables …
   lib/
     clash.ts            ★ The clash engine — pure functions, no database
     clash.test.ts       Tests for the clash engine
+    public-view.ts      Which lectures a class / lecturer / venue sees on the public page + tests
+    semester.ts         Session format, next-semester suggestion, copy options + tests
     signoff.ts          Sign-off rules (date format, image checks, print sizing) + tests
     timetable.ts        Days, time slots, departments, colour rules
     export/             Word builder, print layout, and the fixed wording on page 2
@@ -171,4 +177,4 @@ The "Signed" date and signature come from the **Sign-off** tab (stored per semes
 3. ✅ Logins with roles — Faculty Officer (everything), Department Officer (own department), Viewer
 4. ✅ Change history
 5. ✅ Settings: start the next semester, publish, venues
-6. Public read-only view for students and lecturers, filtered by level, department or lecturer
+6. ✅ Public read-only view for students and lecturers, filtered by level, department, lecturer or venue
