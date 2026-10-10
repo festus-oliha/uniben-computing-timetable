@@ -1,2 +1,140 @@
-# uniben-computing-timetable
-Faculty of Computing Timetable App
+# Faculty of Computing Timetable — University of Benin
+
+A web app for building and checking the Faculty of Computing lecture timetable.
+Officers drag courses around a venue × day grid, and the app flags clashes as they happen.
+
+**What it does today**
+
+- **Timetable** — the full grid (venues T, W, E, P1, P2, P4 × Monday–Friday, 8 a.m.–6:30 p.m.),
+  colour-coded like the printed timetable. Drag a course to move it, click it to edit, click an empty slot to add one.
+  Other faculties' bookings in shared halls show as grey striped blocks so nobody books over them.
+- **Clash checks** — venue double-bookings, student clashes (same level and department, or a common course),
+  lecturer double-bookings, and lectures running into Friday Jumat (1–2 p.m.).
+- **Courses** — level, department, units, "common to all departments", and the lecturer for each course.
+- **Lecturers** — the teaching staff list, with each person's courses and weekly hours.
+- Loaded with the **2026/2027 First Semester** timetable.
+
+---
+
+## 1. Run it on your computer (first time)
+
+You need **Node.js 20 or newer** and **Git**. Check with `node -v` and `git --version`.
+
+```bash
+# 1. Get the code
+git clone https://github.com/festus-oliha/uniben-computing-timetable.git
+cd uniben-computing-timetable
+
+# 2. Open it in VS Code
+code .
+
+# 3. In the VS Code terminal (Terminal → New Terminal):
+npm install          # downloads the libraries (one time, ~1 minute)
+npm run db:setup     # creates the local database and loads the 2026/2027 timetable
+npm run dev          # starts the app
+```
+
+Open **http://localhost:3000** in your browser. Stop the app with `Ctrl + C` in the terminal.
+
+> **No database setup needed for local work.** When `DATABASE_URL` is empty the app uses a built-in
+> Postgres database stored in the `.data/` folder on your computer. Delete that folder and run
+> `npm run db:setup` again to start fresh.
+
+## 2. Everyday work
+
+```bash
+git pull             # get the latest changes
+npm install          # only needed if package.json changed
+npm run dev          # start the app at http://localhost:3000
+```
+
+| Command | What it does |
+|---|---|
+| `npm run dev` | Runs the app locally with live reload |
+| `npm test` | Runs the clash-engine tests |
+| `npm run typecheck` | Checks the TypeScript for mistakes |
+| `npm run check` | Both of the above — run before pushing |
+| `npm run build` | Builds the production version (what Netlify runs) |
+| `npm run db:setup` | Creates tables and loads the timetable (safe to re-run) |
+| `npm run db:seed -- --reset` | Puts the 2026/2027 timetable back to the original, discarding moves |
+| `npm run db:generate` | After changing `src/lib/db/schema.ts`, writes a new migration into `drizzle/` |
+
+Every push to GitHub runs the tests and a build on **GitHub Actions** (free, separate from Netlify credits).
+
+## 3. Using Supabase instead of the local database
+
+Use this when you're ready to deploy, or when several people need to share one database.
+
+1. Create a free project at **supabase.com** (choose a region close to Nigeria, e.g. Europe West).
+2. In the project: **Project Settings → Database → Connection string → "Transaction pooler"**. Copy the URI
+   (port **6543**) and put your database password into it.
+3. Copy `.env.example` to `.env.local` and paste it in:
+   ```
+   DATABASE_URL=postgresql://postgres.xxxx:YOUR-PASSWORD@aws-0-eu-west-2.pooler.supabase.com:6543/postgres
+   ```
+4. Run `npm run db:setup` once to create the tables and load the timetable in Supabase.
+5. `npm run dev` now reads and writes Supabase.
+
+`.env.local` is in `.gitignore` — passwords never go to GitHub.
+
+## 4. Deploying to Netlify (and keeping credits under control)
+
+**First deploy (once):**
+
+1. On **app.netlify.com**: **Add new site → Import an existing project → GitHub** → pick this repository.
+   Netlify reads `netlify.toml`, so leave the build settings as they are.
+2. Before deploying, open **Site configuration → Environment variables** and add:
+   - `DATABASE_URL` — your Supabase transaction-pooler URI (step 3 above)
+   - `SITE_PASSWORD` — a password officers will type to open the site (**required**: until proper logins
+     are built, this is what stops strangers from editing the timetable)
+3. Deploy, open the site, and check it loads.
+
+**Then pause automatic builds** so pushes to GitHub don't use credits:
+**Site configuration → Build & deploy → Continuous deployment → Build settings → Configure → Stop builds**.
+
+**When a batch of changes is ready to go live**, either:
+- turn builds back on (**Activate builds**), let one deploy run, then stop them again; or
+- deploy from your computer without touching the setting:
+  ```bash
+  npm install -g netlify-cli
+  netlify login
+  netlify link          # once, pick this site
+  netlify deploy --build --prod
+  ```
+
+## 5. How the code is organised
+
+```
+src/
+  app/                  Pages (Next.js App Router)
+    page.tsx            Timetable grid
+    courses/            Courses tab
+    lecturers/          Lecturers tab
+    clashes/            Full clash list
+    actions.ts          All saves/moves/deletes (server actions, validated on the server)
+  components/           Screen pieces: TimetableBoard (grid + drag-and-drop), BookingDrawer, tables …
+  lib/
+    clash.ts            ★ The clash engine — pure functions, no database
+    clash.test.ts       Tests for the clash engine
+    timetable.ts        Days, time slots, departments, colour rules
+    data.ts             Database reads for the pages
+    db/schema.ts        Database tables
+    db/client.ts        Picks Supabase (DATABASE_URL) or the local database
+  middleware.ts         SITE_PASSWORD protection
+drizzle/                SQL migrations (generated — don't edit by hand)
+seed/                   The 2026/2027 First Semester timetable as data
+scripts/                migrate and seed commands
+```
+
+**Slots** are numbered 0–9: `0` = 8–9 a.m. … `5` = 1–2 p.m., `6` = 2:30–3:30 … `9` = 5:30–6:30.
+**Days** are 0 (Monday) – 4 (Friday). A booking never crosses the 2:00–2:30 break.
+
+**Changing the clash rules:** edit `src/lib/clash.ts`, add a test in `src/lib/clash.test.ts`, run `npm test`.
+
+## 6. Roadmap
+
+1. ✅ Timetable grid, drag-and-drop, clash checks, courses, lecturers
+2. Logins with roles — Faculty Officer (everything), Department Officer (own department), Viewer
+3. Word/PDF export in the official faculty timetable design
+4. Public read-only view for students and lecturers, filtered by level, department or lecturer
+5. Change history, and "copy this semester" to start the next one

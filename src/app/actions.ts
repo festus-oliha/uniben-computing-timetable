@@ -1,0 +1,168 @@
+"use server";
+
+import { revalidatePath } from "next/cache";
+import { eq } from "drizzle-orm";
+import { db } from "@/lib/db";
+import { bookings, courseLecturers, courses, lecturers, venues } from "@/lib/db/schema";
+import { codesOf, fitsInBlock, isCourseCode, levelOf, prefixOf, type Kind } from "@/lib/timetable";
+import type { ActionResult } from "@/lib/types";
+
+const KINDS: Kind[] = ["course", "activity", "pt", "shared"];
+
+function done(message?: string): ActionResult {
+  revalidatePath("/", "layout");
+  return { ok: true, message };
+}
+
+function fail(error: string): ActionResult {
+  return { ok: false, error };
+}
+
+async function guard(fn: () => Promise<ActionResult>): Promise<ActionResult> {
+  try {
+    return await fn();
+  } catch (err) {
+    console.error(err);
+    return fail("The change could not be saved. Check the database connection and try again.");
+  }
+}
+
+function validSlot(day: number, start: number, span: number): string | null {
+  if (!Number.isInteger(day) || day < 0 || day > 4) return "Pick a day from Monday to Friday.";
+  if (!Number.isInteger(span) || span < 1 || span > 4) return "A booking lasts 1 to 4 hours.";
+  if (!fitsInBlock(start, span)) return "That booking would run past the 2:00 break or past 6:30 p.m.";
+  return null;
+}
+
+async function venueExists(code: string) {
+  const [v] = await db.select({ code: venues.code }).from(venues).where(eq(venues.code, code));
+  return !!v;
+}
+
+/** Adds any course codes in a label that aren't on the course list yet. */
+async function ensureCourses(label: string) {
+  const codes = codesOf(label);
+  if (!codes.length) return;
+  await db
+    .insert(courses)
+    .values(codes.map((code) => ({ code, level: levelOf(code) ?? 1, dept: prefixOf(code) })))
+    .onConflictDoNothing();
+}
+
+export async function moveBooking(id: string, venueCode: string, day: number, start: number): Promise<ActionResult> {
+  return guard(async () => {
+    const [b] = await db.select().from(bookings).where(eq(bookings.id, id));
+    if (!b) return fail("That booking no longer exists. The page will refresh.");
+    const bad = validSlot(day, start, b.span);
+    if (bad) return fail(bad);
+    if (!(await venueExists(venueCode))) return fail(`Venue ${venueCode} doesn't exist.`);
+    await db.update(bookings).set({ venueCode, day, start, updatedAt: new Date() }).where(eq(bookings.id, id));
+    return done(`${b.label} moved.`);
+  });
+}
+
+export interface BookingInput {
+  id?: string | null;
+  semesterId: number;
+  venueCode: string;
+  day: number;
+  start: number;
+  span: number;
+  label: string;
+  kind: Kind;
+  note: string;
+}
+
+export async function saveBooking(input: BookingInput): Promise<ActionResult> {
+  return guard(async () => {
+    const label = input.label.trim().replace(/\s*\/\s*/g, "/");
+    if (!label) return fail("Type a course code or a label.");
+    if (!KINDS.includes(input.kind)) return fail("Pick a booking type.");
+    const bad = validSlot(input.day, input.start, input.span);
+    if (bad) return fail(bad);
+    if (!(await venueExists(input.venueCode))) return fail(`Venue ${input.venueCode} doesn't exist.`);
+    if (input.kind === "course" && !codesOf(label).length)
+      return fail("A course lecture needs a course code such as CSC301. For anything else, change the type.");
+
+    const values = {
+      venueCode: input.venueCode,
+      day: input.day,
+      start: input.start,
+      span: input.span,
+      label: input.kind === "course" ? label.toUpperCase() : label,
+      kind: input.kind,
+      note: input.note.trim(),
+      updatedAt: new Date(),
+    };
+    if (input.kind === "course") await ensureCourses(values.label);
+
+    if (input.id) {
+      await db.update(bookings).set(values).where(eq(bookings.id, input.id));
+      return done("Booking saved.");
+    }
+    await db.insert(bookings).values({ ...values, semesterId: input.semesterId });
+    return done("Booking added.");
+  });
+}
+
+export async function deleteBooking(id: string): Promise<ActionResult> {
+  return guard(async () => {
+    await db.delete(bookings).where(eq(bookings.id, id));
+    return done("Booking deleted.");
+  });
+}
+
+export interface CourseInput {
+  code: string;
+  level: number;
+  dept: string;
+  units: number | null;
+  isCommon: boolean;
+  lecturerId: string | null;
+}
+
+export async function saveCourse(input: CourseInput): Promise<ActionResult> {
+  return guard(async () => {
+    const code = input.code.trim().toUpperCase();
+    if (!isCourseCode(code)) return fail("Course codes look like CSC305.");
+    if (!Number.isInteger(input.level) || input.level < 1 || input.level > 8) return fail("Pick a level from 100 to 800.");
+    if (input.units != null && (!Number.isInteger(input.units) || input.units < 0 || input.units > 12))
+      return fail("Units must be a whole number from 0 to 12.");
+
+    await db
+      .update(courses)
+      .set({ level: input.level, dept: input.dept, units: input.units, isCommon: input.isCommon })
+      .where(eq(courses.code, code));
+
+    await db.delete(courseLecturers).where(eq(courseLecturers.courseCode, code));
+    if (input.lecturerId) await db.insert(courseLecturers).values({ courseCode: code, lecturerId: input.lecturerId });
+    return done(`${code} updated.`);
+  });
+}
+
+export async function addCourse(rawCode: string): Promise<ActionResult> {
+  return guard(async () => {
+    const code = rawCode.trim().toUpperCase();
+    if (!isCourseCode(code)) return fail("Type a course code like CSC305.");
+    const [exists] = await db.select({ code: courses.code }).from(courses).where(eq(courses.code, code));
+    if (exists) return fail(`${code} is already on the list.`);
+    await db.insert(courses).values({ code, level: levelOf(code) ?? 1, dept: prefixOf(code) });
+    return done(`${code} added.`);
+  });
+}
+
+export async function addLecturer(name: string, dept: string): Promise<ActionResult> {
+  return guard(async () => {
+    const n = name.trim();
+    if (!n) return fail("Type the lecturer's name.");
+    await db.insert(lecturers).values({ name: n, dept: dept || null });
+    return done(`${n} added.`);
+  });
+}
+
+export async function deleteLecturer(id: string): Promise<ActionResult> {
+  return guard(async () => {
+    await db.delete(lecturers).where(eq(lecturers.id, id)); // course links cascade
+    return done("Lecturer removed.");
+  });
+}

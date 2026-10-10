@@ -1,0 +1,1196 @@
+{
+ "semester": {
+  "session": "2026/2027",
+  "name": "First Semester"
+ },
+ "venues": [
+  {
+   "code": "T",
+   "name": "1000 LT",
+   "seats": 1000,
+   "sortOrder": 0
+  },
+  {
+   "code": "W",
+   "name": "500 LT",
+   "seats": 500,
+   "sortOrder": 1
+  },
+  {
+   "code": "E",
+   "name": "Pre-Degree, Physics Laboratory A",
+   "seats": 110,
+   "sortOrder": 2
+  },
+  {
+   "code": "P1",
+   "name": "400 Level CSC Class, Statistics Building",
+   "seats": 120,
+   "sortOrder": 3
+  },
+  {
+   "code": "P2",
+   "name": "300 Level CSC Class, Statistics Building",
+   "seats": 120,
+   "sortOrder": 4
+  },
+  {
+   "code": "P4",
+   "name": "Ground Floor LT for Computing Students, Statistics Building",
+   "seats": 98,
+   "sortOrder": 5
+  }
+ ],
+ "courses": [
+  {
+   "code": "CED300",
+   "level": 3,
+   "dept": "CED",
+   "isCommon": true
+  },
+  {
+   "code": "CHM101",
+   "level": 1,
+   "dept": "CHM",
+   "isCommon": true
+  },
+  {
+   "code": "COS101",
+   "level": 1,
+   "dept": "COS",
+   "isCommon": true
+  },
+  {
+   "code": "COS201",
+   "level": 2,
+   "dept": "COS",
+   "isCommon": true
+  },
+  {
+   "code": "COS409",
+   "level": 4,
+   "dept": "COS",
+   "isCommon": true
+  },
+  {
+   "code": "CSC102",
+   "level": 1,
+   "dept": "CSC",
+   "isCommon": false
+  },
+  {
+   "code": "CSC301",
+   "level": 3,
+   "dept": "CSC",
+   "isCommon": false
+  },
+  {
+   "code": "CSC308",
+   "level": 3,
+   "dept": "CSC",
+   "isCommon": false
+  },
+  {
+   "code": "CSC309",
+   "level": 3,
+   "dept": "CSC",
+   "isCommon": false
+  },
+  {
+   "code": "CSC312",
+   "level": 3,
+   "dept": "CSC",
+   "isCommon": false
+  },
+  {
+   "code": "CSC313",
+   "level": 3,
+   "dept": "CSC",
+   "isCommon": false
+  },
+  {
+   "code": "CSC318",
+   "level": 3,
+   "dept": "CSC",
+   "isCommon": false
+  },
+  {
+   "code": "CSC401",
+   "level": 4,
+   "dept": "CSC",
+   "isCommon": false
+  },
+  {
+   "code": "CSC402",
+   "level": 4,
+   "dept": "CSC",
+   "isCommon": false
+  },
+  {
+   "code": "CSC411",
+   "level": 4,
+   "dept": "CSC",
+   "isCommon": false
+  },
+  {
+   "code": "CSC413",
+   "level": 4,
+   "dept": "CSC",
+   "isCommon": false
+  },
+  {
+   "code": "CSC415",
+   "level": 4,
+   "dept": "CSC",
+   "isCommon": false
+  },
+  {
+   "code": "CSC418",
+   "level": 4,
+   "dept": "CSC",
+   "isCommon": false
+  },
+  {
+   "code": "CSC424",
+   "level": 4,
+   "dept": "CSC",
+   "isCommon": false
+  },
+  {
+   "code": "CSC432",
+   "level": 4,
+   "dept": "CSC",
+   "isCommon": false
+  },
+  {
+   "code": "CYB102",
+   "level": 1,
+   "dept": "CYB",
+   "isCommon": false
+  },
+  {
+   "code": "CYB111",
+   "level": 1,
+   "dept": "CYB",
+   "isCommon": false
+  },
+  {
+   "code": "CYB201",
+   "level": 2,
+   "dept": "CYB",
+   "isCommon": false
+  },
+  {
+   "code": "DTS101",
+   "level": 1,
+   "dept": "DTS",
+   "isCommon": false
+  },
+  {
+   "code": "DTS103",
+   "level": 1,
+   "dept": "DTS",
+   "isCommon": false
+  },
+  {
+   "code": "DTS201",
+   "level": 2,
+   "dept": "DTS",
+   "isCommon": false
+  },
+  {
+   "code": "DTS205",
+   "level": 2,
+   "dept": "DTS",
+   "isCommon": false
+  },
+  {
+   "code": "DTS211",
+   "level": 2,
+   "dept": "DTS",
+   "isCommon": false
+  },
+  {
+   "code": "DTS302",
+   "level": 3,
+   "dept": "DTS",
+   "isCommon": false
+  },
+  {
+   "code": "DTS304",
+   "level": 3,
+   "dept": "DTS",
+   "isCommon": false
+  },
+  {
+   "code": "ENT311",
+   "level": 3,
+   "dept": "ENT",
+   "isCommon": true
+  },
+  {
+   "code": "ICT101",
+   "level": 1,
+   "dept": "ICT",
+   "isCommon": false
+  },
+  {
+   "code": "ICT102",
+   "level": 1,
+   "dept": "ICT",
+   "isCommon": false
+  },
+  {
+   "code": "ICT201",
+   "level": 2,
+   "dept": "ICT",
+   "isCommon": false
+  },
+  {
+   "code": "ICT202",
+   "level": 2,
+   "dept": "ICT",
+   "isCommon": false
+  },
+  {
+   "code": "ICT203",
+   "level": 2,
+   "dept": "ICT",
+   "isCommon": false
+  },
+  {
+   "code": "IFT103",
+   "level": 1,
+   "dept": "IFT",
+   "isCommon": false
+  },
+  {
+   "code": "IFT203",
+   "level": 2,
+   "dept": "IFT",
+   "isCommon": false
+  },
+  {
+   "code": "IFT204",
+   "level": 2,
+   "dept": "IFT",
+   "isCommon": false
+  },
+  {
+   "code": "IFT205",
+   "level": 2,
+   "dept": "IFT",
+   "isCommon": false
+  },
+  {
+   "code": "IFT211",
+   "level": 2,
+   "dept": "IFT",
+   "isCommon": false
+  },
+  {
+   "code": "IFT442",
+   "level": 4,
+   "dept": "IFT",
+   "isCommon": false
+  },
+  {
+   "code": "INS401",
+   "level": 4,
+   "dept": "INS",
+   "isCommon": false
+  },
+  {
+   "code": "MTH101",
+   "level": 1,
+   "dept": "MTH",
+   "isCommon": true
+  },
+  {
+   "code": "MTH102",
+   "level": 1,
+   "dept": "MTH",
+   "isCommon": true
+  },
+  {
+   "code": "MTH201",
+   "level": 2,
+   "dept": "MTH",
+   "isCommon": true
+  },
+  {
+   "code": "PHY101",
+   "level": 1,
+   "dept": "PHY",
+   "isCommon": true
+  },
+  {
+   "code": "SEN111",
+   "level": 1,
+   "dept": "SEN",
+   "isCommon": false
+  },
+  {
+   "code": "SEN201",
+   "level": 2,
+   "dept": "SEN",
+   "isCommon": false
+  },
+  {
+   "code": "STA111",
+   "level": 1,
+   "dept": "STA",
+   "isCommon": true
+  }
+ ],
+ "bookings": [
+  {
+   "venue": "T",
+   "day": 0,
+   "start": 0,
+   "span": 1,
+   "label": "PHY101",
+   "kind": "course"
+  },
+  {
+   "venue": "T",
+   "day": 0,
+   "start": 1,
+   "span": 1,
+   "label": "CHM101",
+   "kind": "course"
+  },
+  {
+   "venue": "T",
+   "day": 0,
+   "start": 3,
+   "span": 1,
+   "label": "COS101",
+   "kind": "course"
+  },
+  {
+   "venue": "T",
+   "day": 0,
+   "start": 4,
+   "span": 2,
+   "label": "GST",
+   "kind": "course"
+  },
+  {
+   "venue": "T",
+   "day": 0,
+   "start": 6,
+   "span": 1,
+   "label": "MTH101",
+   "kind": "course"
+  },
+  {
+   "venue": "T",
+   "day": 0,
+   "start": 7,
+   "span": 2,
+   "label": "STA111",
+   "kind": "course"
+  },
+  {
+   "venue": "T",
+   "day": 1,
+   "start": 1,
+   "span": 1,
+   "label": "COS101",
+   "kind": "course"
+  },
+  {
+   "venue": "T",
+   "day": 1,
+   "start": 2,
+   "span": 1,
+   "label": "MTH102",
+   "kind": "course"
+  },
+  {
+   "venue": "T",
+   "day": 1,
+   "start": 5,
+   "span": 1,
+   "label": "CHM101",
+   "kind": "course"
+  },
+  {
+   "venue": "T",
+   "day": 1,
+   "start": 6,
+   "span": 1,
+   "label": "CSC102",
+   "kind": "course"
+  },
+  {
+   "venue": "T",
+   "day": 1,
+   "start": 7,
+   "span": 2,
+   "label": "CED300",
+   "kind": "course"
+  },
+  {
+   "venue": "T",
+   "day": 2,
+   "start": 1,
+   "span": 1,
+   "label": "MTH101",
+   "kind": "course"
+  },
+  {
+   "venue": "T",
+   "day": 2,
+   "start": 3,
+   "span": 1,
+   "label": "PHY101",
+   "kind": "course"
+  },
+  {
+   "venue": "T",
+   "day": 2,
+   "start": 4,
+   "span": 2,
+   "label": "GST",
+   "kind": "course"
+  },
+  {
+   "venue": "T",
+   "day": 2,
+   "start": 8,
+   "span": 2,
+   "label": "Chemistry Tutorial",
+   "kind": "activity"
+  },
+  {
+   "venue": "T",
+   "day": 3,
+   "start": 5,
+   "span": 1,
+   "label": "SEN111",
+   "kind": "course"
+  },
+  {
+   "venue": "T",
+   "day": 3,
+   "start": 6,
+   "span": 1,
+   "label": "SEN111",
+   "kind": "course"
+  },
+  {
+   "venue": "T",
+   "day": 3,
+   "start": 8,
+   "span": 2,
+   "label": "Mathematics Tutorial",
+   "kind": "activity"
+  },
+  {
+   "venue": "T",
+   "day": 4,
+   "start": 0,
+   "span": 1,
+   "label": "MTH101",
+   "kind": "course"
+  },
+  {
+   "venue": "T",
+   "day": 4,
+   "start": 2,
+   "span": 1,
+   "label": "COS101",
+   "kind": "course"
+  },
+  {
+   "venue": "T",
+   "day": 4,
+   "start": 5,
+   "span": 1,
+   "label": "Jumat",
+   "kind": "activity"
+  },
+  {
+   "venue": "T",
+   "day": 4,
+   "start": 7,
+   "span": 3,
+   "label": "PT",
+   "kind": "pt"
+  },
+  {
+   "venue": "W",
+   "day": 0,
+   "start": 0,
+   "span": 1,
+   "label": "CHM201",
+   "kind": "shared"
+  },
+  {
+   "venue": "W",
+   "day": 0,
+   "start": 1,
+   "span": 1,
+   "label": "UMTH251",
+   "kind": "shared"
+  },
+  {
+   "venue": "W",
+   "day": 0,
+   "start": 2,
+   "span": 2,
+   "label": "COS201",
+   "kind": "course"
+  },
+  {
+   "venue": "W",
+   "day": 0,
+   "start": 5,
+   "span": 1,
+   "label": "UMTH231",
+   "kind": "shared"
+  },
+  {
+   "venue": "W",
+   "day": 0,
+   "start": 6,
+   "span": 1,
+   "label": "DTS211",
+   "kind": "course"
+  },
+  {
+   "venue": "W",
+   "day": 1,
+   "start": 1,
+   "span": 1,
+   "label": "UMTH231",
+   "kind": "shared"
+  },
+  {
+   "venue": "W",
+   "day": 1,
+   "start": 2,
+   "span": 1,
+   "label": "ICT202",
+   "kind": "course"
+  },
+  {
+   "venue": "W",
+   "day": 1,
+   "start": 5,
+   "span": 1,
+   "label": "CHM213",
+   "kind": "shared"
+  },
+  {
+   "venue": "W",
+   "day": 1,
+   "start": 6,
+   "span": 2,
+   "label": "IFT211",
+   "kind": "course"
+  },
+  {
+   "venue": "W",
+   "day": 1,
+   "start": 8,
+   "span": 2,
+   "label": "DTS201",
+   "kind": "course"
+  },
+  {
+   "venue": "W",
+   "day": 2,
+   "start": 0,
+   "span": 1,
+   "label": "COS201",
+   "kind": "course"
+  },
+  {
+   "venue": "W",
+   "day": 2,
+   "start": 1,
+   "span": 1,
+   "label": "MTH201",
+   "kind": "course"
+  },
+  {
+   "venue": "W",
+   "day": 2,
+   "start": 3,
+   "span": 2,
+   "label": "SEN201",
+   "kind": "course"
+  },
+  {
+   "venue": "W",
+   "day": 2,
+   "start": 5,
+   "span": 1,
+   "label": "IFT203",
+   "kind": "course"
+  },
+  {
+   "venue": "W",
+   "day": 2,
+   "start": 6,
+   "span": 1,
+   "label": "UMTH223",
+   "kind": "shared"
+  },
+  {
+   "venue": "W",
+   "day": 2,
+   "start": 7,
+   "span": 1,
+   "label": "DTS205",
+   "kind": "course"
+  },
+  {
+   "venue": "W",
+   "day": 3,
+   "start": 0,
+   "span": 1,
+   "label": "DTS201",
+   "kind": "course"
+  },
+  {
+   "venue": "W",
+   "day": 3,
+   "start": 1,
+   "span": 1,
+   "label": "UMTH223",
+   "kind": "shared"
+  },
+  {
+   "venue": "W",
+   "day": 3,
+   "start": 2,
+   "span": 2,
+   "label": "CYB201",
+   "kind": "course"
+  },
+  {
+   "venue": "W",
+   "day": 3,
+   "start": 4,
+   "span": 1,
+   "label": "IFT203",
+   "kind": "course"
+  },
+  {
+   "venue": "W",
+   "day": 3,
+   "start": 5,
+   "span": 1,
+   "label": "PHY205",
+   "kind": "shared"
+  },
+  {
+   "venue": "W",
+   "day": 3,
+   "start": 6,
+   "span": 1,
+   "label": "DTS211",
+   "kind": "course"
+  },
+  {
+   "venue": "W",
+   "day": 3,
+   "start": 7,
+   "span": 1,
+   "label": "ENT311",
+   "kind": "course"
+  },
+  {
+   "venue": "W",
+   "day": 3,
+   "start": 8,
+   "span": 2,
+   "label": "ICT202",
+   "kind": "course"
+  },
+  {
+   "venue": "W",
+   "day": 4,
+   "start": 0,
+   "span": 1,
+   "label": "MTH204",
+   "kind": "shared"
+  },
+  {
+   "venue": "W",
+   "day": 4,
+   "start": 1,
+   "span": 1,
+   "label": "CHM211",
+   "kind": "shared"
+  },
+  {
+   "venue": "W",
+   "day": 4,
+   "start": 2,
+   "span": 1,
+   "label": "UMTH251",
+   "kind": "shared"
+  },
+  {
+   "venue": "W",
+   "day": 4,
+   "start": 3,
+   "span": 1,
+   "label": "MTH210",
+   "kind": "shared"
+  },
+  {
+   "venue": "W",
+   "day": 4,
+   "start": 4,
+   "span": 1,
+   "label": "DTS205",
+   "kind": "course"
+  },
+  {
+   "venue": "W",
+   "day": 4,
+   "start": 7,
+   "span": 3,
+   "label": "PT",
+   "kind": "pt"
+  },
+  {
+   "venue": "E",
+   "day": 0,
+   "start": 5,
+   "span": 1,
+   "label": "PHY215",
+   "kind": "shared"
+  },
+  {
+   "venue": "E",
+   "day": 0,
+   "start": 6,
+   "span": 1,
+   "label": "CED211",
+   "kind": "shared"
+  },
+  {
+   "venue": "E",
+   "day": 0,
+   "start": 7,
+   "span": 3,
+   "label": "Physics Practical Periods",
+   "kind": "activity"
+  },
+  {
+   "venue": "E",
+   "day": 1,
+   "start": 5,
+   "span": 1,
+   "label": "PHY218",
+   "kind": "shared"
+  },
+  {
+   "venue": "E",
+   "day": 1,
+   "start": 6,
+   "span": 1,
+   "label": "PHY205",
+   "kind": "shared"
+  },
+  {
+   "venue": "E",
+   "day": 1,
+   "start": 7,
+   "span": 3,
+   "label": "Physics Practical Periods",
+   "kind": "activity"
+  },
+  {
+   "venue": "E",
+   "day": 2,
+   "start": 5,
+   "span": 1,
+   "label": "PHY219",
+   "kind": "shared"
+  },
+  {
+   "venue": "E",
+   "day": 2,
+   "start": 6,
+   "span": 2,
+   "label": "IFT205",
+   "kind": "course"
+  },
+  {
+   "venue": "E",
+   "day": 3,
+   "start": 5,
+   "span": 1,
+   "label": "IFT204",
+   "kind": "course"
+  },
+  {
+   "venue": "E",
+   "day": 3,
+   "start": 6,
+   "span": 1,
+   "label": "IFT204",
+   "kind": "course"
+  },
+  {
+   "venue": "E",
+   "day": 3,
+   "start": 7,
+   "span": 3,
+   "label": "Physics Practical Periods",
+   "kind": "activity"
+  },
+  {
+   "venue": "E",
+   "day": 4,
+   "start": 5,
+   "span": 1,
+   "label": "Jumat",
+   "kind": "activity"
+  },
+  {
+   "venue": "E",
+   "day": 4,
+   "start": 7,
+   "span": 3,
+   "label": "PT",
+   "kind": "pt"
+  },
+  {
+   "venue": "P2",
+   "day": 0,
+   "start": 0,
+   "span": 2,
+   "label": "CSC308/CSC411",
+   "kind": "course"
+  },
+  {
+   "venue": "P2",
+   "day": 0,
+   "start": 3,
+   "span": 2,
+   "label": "CSC309/CSC415",
+   "kind": "course"
+  },
+  {
+   "venue": "P2",
+   "day": 1,
+   "start": 0,
+   "span": 2,
+   "label": "DTS304",
+   "kind": "course"
+  },
+  {
+   "venue": "P2",
+   "day": 1,
+   "start": 5,
+   "span": 1,
+   "label": "CSC301/CSC313",
+   "kind": "course"
+  },
+  {
+   "venue": "P2",
+   "day": 1,
+   "start": 6,
+   "span": 2,
+   "label": "CSC318",
+   "kind": "course"
+  },
+  {
+   "venue": "P2",
+   "day": 2,
+   "start": 0,
+   "span": 2,
+   "label": "DTS302",
+   "kind": "course"
+  },
+  {
+   "venue": "P2",
+   "day": 2,
+   "start": 6,
+   "span": 2,
+   "label": "ICT201",
+   "kind": "course"
+  },
+  {
+   "venue": "P2",
+   "day": 3,
+   "start": 0,
+   "span": 2,
+   "label": "CSC312",
+   "kind": "course"
+  },
+  {
+   "venue": "P2",
+   "day": 3,
+   "start": 2,
+   "span": 2,
+   "label": "ICT203",
+   "kind": "course"
+  },
+  {
+   "venue": "P2",
+   "day": 3,
+   "start": 6,
+   "span": 2,
+   "label": "CSC301/CSC313",
+   "kind": "course"
+  },
+  {
+   "venue": "P2",
+   "day": 4,
+   "start": 2,
+   "span": 1,
+   "label": "CSC308/CSC411",
+   "kind": "course"
+  },
+  {
+   "venue": "P2",
+   "day": 4,
+   "start": 3,
+   "span": 1,
+   "label": "CSC309/CSC415",
+   "kind": "course"
+  },
+  {
+   "venue": "P2",
+   "day": 4,
+   "start": 7,
+   "span": 3,
+   "label": "PT",
+   "kind": "pt"
+  },
+  {
+   "venue": "P1",
+   "day": 0,
+   "start": 0,
+   "span": 2,
+   "label": "CSC401/CSC418",
+   "kind": "course"
+  },
+  {
+   "venue": "P1",
+   "day": 0,
+   "start": 4,
+   "span": 2,
+   "label": "INS401",
+   "kind": "course"
+  },
+  {
+   "venue": "P1",
+   "day": 0,
+   "start": 6,
+   "span": 2,
+   "label": "COS409",
+   "kind": "course"
+  },
+  {
+   "venue": "P1",
+   "day": 1,
+   "start": 0,
+   "span": 2,
+   "label": "CSC424",
+   "kind": "course"
+  },
+  {
+   "venue": "P1",
+   "day": 1,
+   "start": 4,
+   "span": 2,
+   "label": "IFT442",
+   "kind": "course"
+  },
+  {
+   "venue": "P1",
+   "day": 1,
+   "start": 6,
+   "span": 1,
+   "label": "CSC413",
+   "kind": "course"
+  },
+  {
+   "venue": "P1",
+   "day": 2,
+   "start": 0,
+   "span": 2,
+   "label": "CSC402",
+   "kind": "course"
+  },
+  {
+   "venue": "P1",
+   "day": 2,
+   "start": 2,
+   "span": 1,
+   "label": "ICT101",
+   "kind": "course"
+  },
+  {
+   "venue": "P1",
+   "day": 3,
+   "start": 0,
+   "span": 2,
+   "label": "CSC413",
+   "kind": "course"
+  },
+  {
+   "venue": "P1",
+   "day": 4,
+   "start": 0,
+   "span": 2,
+   "label": "CSC432",
+   "kind": "course"
+  },
+  {
+   "venue": "P1",
+   "day": 4,
+   "start": 7,
+   "span": 3,
+   "label": "PT",
+   "kind": "pt"
+  },
+  {
+   "venue": "P4",
+   "day": 0,
+   "start": 0,
+   "span": 1,
+   "label": "GLY210",
+   "kind": "shared"
+  },
+  {
+   "venue": "P4",
+   "day": 0,
+   "start": 1,
+   "span": 1,
+   "label": "GLY211",
+   "kind": "shared"
+  },
+  {
+   "venue": "P4",
+   "day": 0,
+   "start": 2,
+   "span": 2,
+   "label": "DTS101",
+   "kind": "course"
+  },
+  {
+   "venue": "P4",
+   "day": 0,
+   "start": 5,
+   "span": 1,
+   "label": "GLY212",
+   "kind": "shared"
+  },
+  {
+   "venue": "P4",
+   "day": 1,
+   "start": 4,
+   "span": 2,
+   "label": "ICT101",
+   "kind": "course"
+  },
+  {
+   "venue": "P4",
+   "day": 1,
+   "start": 7,
+   "span": 1,
+   "label": "GLY201",
+   "kind": "shared"
+  },
+  {
+   "venue": "P4",
+   "day": 1,
+   "start": 8,
+   "span": 2,
+   "label": "DTS103",
+   "kind": "course"
+  },
+  {
+   "venue": "P4",
+   "day": 2,
+   "start": 0,
+   "span": 1,
+   "label": "GLY110",
+   "kind": "shared"
+  },
+  {
+   "venue": "P4",
+   "day": 2,
+   "start": 6,
+   "span": 2,
+   "label": "ICT102",
+   "kind": "course"
+  },
+  {
+   "venue": "P4",
+   "day": 2,
+   "start": 8,
+   "span": 2,
+   "label": "GLY200",
+   "kind": "shared"
+  },
+  {
+   "venue": "P4",
+   "day": 3,
+   "start": 0,
+   "span": 1,
+   "label": "GLY211",
+   "kind": "shared"
+  },
+  {
+   "venue": "P4",
+   "day": 3,
+   "start": 1,
+   "span": 1,
+   "label": "GLY110",
+   "kind": "shared"
+  },
+  {
+   "venue": "P4",
+   "day": 3,
+   "start": 2,
+   "span": 2,
+   "label": "IFT103",
+   "kind": "course"
+  },
+  {
+   "venue": "P4",
+   "day": 3,
+   "start": 8,
+   "span": 2,
+   "label": "CYB111",
+   "kind": "course"
+  },
+  {
+   "venue": "P4",
+   "day": 4,
+   "start": 0,
+   "span": 1,
+   "label": "GLY110",
+   "kind": "shared"
+  },
+  {
+   "venue": "P4",
+   "day": 4,
+   "start": 1,
+   "span": 2,
+   "label": "GLY210",
+   "kind": "shared"
+  },
+  {
+   "venue": "P4",
+   "day": 4,
+   "start": 3,
+   "span": 2,
+   "label": "CYB102",
+   "kind": "course"
+  }
+ ]
+}
