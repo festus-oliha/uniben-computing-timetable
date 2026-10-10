@@ -8,9 +8,8 @@ Officers drag courses around a venue × day grid, and the app flags clashes as t
 - **FaCoMS home** (`/`, public) — the FaCoMS logo, the module board (Projects, Seminars, Timetable, Staff Members,
   Results and Records), about the Faculty and its departments, with links to https://www.uniben.edu/. Modules not built
   yet open a page listing what they will hold (`/modules/projects` …). The Timetable module hub is `/timetables`.
-- **Old home page notes** (`/`, public) — about the Faculty and its departments, and every timetable grouped by programme:
-  Undergraduate, Postgraduate (M.Sc., Ph.D., PGD), Part-time and Invigilation. Wording lives in
-  `src/lib/site-content.ts`; schedules not built yet show "Coming soon".
+- **Timetables hub** (`/timetables`, public) — every timetable grouped by programme: Undergraduate, Postgraduate
+  (M.Sc., Ph.D., PGD), Part-time and Invigilation. Wording lives in `src/lib/site-content.ts`.
 - **Workspace** (`/timetable`, staff sign-in) — everything below.
 
 - **Timetable** — the full grid (venues T, W, E, P1, P2, P4 × Monday–Friday, 8 a.m.–6:30 p.m.),
