@@ -3,7 +3,7 @@ import { getCurrentSemester } from "@/lib/data";
 import { listProgrammeTimetables } from "@/lib/programme-data";
 import { ProgrammeList } from "@/components/programmes/ProgrammeList";
 
-export const metadata = { title: "Part-time & postgraduate — Faculty of Computing Timetable" };
+export const metadata = { title: "Part-time & postgraduate — FaCoMS Timetable" };
 
 export default async function ProgrammesPage() {
   const [me, sem] = await Promise.all([requireUser(), getCurrentSemester()]);

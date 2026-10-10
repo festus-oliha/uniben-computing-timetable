@@ -1,0 +1,14 @@
+/* A module page while the module is being built. */
+.mp { min-height: 100vh; display: flex; flex-direction: column; background: var(--bg); }
+.mp-main { width: 100%; max-width: 760px; margin: 0 auto; padding: 44px 20px 56px; flex: 1; }
+.mp-icon { width: 72px; height: 72px; display: grid; place-items: center; border-radius: 18px; border: 2px dashed var(--line); color: var(--teal); }
+.mp-main h1 { margin: 18px 0 4px; font-family: var(--font-display); font-weight: 800; font-size: clamp(32px, 6vw, 48px); }
+.mp-purpose { margin: 0; font-size: 18px; color: var(--mute); }
+.mp-state { margin: 28px 0 10px; font-weight: 600; }
+.mp-plans { margin: 0; padding: 0; list-style: none; border-top: 2px solid var(--navy); }
+.mp-plans li { padding: 12px 0 12px 26px; border-bottom: 1px solid var(--line); position: relative; font-size: 16px; }
+.mp-plans li::before { content: ""; position: absolute; left: 4px; top: 19px; width: 9px; height: 9px; border-radius: 50%; border: 2px solid var(--teal); }
+@media (prefers-color-scheme: dark) { .mp-plans { border-top-color: var(--teal); } }
+.mp-note { margin: 18px 0 0; color: var(--warn); font-weight: 600; }
+.mp-back { margin-top: 32px; display: flex; gap: 20px; flex-wrap: wrap; }
+.mp-back a { color: var(--teal); font-weight: 700; }

@@ -8,7 +8,7 @@ import { DAYS, SLOTS } from "@/lib/timetable";
 import { PrintButton } from "@/components/PrintButton";
 import "./print.css";
 
-export const metadata = { title: "Print timetable — Faculty of Computing" };
+export const metadata = { title: "Print timetable — FaCoMS" };
 
 /** The official timetable laid out for paper (A4 landscape). Use the browser's print dialog → "Save as PDF". */
 export default async function PrintPage() {

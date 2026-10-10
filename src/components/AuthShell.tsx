@@ -1,13 +1,14 @@
+import { FacomsMark } from "./brand/FacomsLogo";
+
 /** Centered card used by the sign-in and first-time setup pages. */
 export function AuthShell({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="auth-wrap">
       <div className="auth-card">
         <header>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/crest.png" alt="University of Benin crest" />
+          <FacomsMark size={46} />
           <div>
-            <small>University of Benin · Faculty of Computing</small>
+            <small>FaCoMS · Faculty of Computing, UNIBEN</small>
             <h1>{title}</h1>
           </div>
         </header>

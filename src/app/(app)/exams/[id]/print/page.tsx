@@ -7,7 +7,7 @@ import { fitSignature, formatSignedDate } from "@/lib/signoff";
 import { PrintButton } from "@/components/PrintButton";
 import "./exam-print.css";
 
-export const metadata = { title: "Print examination timetable — Faculty of Computing" };
+export const metadata = { title: "Print examination timetable — FaCoMS" };
 
 /** The examination timetable on A4 portrait. Use the browser's print dialog → "Save as PDF". */
 export default async function ExamPrintPage({ params }: { params: Promise<{ id: string }> }) {

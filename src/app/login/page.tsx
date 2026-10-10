@@ -3,7 +3,7 @@ import { countUsers, getCurrentUser } from "@/lib/auth/session";
 import { AuthShell } from "@/components/AuthShell";
 import { LoginForm } from "@/components/AuthForms";
 
-export const metadata = { title: "Sign in — Faculty of Computing Timetable" };
+export const metadata = { title: "Sign in — FaCoMS Timetable" };
 
 export default async function LoginPage({ searchParams }: { searchParams: Promise<{ next?: string }> }) {
   if ((await countUsers()) === 0) redirect("/setup");

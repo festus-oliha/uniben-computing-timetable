@@ -4,14 +4,78 @@
  */
 
 export const SITE = {
+  name: "FaCoMS",
+  fullName: "Faculty of Computing Management System",
   university: "University of Benin, Benin City",
+  universityUrl: "https://www.uniben.edu/",
   faculty: "Faculty of Computing",
-  tagline: "Lecture, examination and invigilation timetables for every programme in the Faculty.",
+  tagline: "One place for the Faculty's projects, seminars, timetables, staff and records.",
+  /** Placeholder wording — replace with the Faculty's official description. */
   about: [
-    "The Faculty of Computing brings together the University of Benin's departments in computing and information technology, offering undergraduate, postgraduate and part-time programmes.",
-    "This site publishes the Faculty's official lecture timetables, examination timetables and invigilation schedules. Pick your programme below to find yours.",
+    "The Faculty of Computing at the University of Benin brings the University's computing and information technology departments together in one faculty. It runs undergraduate (B.Sc.), postgraduate (PGD, M.Sc. and Ph.D.) and part-time programmes.",
+    "FaCoMS is the Faculty's own management system. Students and staff use it to find timetables and, as each module is added, to follow projects and seminars, look up staff, and keep results and records.",
   ],
 };
+
+export type ModuleStatus = "live" | "building";
+
+export interface ModuleInfo {
+  slug: "projects" | "seminars" | "timetable" | "staff" | "records";
+  name: string;
+  /** One line on the home page. */
+  purpose: string;
+  /** What the module will hold — shown on its page while it is being built. */
+  plans: string[];
+  status: ModuleStatus;
+  href: string;
+  /** Staff-only once built (shown as such on the home page). */
+  staffOnly?: boolean;
+}
+
+/** The FaCoMS modules, in the order they appear on the home page. Set status to "live" as each is built. */
+export const MODULES: ModuleInfo[] = [
+  {
+    slug: "projects",
+    name: "Projects",
+    purpose: "Final-year and postgraduate projects, from topic to defence.",
+    plans: ["Project topics and approval", "Supervisor allocation by department", "Proposal, chapter and final submissions", "Defence schedules and panels"],
+    status: "building",
+    href: "/modules/projects",
+  },
+  {
+    slug: "seminars",
+    name: "Seminars",
+    purpose: "Departmental and postgraduate seminar schedules.",
+    plans: ["Seminar calendar by department", "Presenters, topics and venues", "Attendance and assessment", "Year 5 part-time seminar presentations"],
+    status: "building",
+    href: "/modules/seminars",
+  },
+  {
+    slug: "timetable",
+    name: "Timetable",
+    purpose: "Lecture, examination and invigilation timetables for every programme.",
+    plans: [],
+    status: "live",
+    href: "/timetables",
+  },
+  {
+    slug: "staff",
+    name: "Staff Members",
+    purpose: "Who is who in each department, and what they teach.",
+    plans: ["Staff directory by department", "Ranks, offices and contact details", "Courses taught and supervision load", "Research interests and publications"],
+    status: "building",
+    href: "/modules/staff",
+  },
+  {
+    slug: "records",
+    name: "Results and Records",
+    purpose: "Course results, approvals and student records.",
+    plans: ["Course result entry by lecturers", "Department and Faculty approval steps", "Student academic records", "Reports for Senate and the Examinations unit"],
+    status: "building",
+    href: "/modules/records",
+    staffOnly: true,
+  },
+];
 
 /** The Faculty's departments, shown on the home page (codes match course prefixes). */
 export const FACULTY_DEPARTMENTS: { code: string; name: string }[] = [

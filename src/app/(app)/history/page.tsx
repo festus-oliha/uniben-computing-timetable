@@ -6,7 +6,7 @@ import { requireUser } from "@/lib/auth/session";
 import { isAdmin } from "@/lib/permissions";
 import { AUDIT_GROUPS } from "@/lib/audit";
 
-export const metadata = { title: "History — Faculty of Computing Timetable" };
+export const metadata = { title: "History — FaCoMS Timetable" };
 
 const PAGE = 100;
 /** Account and settings changes are only shown to the Faculty Time-Table Officer. */

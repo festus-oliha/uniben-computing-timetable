@@ -1,132 +1,90 @@
 import Link from "next/link";
 import { getPublishedSemesters } from "@/lib/data";
 import { getCurrentUser } from "@/lib/auth/session";
-import { FACULTY_DEPARTMENTS, PROGRAMMES, SITE } from "@/lib/site-content";
+import { FACULTY_DEPARTMENTS, MODULES, SITE } from "@/lib/site-content";
+import { FacomsMark } from "@/components/brand/FacomsLogo";
+import { ModuleIcon } from "@/components/brand/ModuleIcon";
+import { SiteFooter, UnibenStrip } from "@/components/brand/SiteChrome";
 import "./home.css";
 
 export const metadata = {
-  title: "Faculty of Computing Timetables — University of Benin",
-  description: "Lecture, examination and invigilation timetables for the Faculty of Computing, University of Benin.",
+  title: "FaCoMS — Faculty of Computing Management System, University of Benin",
+  description: "Projects, seminars, timetables, staff and records for the Faculty of Computing, University of Benin.",
 };
 
-/** Public home page: about the Faculty, its departments, and the timetables for each programme. */
+/** FaCoMS home: the modules first, then about the Faculty and its departments. */
 export default async function HomePage() {
   const [me, published] = await Promise.all([getCurrentUser(), getPublishedSemesters()]);
   const current = published[0];
 
   return (
     <div className="home">
-      <header className="h-hero">
-        <div className="h-bar">
-          <div className="h-id">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/crest.png" alt="University of Benin crest" />
-            <span>
-              <small>{SITE.university}</small>
-              <b>{SITE.faculty}</b>
-            </span>
+      <UnibenStrip signedIn={!!me} />
+      <header className="hx">
+        <div className="hx-in">
+          <div className="hx-brand">
+            <FacomsMark size={84} />
+            <div>
+              <h1 className="hx-word">FaCoMS</h1>
+              <p className="hx-full">{SITE.fullName}</p>
+            </div>
           </div>
-          {me ? (
-            <Link className="h-staff" href="/timetable">
-              Go to workspace →
-            </Link>
-          ) : (
-            <Link className="h-staff" href="/login">
-              Staff sign in
-            </Link>
-          )}
+          <p className="hx-tag">
+            {SITE.faculty}, University of Benin. {SITE.tagline}
+          </p>
         </div>
-        <div className="h-lead">
-          <p className="h-kicker">Timetables</p>
-          <h1>{SITE.faculty}</h1>
-          <p className="h-tag">{SITE.tagline}</p>
-          <div className="h-cta">
-            <Link className="h-btn primary" href="/view">
-              Find my lecture timetable
-            </Link>
-            <a className="h-btn" href="#programmes">
-              All timetables
-            </a>
-          </div>
-          {current && (
-            <p className="h-now">
-              Now published: <b>{current.session} {current.name}</b> undergraduate lecture timetable
-            </p>
-          )}
-        </div>
+
+        <nav className="board" aria-label="FaCoMS modules">
+          {MODULES.map((m) => {
+            const live = m.status === "live";
+            return (
+              <Link key={m.slug} href={m.href} className={`port ${live ? "live" : "soon"}`}>
+                <span className="port-icon">
+                  <ModuleIcon slug={m.slug} />
+                </span>
+                <span className="port-name">{m.name}</span>
+                <span className="port-purpose">{m.purpose}</span>
+                <span className="port-state">
+                  {live
+                    ? m.slug === "timetable" && current
+                      ? `Open: ${current.session} ${current.name} published`
+                      : "Open"
+                    : m.staffOnly
+                      ? "Being built (staff only)"
+                      : "Being built"}
+                </span>
+              </Link>
+            );
+          })}
+        </nav>
       </header>
 
-      <main className="h-main">
-        <section className="h-about">
-          <div>
-            <h2>About the Faculty</h2>
-            {SITE.about.map((p, i) => (
-              <p key={i}>{p}</p>
-            ))}
-          </div>
-          <div>
-            <h2>Departments</h2>
-            <ul className="h-depts">
-              {FACULTY_DEPARTMENTS.map((d) => (
-                <li key={d.code}>
-                  <span className="code">{d.code}</span>
-                  {d.name}
-                </li>
-              ))}
-            </ul>
-          </div>
+      <main className="hm">
+        <section className="hm-about" aria-labelledby="about-h">
+          <h2 id="about-h">About the Faculty of Computing</h2>
+          {SITE.about.map((p, i) => (
+            <p key={i}>{p}</p>
+          ))}
+          <p>
+            <a href={SITE.universityUrl} target="_blank" rel="noopener" className="hm-uni">
+              Visit the University of Benin website
+            </a>
+          </p>
         </section>
-
-        <section id="programmes" className="h-progs">
-          <h2>Timetables by programme</h2>
-          <div className="h-grid">
-            {PROGRAMMES.map((prog) => (
-              <article key={prog.id} className={`h-prog ${prog.id}`}>
-                <header>
-                  <h3>{prog.title}</h3>
-                  <p>{prog.subtitle}</p>
-                </header>
-                <ul>
-                  {prog.schedules.map((s) => {
-                    const live = s.status === "live" && s.href;
-                    const note =
-                      s.href === "/view" ? (current ? `${current.session} ${current.name}` : "Not yet published") : s.staffOnly ? "Staff" : "";
-                    const body = (
-                      <>
-                        <span className="l">
-                          <b>{s.label}</b>
-                          <small>{s.hint}</small>
-                        </span>
-                        <span className={`badge${live && !(s.href === "/view" && !current) ? " live" : ""}`}>{live ? note || "Open" : "Coming soon"}</span>
-                      </>
-                    );
-                    return (
-                      <li key={s.label}>
-                        {live ? (
-                          <Link href={s.href!} className="h-link">
-                            {body}
-                          </Link>
-                        ) : (
-                          <div className="h-link off" aria-disabled="true">
-                            {body}
-                          </div>
-                        )}
-                      </li>
-                    );
-                  })}
-                </ul>
-              </article>
+        <section className="hm-depts" aria-labelledby="dept-h">
+          <h2 id="dept-h">Departments</h2>
+          <ul>
+            {FACULTY_DEPARTMENTS.map((d) => (
+              <li key={d.code}>
+                <span className="code">{d.code}</span>
+                <span>{d.name}</span>
+              </li>
             ))}
-          </div>
+          </ul>
         </section>
       </main>
 
-      <footer className="h-foot">
-        <span>
-          {SITE.faculty} · {SITE.university}
-        </span>
-        <Link href="/login">Staff sign in</Link>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

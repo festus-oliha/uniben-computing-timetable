@@ -6,7 +6,7 @@ import { requireUser } from "@/lib/auth/session";
 import { isAdmin } from "@/lib/permissions";
 import { SettingsPanel } from "@/components/SettingsPanel";
 
-export const metadata = { title: "Settings — Faculty of Computing Timetable" };
+export const metadata = { title: "Settings — FaCoMS Timetable" };
 
 export default async function SettingsPage() {
   const me = await requireUser();

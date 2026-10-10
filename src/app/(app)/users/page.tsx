@@ -6,7 +6,7 @@ import { requireUser } from "@/lib/auth/session";
 import { canManageUsers } from "@/lib/permissions";
 import { UsersPanel } from "@/components/UsersPanel";
 
-export const metadata = { title: "Users — Faculty of Computing Timetable" };
+export const metadata = { title: "Users — FaCoMS Timetable" };
 
 export default async function UsersPage() {
   const me = await requireUser();

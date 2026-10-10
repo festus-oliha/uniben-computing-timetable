@@ -1,11 +1,14 @@
-# Faculty of Computing Timetable — University of Benin
+# FaCoMS — Faculty of Computing Management System, University of Benin
 
 A web app for building and checking the Faculty of Computing lecture timetable.
 Officers drag courses around a venue × day grid, and the app flags clashes as they happen.
 
 **What it does today**
 
-- **Home page** (`/`, public) — about the Faculty and its departments, and every timetable grouped by programme:
+- **FaCoMS home** (`/`, public) — the FaCoMS logo, the module board (Projects, Seminars, Timetable, Staff Members,
+  Results and Records), about the Faculty and its departments, with links to https://www.uniben.edu/. Modules not built
+  yet open a page listing what they will hold (`/modules/projects` …). The Timetable module hub is `/timetables`.
+- **Old home page notes** (`/`, public) — about the Faculty and its departments, and every timetable grouped by programme:
   Undergraduate, Postgraduate (M.Sc., Ph.D., PGD), Part-time and Invigilation. Wording lives in
   `src/lib/site-content.ts`; schedules not built yet show "Coming soon".
 - **Workspace** (`/timetable`, staff sign-in) — everything below.

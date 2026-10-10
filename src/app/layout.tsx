@@ -3,8 +3,8 @@ import { ToastProvider } from "@/components/Toast";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Faculty of Computing Timetable — UNIBEN",
-  description: "Lecture timetable manager for the Faculty of Computing, University of Benin.",
+  title: "FaCoMS — Faculty of Computing, UNIBEN",
+  description: "FaCoMS — the Faculty of Computing Management System, University of Benin.",
 };
 
 // Always read fresh data: several officers edit the same timetable.
@@ -19,7 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..800&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
         />
       </head>
       <body>

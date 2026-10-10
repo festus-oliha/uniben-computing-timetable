@@ -3,7 +3,7 @@ import { ROLE_LABELS } from "@/lib/permissions";
 import { DEPARTMENTS } from "@/lib/timetable";
 import { ChangePasswordForm } from "@/components/AuthForms";
 
-export const metadata = { title: "Your account — Faculty of Computing Timetable" };
+export const metadata = { title: "Your account — FaCoMS Timetable" };
 
 export default async function AccountPage({ searchParams }: { searchParams: Promise<{ first?: string }> }) {
   const me = await requireUser();

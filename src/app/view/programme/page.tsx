@@ -10,7 +10,7 @@ import { ProgrammeSheet } from "@/components/programmes/ProgrammeSheet";
 import "../view.css";
 
 export const metadata = {
-  title: "Part-time & Postgraduate Timetables — Faculty of Computing, UNIBEN",
+  title: "Part-time & Postgraduate Timetables — FaCoMS, UNIBEN",
   description: "Part-time, M.Sc., Ph.D. and PGD lecture timetables by department.",
 };
 

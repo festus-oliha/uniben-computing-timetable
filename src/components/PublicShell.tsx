@@ -1,21 +1,24 @@
 import Link from "next/link";
+import { FacomsMark } from "./brand/FacomsLogo";
 
 /** Header and footer of the public (no sign-in) pages. */
 export function PublicShell({ children, subtitle }: { children: React.ReactNode; subtitle: string }) {
   return (
     <div className="pv">
       <header className="pv-top">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/crest.png" alt="University of Benin crest" />
-        <a href="/" className="pv-home" title="Faculty home page">
-          <small>University of Benin</small>
-          <h1>Faculty of Computing</h1>
-          <p>{subtitle}</p>
+        <a href="/" className="pv-home" title="FaCoMS home">
+          <FacomsMark size={46} />
+          <span>
+            <small>FaCoMS · Faculty of Computing</small>
+            <h1>{subtitle.split(" · ")[0]}</h1>
+            {subtitle.includes(" · ") && <p>{subtitle.split(" · ").slice(1).join(" · ")}</p>}
+          </span>
         </a>
       </header>
       <main className="pv-main">{children}</main>
       <footer className="pv-foot">
-        <Link href="/">Faculty of Computing</Link> · University of Benin, Benin City
+        <Link href="/">FaCoMS</Link> · Faculty of Computing, <a href="https://www.uniben.edu/" target="_blank" rel="noopener">University of Benin</a> ·{" "}
+        <Link href="/timetables">All timetables</Link>
         <span className="pv-noprint">
           {" "}
           · <Link href="/login">Staff sign in</Link>

@@ -3,7 +3,7 @@ import { getCurrentSemester } from "@/lib/data";
 import { listExamTimetables } from "@/lib/exam-data";
 import { ExamList } from "@/components/exams/ExamList";
 
-export const metadata = { title: "Examinations — Faculty of Computing Timetable" };
+export const metadata = { title: "Examinations — FaCoMS Timetable" };
 
 export default async function ExamsPage() {
   const [me, sem] = await Promise.all([requireUser(), getCurrentSemester()]);

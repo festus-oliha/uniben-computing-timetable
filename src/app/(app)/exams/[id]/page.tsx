@@ -13,7 +13,7 @@ import { clearExamSignoff, saveExamSignoff } from "@/app/exam-actions";
 import { clearInvigilationSignoff, saveInvigilationSignoff } from "@/app/invigilation-actions";
 import { InvigilationBoard } from "@/components/exams/InvigilationBoard";
 
-export const metadata = { title: "Examination timetable — Faculty of Computing" };
+export const metadata = { title: "Examination timetable — FaCoMS" };
 
 type Tab = "board" | "invigilation" | "setup" | "sign";
 

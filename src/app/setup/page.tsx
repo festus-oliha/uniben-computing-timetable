@@ -3,7 +3,7 @@ import { countUsers } from "@/lib/auth/session";
 import { AuthShell } from "@/components/AuthShell";
 import { SetupForm } from "@/components/AuthForms";
 
-export const metadata = { title: "First-time setup — Faculty of Computing Timetable" };
+export const metadata = { title: "First-time setup — FaCoMS Timetable" };
 
 /** Shown only until the first account exists. That account is the Faculty Time-Table Officer (admin). */
 export default async function SetupPage() {

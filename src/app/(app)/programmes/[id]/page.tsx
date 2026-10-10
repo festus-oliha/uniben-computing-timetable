@@ -13,7 +13,7 @@ import { ProgrammeSetup } from "@/components/programmes/ProgrammeSetup";
 import { SignoffPanel } from "@/components/SignoffPanel";
 import { clearProgrammeSignoff, saveProgrammeSignoff } from "@/app/programme-actions";
 
-export const metadata = { title: "Lecture timetable — Faculty of Computing" };
+export const metadata = { title: "Lecture timetable — FaCoMS" };
 
 type Tab = "board" | "courses" | "setup" | "sign";
 

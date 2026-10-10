@@ -5,7 +5,7 @@ import { buildProgrammeDoc } from "@/lib/export/programme-layout";
 import { ProgrammeSheet } from "@/components/programmes/ProgrammeSheet";
 import { PrintButton } from "@/components/PrintButton";
 
-export const metadata = { title: "Print lecture timetable — Faculty of Computing" };
+export const metadata = { title: "Print lecture timetable — FaCoMS" };
 
 export default async function ProgrammePrintPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

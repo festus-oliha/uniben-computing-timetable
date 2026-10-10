@@ -61,7 +61,7 @@ export function UsersPanel({ rows, meId }: { rows: UserRow[]; meId: string }) {
               className="btn"
               onClick={() =>
                 navigator.clipboard
-                  .writeText(`Faculty of Computing Timetable\nEmail: ${issued.email}\nTemporary password: ${issued.password}`)
+                  .writeText(`FaCoMS (Faculty of Computing)\nEmail: ${issued.email}\nTemporary password: ${issued.password}`)
                   .then(() => toast("Copied."))
                   .catch(() => toast("Couldn't copy — select the text instead.", true))
               }

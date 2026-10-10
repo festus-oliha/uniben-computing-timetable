@@ -7,7 +7,7 @@ import { PublicShell } from "@/components/PublicShell";
 import "./view.css";
 
 export const metadata = {
-  title: "Lecture Timetable — Faculty of Computing, UNIBEN",
+  title: "Lecture Timetable — FaCoMS, UNIBEN",
   description: "Find your lecture timetable by level and department, lecturer or venue.",
 };
 

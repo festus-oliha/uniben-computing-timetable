@@ -7,7 +7,7 @@ import { fitSignature, formatSignedDate } from "@/lib/signoff";
 import { PrintButton } from "@/components/PrintButton";
 import "./inv-print.css";
 
-export const metadata = { title: "Print invigilation schedule — Faculty of Computing" };
+export const metadata = { title: "Print invigilation schedule — FaCoMS" };
 
 /** The invigilation schedule on A4 landscape, then each person's duties. */
 export default async function InvigilationPrintPage({ params }: { params: Promise<{ id: string }> }) {

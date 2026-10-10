@@ -23,7 +23,11 @@ Next.js 15 (App Router, server actions) · React 19 · TypeScript · Tailwind 4 
   (never COS/common, tutorials, PT or other-faculty bookings); viewer is read-only.
 - PGlite allows one process at a time: stop `npm run dev` before running db/user scripts.
 - Every server action that changes data also calls `logChange()` (src/lib/audit.ts) with a plain-language summary.
-- `/` is the public home page (src/app/page.tsx, text in src/lib/site-content.ts); the staff workspace is `/timetable`.
+- The app is **FaCoMS** (Faculty of Computing Management System). `/` is the public FaCoMS home with the module board
+  (Projects, Seminars, Timetable, Staff Members, Results and Records); module list, about text and departments live in
+  `src/lib/site-content.ts` (`MODULES`, `SITE`). Timetable module hub: `/timetables`; staff timetable workspace: `/timetable`;
+  modules still being built show `/modules/[slug]`. Logo: `src/components/brand/FacomsLogo.tsx` (favicon `src/app/icon.svg`).
+  Every public page links to https://www.uniben.edu/. Printed documents keep the UNIBEN crest.
 - Exams: `src/lib/exam.ts` (pure, tested) holds exam clash rules; writes go through `src/app/exam-actions.ts`.
   An exam timetable has `dept = null` (Faculty-wide undergraduate) or a department (PT, M.Sc. …). Venues with
   `in_lecture_grid = false` are exam-only and never appear on the lecture grid. Venues are not clash-checked in exams

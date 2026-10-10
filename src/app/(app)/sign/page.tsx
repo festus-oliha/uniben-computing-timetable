@@ -5,7 +5,7 @@ import { formatSignedDate } from "@/lib/signoff";
 import { DOCUMENT_TEXT } from "@/lib/export/document-text";
 import { SignoffPanel } from "@/components/SignoffPanel";
 
-export const metadata = { title: "Sign-off — Faculty of Computing Timetable" };
+export const metadata = { title: "Sign-off — FaCoMS Timetable" };
 
 export default async function SignPage() {
   const [me, data, signoff] = await Promise.all([requireUser(), getTimetableData(), getSignoff()]);

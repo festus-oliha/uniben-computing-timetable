@@ -9,7 +9,7 @@ import { PublicShell } from "@/components/PublicShell";
 import "../view.css";
 
 export const metadata = {
-  title: "Invigilation Schedule — Faculty of Computing, UNIBEN",
+  title: "Invigilation Schedule — FaCoMS, UNIBEN",
   description: "Look up your examination invigilation duties.",
 };
 

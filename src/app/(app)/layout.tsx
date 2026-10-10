@@ -4,6 +4,7 @@ import { countUsers, getCurrentUser } from "@/lib/auth/session";
 import { ROLE_LABELS } from "@/lib/permissions";
 import { DEPARTMENTS } from "@/lib/timetable";
 import { Nav } from "@/components/Nav";
+import { FacomsMark } from "@/components/brand/FacomsLogo";
 import { logout } from "../auth-actions";
 
 /** Everything behind sign-in: header, tabs and the signed-in person. */
@@ -17,13 +18,14 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   return (
     <>
       <div className="top">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/crest.png" alt="University of Benin crest" />
-        <a className="brand" href="/" title="Faculty home page">
-          <small>University of Benin</small>
-          <h1>
-            Faculty of Computing <span>Timetable</span>
-          </h1>
+        <a className="brand" href="/" title="FaCoMS home">
+          <FacomsMark size={44} />
+          <span>
+            <small>FaCoMS · Faculty of Computing</small>
+            <h1>
+              Timetable <span>workspace</span>
+            </h1>
+          </span>
         </a>
         {data.semester && (
           <div className="session">
