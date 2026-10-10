@@ -273,3 +273,17 @@ table.t input.units { width: 60px; }
 fieldset.plain { border: 0; padding: 0; margin: 0; min-width: 0; display: grid; gap: 12px; }
 table.history td.when { white-space: nowrap; }
 table.history td:last-child { min-width: 320px; }
+
+/* ---------- settings ---------- */
+h3.sub { font-family: var(--font-display); font-size: 14px; margin: 22px 0 10px; padding-top: 14px; border-top: 1px solid var(--line); }
+.new-sem { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; align-items: end; }
+.new-sem .copy-modes, .new-sem .toggle-row, .new-sem > div { grid-column: 1 / -1; }
+.copy-modes { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; display: grid; gap: 8px; margin: 0; }
+.copy-modes legend { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--mute); padding: 0 4px; }
+.radio { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; }
+.radio input { margin-top: 3px; }
+.radio small { display: block; color: var(--mute); font-size: 12px; }
+.toggle-row { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; }
+.pubtag { display: inline-block; margin-top: 3px; font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #e6b65a; }
+.pubtag.on { color: #5fd4c8; }
+table.t input.seats-in { width: 84px; }

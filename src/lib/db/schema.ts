@@ -23,6 +23,9 @@ export const semesters = pgTable("semesters", {
   signatureWidth: integer("signature_width"),
   signatureHeight: integer("signature_height"),
   signatureUpdatedAt: timestamp("signature_updated_at", { withTimezone: true }),
+  /** When true, the public timetable page (/view) shows this semester to students and lecturers. */
+  isPublished: boolean("is_published").notNull().default(false),
+  publishedAt: timestamp("published_at", { withTimezone: true }),
 });
 
 /** Lecture halls and labs: T, W, E, P1, P2, P4 … */

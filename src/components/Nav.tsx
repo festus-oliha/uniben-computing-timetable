@@ -11,6 +11,7 @@ const TABS = [
   { href: "/sign", label: "Sign-off" },
   { href: "/history", label: "History" },
   { href: "/users", label: "Users", adminOnly: true },
+  { href: "/settings", label: "Settings", adminOnly: true },
 ];
 
 export function Nav({ clashCount, isAdmin }: { clashCount: number; isAdmin: boolean }) {

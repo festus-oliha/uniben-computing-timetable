@@ -15,7 +15,7 @@ const b = (p: Partial<BookingDTO>): BookingDTO => ({
 });
 
 const data = (bookings: BookingDTO[]): TimetableData => ({
-  semester: { id: 1, session: "2026/2027", name: "First Semester" },
+  semester: { id: 1, session: "2026/2027", name: "First Semester", isPublished: false },
   venues: [{ code: "T", name: "1000 LT", seats: 1000 }],
   bookings,
   courses: [],

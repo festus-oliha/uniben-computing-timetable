@@ -29,6 +29,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           <div className="session">
             {data.semester.name}
             <b>{data.semester.session}</b>
+            <span className={`pubtag${data.semester.isPublished ? " on" : ""}`}>{data.semester.isPublished ? "Published" : "Draft"}</span>
           </div>
         )}
         <div className="me">

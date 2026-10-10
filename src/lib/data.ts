@@ -29,7 +29,7 @@ export async function getTimetableData(): Promise<TimetableData> {
   for (const l of links) byCourse.set(l.courseCode, [...(byCourse.get(l.courseCode) ?? []), l.lecturerId]);
 
   return {
-    semester: semester ? { id: semester.id, session: semester.session, name: semester.name } : null,
+    semester: semester ? { id: semester.id, session: semester.session, name: semester.name, isPublished: semester.isPublished } : null,
     venues: venueRows.map((v) => ({ code: v.code, name: v.name, seats: v.seats })),
     bookings: bookingRows.map((b) => ({
       id: b.id,

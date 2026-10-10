@@ -39,6 +39,7 @@ export interface SemesterDTO {
   id: number;
   session: string;
   name: string;
+  isPublished: boolean;
 }
 
 export interface TimetableData {
