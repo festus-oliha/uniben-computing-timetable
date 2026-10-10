@@ -12,6 +12,8 @@ Officers drag courses around a venue × day grid, and the app flags clashes as t
   lecturer double-bookings, and lectures running into Friday Jumat (1–2 p.m.).
 - **Courses** — level, department, units, "common to all departments", and the lecturer for each course.
 - **Lecturers** — the teaching staff list, with each person's courses and weekly hours.
+- **Exports** — *Download Word* gives the official timetable as a `.docx` (A4 landscape, 2 pages, faculty design);
+  *Print / PDF* opens the same layout for printing or "Save as PDF". Other faculties' bookings print as blanks.
 - Loaded with the **2026/2027 First Semester** timetable.
 
 ---
@@ -111,12 +113,16 @@ src/
     courses/            Courses tab
     lecturers/          Lecturers tab
     clashes/            Full clash list
+    print/              Paper layout for Print / Save as PDF
+    export/docx/        Word download (GET /export/docx)
     actions.ts          All saves/moves/deletes (server actions, validated on the server)
   components/           Screen pieces: TimetableBoard (grid + drag-and-drop), BookingDrawer, tables …
   lib/
     clash.ts            ★ The clash engine — pure functions, no database
     clash.test.ts       Tests for the clash engine
     timetable.ts        Days, time slots, departments, colour rules
+    export/             Word builder, print layout, and the fixed wording on page 2
+                        (notes, distribution list, signatory → export/document-text.ts)
     data.ts             Database reads for the pages
     db/schema.ts        Database tables
     db/client.ts        Picks Supabase (DATABASE_URL) or the local database
@@ -129,12 +135,15 @@ scripts/                migrate and seed commands
 **Slots** are numbered 0–9: `0` = 8–9 a.m. … `5` = 1–2 p.m., `6` = 2:30–3:30 … `9` = 5:30–6:30.
 **Days** are 0 (Monday) – 4 (Friday). A booking never crosses the 2:00–2:30 break.
 
+**Changing the printed notes, distribution list or signatory:** edit `src/lib/export/document-text.ts`.
+The "Signed" date is the day the file is exported.
+
 **Changing the clash rules:** edit `src/lib/clash.ts`, add a test in `src/lib/clash.test.ts`, run `npm test`.
 
 ## 6. Roadmap
 
 1. ✅ Timetable grid, drag-and-drop, clash checks, courses, lecturers
-2. Logins with roles — Faculty Officer (everything), Department Officer (own department), Viewer
-3. Word/PDF export in the official faculty timetable design
+2. ✅ Word/PDF export in the official faculty timetable design
+3. Logins with roles — Faculty Officer (everything), Department Officer (own department), Viewer
 4. Public read-only view for students and lecturers, filtered by level, department or lecturer
 5. Change history, and "copy this semester" to start the next one

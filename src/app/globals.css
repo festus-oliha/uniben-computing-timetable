@@ -215,3 +215,8 @@ table.t input.units { width: 60px; }
 .empty { padding: 28px; text-align: center; color: var(--mute); }
 .toast { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); background: var(--navy); color: #fff; padding: 9px 16px; border-radius: 6px; font-size: 13px; z-index: 30; box-shadow: 0 6px 20px rgba(0,0,0,.2); }
 .toast.error { background: var(--bad); }
+
+/* ---------- export buttons ---------- */
+.exports { display: flex; gap: 8px; }
+.exports .btn, .print-toolbar .btn { text-decoration: none; color: var(--ink); font-size: 13px; padding: 6px 12px; }
+.print-toolbar .btn.primary { color: #fff; }

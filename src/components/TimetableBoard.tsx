@@ -155,6 +155,14 @@ export function TimetableBoard({ data, showId }: { data: TimetableData; showId?:
           <input type="checkbox" checked={showShared} onChange={(e) => setShowShared(e.target.checked)} /> Show other
           faculties&apos; bookings
         </label>
+        <div className="exports">
+          <a className="btn" href="/export/docx">
+            Download Word
+          </a>
+          <a className="btn" href="/print">
+            Print / PDF
+          </a>
+        </div>
         <div className="legend">
           <span><i style={{ background: "var(--comp)", borderColor: "var(--comp-bar)" }} />Computing</span>
           <span><i style={{ background: "var(--sci)", borderColor: "var(--sci-bar)" }} />Maths &amp; Science</span>
