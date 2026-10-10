@@ -22,3 +22,4 @@ Next.js 15 (App Router, server actions) · React 19 · TypeScript · Tailwind 4 
 - Roles: admin = Faculty Time-Table Officer; dept_officer edits only course lectures whose courses are all in their dept
   (never COS/common, tutorials, PT or other-faculty bookings); viewer is read-only.
 - PGlite allows one process at a time: stop `npm run dev` before running db/user scripts.
+- Every server action that changes data also calls `logChange()` (src/lib/audit.ts) with a plain-language summary.

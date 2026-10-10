@@ -18,6 +18,8 @@ import {
   type DeptOf,
 } from "@/lib/permissions";
 import type { ActionResult } from "@/lib/types";
+import { logChange, slotText } from "@/lib/audit";
+import { KIND_LABELS, levelName } from "@/lib/timetable";
 
 const KINDS: Kind[] = ["course", "activity", "pt", "shared"];
 
@@ -81,6 +83,7 @@ export async function moveBooking(id: string, venueCode: string, day: number, st
     if (bad) return fail(bad);
     if (!(await venueExists(venueCode))) return fail(`Venue ${venueCode} doesn't exist.`);
     await db.update(bookings).set({ venueCode, day, start, updatedAt: new Date() }).where(eq(bookings.id, id));
+    await logChange(me, "booking.move", `Moved ${b.label} from ${slotText(b)} to ${slotText({ venueCode, day, start, span: b.span })}.`, b.semesterId);
     return done(`${b.label} moved.`);
   });
 }
@@ -127,9 +130,18 @@ export async function saveBooking(input: BookingInput): Promise<ActionResult> {
 
     if (input.id) {
       await db.update(bookings).set(values).where(eq(bookings.id, input.id));
+      const what = existing.label === values.label ? values.label : `${existing.label} → ${values.label}`;
+      const where = slotText(existing) === slotText(values) ? slotText(values) : `${slotText(existing)} → ${slotText(values)}`;
+      await logChange(me, "booking.edit", `Edited ${what} (${where}).`, existing.semesterId);
       return done("Booking saved.");
     }
     await db.insert(bookings).values({ ...values, semesterId: input.semesterId });
+    await logChange(
+      me,
+      "booking.add",
+      `Added ${values.label}${values.kind === "course" ? "" : ` (${KIND_LABELS[values.kind]})`} at ${slotText(values)}.`,
+      input.semesterId,
+    );
     return done("Booking added.");
   });
 }
@@ -140,6 +152,7 @@ export async function deleteBooking(id: string): Promise<ActionResult> {
     if (!b) return done("Booking deleted.");
     if (!canEditBooking(me, b, await deptLookup(b.label))) return fail(outsideDeptMessage(me));
     await db.delete(bookings).where(eq(bookings.id, id));
+    await logChange(me, "booking.delete", `Deleted ${b.label} from ${slotText(b)}.`, b.semesterId);
     return done("Booking deleted.");
   });
 }
@@ -173,8 +186,22 @@ export async function saveCourse(input: CourseInput): Promise<ActionResult> {
       .set({ level: input.level, dept: input.dept, units: input.units, isCommon: input.isCommon })
       .where(eq(courses.code, code));
 
+    const [oldLink] = await db.select().from(courseLecturers).where(eq(courseLecturers.courseCode, code));
     await db.delete(courseLecturers).where(eq(courseLecturers.courseCode, code));
     if (input.lecturerId) await db.insert(courseLecturers).values({ courseCode: code, lecturerId: input.lecturerId });
+
+    const changes: string[] = [];
+    if (current.level !== input.level) changes.push(`level ${levelName(current.level)} → ${levelName(input.level)}`);
+    if (current.dept !== input.dept) changes.push(`department ${current.dept} → ${input.dept}`);
+    if (current.units !== input.units) changes.push(`units ${current.units ?? "—"} → ${input.units ?? "—"}`);
+    if (current.isCommon !== input.isCommon) changes.push(input.isCommon ? "marked common" : "no longer common");
+    if ((oldLink?.lecturerId ?? null) !== (input.lecturerId ?? null)) {
+      const ids = [oldLink?.lecturerId, input.lecturerId].filter(Boolean) as string[];
+      const names = new Map((ids.length ? await db.select().from(lecturers).where(inArray(lecturers.id, ids)) : []).map((l) => [l.id, l.name]));
+      const n = (id?: string | null) => (id ? names.get(id) ?? "a removed lecturer" : "nobody");
+      changes.push(`lecturer ${n(oldLink?.lecturerId)} → ${n(input.lecturerId)}`);
+    }
+    if (changes.length) await logChange(me, "course.edit", `${code}: ${changes.join("; ")}.`);
     return done(`${code} updated.`);
   });
 }
@@ -187,6 +214,7 @@ export async function addCourse(rawCode: string): Promise<ActionResult> {
     const [exists] = await db.select({ code: courses.code }).from(courses).where(eq(courses.code, code));
     if (exists) return fail(`${code} is already on the list.`);
     await db.insert(courses).values({ code, level: levelOf(code) ?? 1, dept: prefixOf(code) });
+    await logChange(me, "course.add", `Added course ${code}.`);
     return done(`${code} added.`);
   });
 }
@@ -198,6 +226,7 @@ export async function addLecturer(name: string, dept: string): Promise<ActionRes
     const d = me.role === "dept_officer" ? me.dept : dept || null;
     if (!canManageLecturer(me, { dept: d })) return fail(outsideDeptMessage(me));
     await db.insert(lecturers).values({ name: n, dept: d });
+    await logChange(me, "lecturer.add", `Added lecturer ${n}${d ? ` (${d})` : ""}.`);
     return done(`${n} added.`);
   });
 }
@@ -208,6 +237,7 @@ export async function deleteLecturer(id: string): Promise<ActionResult> {
     if (!l) return done("Lecturer removed.");
     if (!canManageLecturer(me, l)) return fail(outsideDeptMessage(me));
     await db.delete(lecturers).where(eq(lecturers.id, id)); // course links cascade
+    await logChange(me, "lecturer.remove", `Removed lecturer ${l.name}.`);
     return done("Lecturer removed.");
   });
 }
@@ -234,6 +264,12 @@ export async function saveSignoff(input: Signoff): Promise<ActionResult> {
         signatureUpdatedAt: new Date(),
       })
       .where(eq(semesters.id, sem.id));
+    await logChange(
+      me,
+      "signoff.save",
+      `Signed off ${sem.session} ${sem.name}: dated ${input.signedOn ?? "—"}${input.image ? ", with signature" : ", no signature image"}.`,
+      sem.id,
+    );
     return done(input.image ? "Signature and date saved." : "Signing date saved.");
   });
 }
@@ -247,6 +283,7 @@ export async function clearSignoff(): Promise<ActionResult> {
       .update(semesters)
       .set({ signedOn: null, signatureImage: null, signatureWidth: null, signatureHeight: null, signatureUpdatedAt: new Date() })
       .where(eq(semesters.id, sem.id));
+    await logChange(me, "signoff.clear", `Removed the sign-off for ${sem.session} ${sem.name}.`, sem.id);
     return done("Sign-off removed. Exports now show a blank signature line.");
   });
 }

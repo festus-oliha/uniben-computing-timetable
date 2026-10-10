@@ -8,6 +8,8 @@ import { hashPassword, temporaryPassword } from "@/lib/auth/password";
 import { endAllSessions, getCurrentUser } from "@/lib/auth/session";
 import { canManageUsers, type Role } from "@/lib/permissions";
 import { FACULTY_DEPTS } from "@/lib/timetable";
+import { logChange } from "@/lib/audit";
+import { ROLE_LABELS } from "@/lib/permissions";
 
 /** Result for account actions; `tempPassword` is shown once so the admin can pass it on. */
 export type UserActionResult = { ok: true; message: string; tempPassword?: string } | { ok: false; error: string };
@@ -15,7 +17,7 @@ export type UserActionResult = { ok: true; message: string; tempPassword?: strin
 const ROLES: Role[] = ["admin", "dept_officer", "viewer"];
 const looksLikeEmail = (e: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
 
-async function adminOnly(): Promise<{ id: string } | UserActionResult> {
+async function adminOnly(): Promise<{ id: string; name: string } | UserActionResult> {
   const me = await getCurrentUser();
   if (!me || !canManageUsers(me)) return { ok: false, error: "Only the Faculty Time-Table Officer can manage accounts." };
   return me;
@@ -56,6 +58,7 @@ export async function createUser(input: { name: string; email: string; role: Rol
     passwordHash: await hashPassword(temp),
     mustChangePassword: true,
   });
+  await logChange(me, "user.create", `Created an account for ${name} (${email}) as ${ROLE_LABELS[input.role]}${input.role === "dept_officer" ? `, ${input.dept}` : ""}.`);
   revalidatePath("/users");
   return { ok: true, message: `Account created for ${name}.`, tempPassword: temp };
 }
@@ -77,6 +80,11 @@ export async function updateUser(input: { id: string; role: Role; dept: string |
     .set({ role: input.role, dept: input.role === "dept_officer" ? input.dept : null, isActive: input.isActive })
     .where(eq(users.id, input.id));
   if (!input.isActive) await endAllSessions(input.id);
+  const changes: string[] = [];
+  if (u.role !== input.role) changes.push(`role ${ROLE_LABELS[u.role]} → ${ROLE_LABELS[input.role]}`);
+  if ((u.dept ?? null) !== (input.role === "dept_officer" ? input.dept : null)) changes.push(`department ${u.dept ?? "—"} → ${input.role === "dept_officer" ? input.dept : "—"}`);
+  if (u.isActive !== input.isActive) changes.push(input.isActive ? "switched on" : "switched off");
+  if (changes.length) await logChange(me, "user.update", `${u.name}: ${changes.join("; ")}.`);
   revalidatePath("/users");
   return { ok: true, message: input.isActive ? `${u.name} updated.` : `${u.name} switched off and signed out.` };
 }
@@ -89,6 +97,7 @@ export async function resetUserPassword(id: string): Promise<UserActionResult> {
   const temp = temporaryPassword();
   await db.update(users).set({ passwordHash: await hashPassword(temp), mustChangePassword: true }).where(eq(users.id, id));
   await endAllSessions(id);
+  await logChange(me, "user.reset", `Reset the password for ${u.name}.`);
   revalidatePath("/users");
   return { ok: true, message: `Password reset for ${u.name}. They've been signed out everywhere.`, tempPassword: temp };
 }

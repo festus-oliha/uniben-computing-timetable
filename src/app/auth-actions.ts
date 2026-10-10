@@ -7,6 +7,7 @@ import { users } from "@/lib/db/schema";
 import { hashPassword, passwordProblem, verifyPassword } from "@/lib/auth/password";
 import { countUsers, endSession, getCurrentUser, startSession } from "@/lib/auth/session";
 import type { ActionResult } from "@/lib/types";
+import { logChange } from "@/lib/audit";
 
 /** Form result that also hands back what was typed, so the form can keep it after an error. */
 export type FormState = ActionResult & { values?: Record<string, string> };
@@ -59,6 +60,7 @@ export async function setupFirstAdmin(_prev: FormState | null, form: FormData): 
     .insert(users)
     .values({ name, email, role: "admin", passwordHash: await hashPassword(password), mustChangePassword: false })
     .returning({ id: users.id });
+  await logChange({ id: u.id, name }, "user.create", `Created the first Faculty Time-Table Officer account (${email}).`);
   await startSession(u.id);
   redirect("/");
 }

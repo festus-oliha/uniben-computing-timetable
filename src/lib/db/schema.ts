@@ -131,3 +131,20 @@ export const sessions = pgTable("sessions", {
 
 export type User = typeof users.$inferSelect;
 export type UserRole = (typeof userRole.enumValues)[number];
+
+/* ---------- change history ---------- */
+
+/** One line per change, written by the server actions. Names are copied in so history survives deleted accounts. */
+export const auditLog = pgTable("audit_log", {
+  id: serial("id").primaryKey(),
+  at: timestamp("at", { withTimezone: true }).notNull().defaultNow(),
+  userId: uuid("user_id").references(() => users.id, { onDelete: "set null" }),
+  userName: text("user_name").notNull(),
+  /** e.g. "booking.move", "course.edit", "signoff.save" — see src/lib/audit.ts */
+  action: text("action").notNull(),
+  /** Plain-language description shown on the History page. */
+  summary: text("summary").notNull(),
+  semesterId: integer("semester_id").references(() => semesters.id, { onDelete: "set null" }),
+});
+
+export type AuditEntry = typeof auditLog.$inferSelect;

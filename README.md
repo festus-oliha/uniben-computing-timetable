@@ -16,6 +16,7 @@ Officers drag courses around a venue × day grid, and the app flags clashes as t
   *Print / PDF* opens the same layout for printing or "Save as PDF". Other faculties' bookings print as blanks.
 - **Logins and roles** — *Faculty Time-Table Officer* (everything, accounts, sign-off), *Department Officer*
   (their own department's course lectures, courses and lecturers), *Viewer* (look and export only).
+- **History** — every change (moves, edits, deletions, courses, lecturers, sign-off, accounts) with who and when.
 - **Sign-off** — the Faculty Time-Table Officer sets the signing date and adds a signature (drawn on screen or
   uploaded as a scan). Both print on the exports; until it's signed, exports show a blank date and signature line.
 - Loaded with the **2026/2027 First Semester** timetable.
@@ -166,5 +167,6 @@ The "Signed" date and signature come from the **Sign-off** tab (stored per semes
 1. ✅ Timetable grid, drag-and-drop, clash checks, courses, lecturers
 2. ✅ Word/PDF export in the official faculty timetable design, with online sign-off
 3. ✅ Logins with roles — Faculty Officer (everything), Department Officer (own department), Viewer
-4. Public read-only view for students and lecturers, filtered by level, department or lecturer
-5. Change history, and "copy this semester" to start the next one
+4. ✅ Change history
+5. Settings: start the next semester, publish, venues
+6. Public read-only view for students and lecturers, filtered by level, department or lecturer
