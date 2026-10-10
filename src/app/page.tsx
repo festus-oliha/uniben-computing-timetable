@@ -124,8 +124,10 @@ export default async function HomePage() {
           <ul>
             {FACULTY_DEPARTMENTS.map((d) => (
               <li key={d.code}>
-                <span className="code">{d.code}</span>
-                <span>{d.name}</span>
+                <Link href={`/departments/${d.code.toLowerCase()}`}>
+                  <span className="code">{d.code}</span>
+                  <span>{d.name}</span>
+                </Link>
               </li>
             ))}
           </ul>

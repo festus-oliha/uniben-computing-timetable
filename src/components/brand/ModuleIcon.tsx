@@ -1,9 +1,33 @@
-import type { ModuleInfo } from "@/lib/site-content";
+import type { IconName } from "@/lib/site-content";
 
 /** Line icons for the FaCoMS modules (24 × 24, drawn in the current text colour). */
-export function ModuleIcon({ slug, size = 28 }: { slug: ModuleInfo["slug"]; size?: number }) {
+export function ModuleIcon({ slug, size = 28 }: { slug: IconName; size?: number }) {
   const common = { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.7, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, "aria-hidden": true };
   switch (slug) {
+    case "departments": // a faculty building with columns
+      return (
+        <svg {...common}>
+          <path d="M3 9.5L12 4l9 5.5" />
+          <path d="M4.5 9.5h15" />
+          <path d="M6.5 10v7M10 10v7M14 10v7M17.5 10v7" />
+          <path d="M3.5 20h17M4.5 17.5h15" />
+        </svg>
+      );
+    case "news": // a folded newspaper
+      return (
+        <svg {...common}>
+          <path d="M4 5h13v13.5A1.5 1.5 0 0 0 18.5 20H6a2 2 0 0 1-2-2z" />
+          <path d="M17 9h3v9.5a1.5 1.5 0 0 1-3 0" />
+          <path d="M7 8.5h7M7 12h7M7 15.5h4" />
+        </svg>
+      );
+    case "prospectus": // an open book
+      return (
+        <svg {...common}>
+          <path d="M12 6.5C10 5 7 4.5 3.5 5v13c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5V5C17 4.5 14 5 12 6.5z" />
+          <path d="M12 6.5v13" />
+        </svg>
+      );
     case "projects": // a bound project report with a bookmark
       return (
         <svg {...common}>

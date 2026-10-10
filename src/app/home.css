@@ -57,7 +57,9 @@
 .hm-about p { margin: 0 0 14px; max-width: 62ch; font-size: 16px; line-height: 1.65; }
 .hm-uni { color: var(--teal); font-weight: 700; }
 .hm-depts ul { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--navy); }
-.hm-depts li { display: grid; grid-template-columns: 56px 1fr; align-items: baseline; padding: 11px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
+.hm-depts li { border-bottom: 1px solid var(--line); font-size: 15px; }
+.hm-depts li a { display: grid; grid-template-columns: 56px 1fr; align-items: baseline; padding: 11px 0; color: var(--ink); text-decoration: none; }
+.hm-depts li a:hover span:last-child { color: var(--teal); text-decoration: underline; }
 .hm-depts .code { font-family: var(--font-display); font-weight: 800; color: var(--teal); letter-spacing: .02em; }
 @media (prefers-color-scheme: dark) { .hm-depts ul { border-top-color: var(--teal); } }
 

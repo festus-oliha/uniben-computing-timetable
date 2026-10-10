@@ -24,9 +24,10 @@ Next.js 15 (App Router, server actions) · React 19 · TypeScript · Tailwind 4 
 - PGlite allows one process at a time: stop `npm run dev` before running db/user scripts.
 - Every server action that changes data also calls `logChange()` (src/lib/audit.ts) with a plain-language summary.
 - The app is **FaCoMS** (Faculty of Computing Management System). `/` is the public FaCoMS home with the module board
-  (Projects, Seminars, Timetable, Staff Members, Results and Records); module list, about text and departments live in
+  (Departments, Faculty News, Timetable, Staff Members, Prospectus); module list, about text and departments live in
   `src/lib/site-content.ts` (`MODULES`, `SITE`). Timetable module hub: `/timetables`; staff timetable workspace: `/timetable`;
-  modules still being built show `/modules/[slug]`. Logo: `src/components/brand/FacomsLogo.tsx` (favicon `src/app/icon.svg`).
+  modules still being built show `/modules/[slug]`. Departments: `/departments` and `/departments/[code]` (staff,
+  timetables); Projects, Seminars and Results & Records belong to each department page (`DEPARTMENT_FEATURES`). Logo: `src/components/brand/FacomsLogo.tsx` (favicon `src/app/icon.svg`).
   Every public page links to https://www.uniben.edu/. Printed documents keep the UNIBEN crest.
   The Dean's profile/photo, mission and vision are edited in Settings → Home page (table `site_content`, key "home",
   rules in `src/lib/home-content.ts`); the home section stays hidden until filled. Footers credit

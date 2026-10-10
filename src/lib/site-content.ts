@@ -11,18 +11,21 @@ export const SITE = {
   faculty: "Faculty of Computing",
   builtBy: "JVeeSoft-IT",
   copyrightYear: 2026,
-  tagline: "One place for the Faculty's projects, seminars, timetables, staff and records.",
+  tagline: "One place for the Faculty's departments, news, timetables, staff and prospectus.",
   /** Placeholder wording — replace with the Faculty's official description. */
   about: [
     "The Faculty of Computing at the University of Benin brings the University's computing and information technology departments together in one faculty. It runs undergraduate (B.Sc.), postgraduate (PGD, M.Sc. and Ph.D.) and part-time programmes.",
-    "FaCoMS is the Faculty's own management system. Students and staff use it to find timetables and, as each module is added, to follow projects and seminars, look up staff, and keep results and records.",
+    "FaCoMS is the Faculty's own management system. Students and staff use it to find timetables, look up staff and departments and, as each part is added, to follow Faculty news, read the prospectus, and manage each department's projects, seminars and records.",
   ],
 };
 
 export type ModuleStatus = "live" | "building";
 
+/** Icons available for modules and department features (see src/components/brand/ModuleIcon.tsx). */
+export type IconName = "departments" | "news" | "timetable" | "staff" | "prospectus" | "projects" | "seminars" | "records";
+
 export interface ModuleInfo {
-  slug: "projects" | "seminars" | "timetable" | "staff" | "records";
+  slug: "departments" | "news" | "timetable" | "staff" | "prospectus";
   name: string;
   /** One line on the home page. */
   purpose: string;
@@ -37,20 +40,20 @@ export interface ModuleInfo {
 /** The FaCoMS modules, in the order they appear on the home page. Set status to "live" as each is built. */
 export const MODULES: ModuleInfo[] = [
   {
-    slug: "projects",
-    name: "Projects",
-    purpose: "Final-year and postgraduate projects, from topic to defence.",
-    plans: ["Project topics and approval", "Supervisor allocation by department", "Proposal, chapter and final submissions", "Defence schedules and panels"],
-    status: "building",
-    href: "/modules/projects",
+    slug: "departments",
+    name: "Departments",
+    purpose: "Each department's page: its staff, programmes, projects, seminars and records.",
+    plans: [],
+    status: "live",
+    href: "/departments",
   },
   {
-    slug: "seminars",
-    name: "Seminars",
-    purpose: "Departmental and postgraduate seminar schedules.",
-    plans: ["Seminar calendar by department", "Presenters, topics and venues", "Attendance and assessment", "Year 5 part-time seminar presentations"],
+    slug: "news",
+    name: "Faculty News",
+    purpose: "Announcements, events and achievements across the Faculty.",
+    plans: ["News and announcements from the Dean's office", "Events, conferences and workshops", "Staff and student achievements", "Notices for students, by department and level"],
     status: "building",
-    href: "/modules/seminars",
+    href: "/modules/news",
   },
   {
     slug: "timetable",
@@ -69,14 +72,20 @@ export const MODULES: ModuleInfo[] = [
     href: "/staff",
   },
   {
-    slug: "records",
-    name: "Results and Records",
-    purpose: "Course results, approvals and student records.",
-    plans: ["Course result entry by lecturers", "Department and Faculty approval steps", "Student academic records", "Reports for Senate and the Examinations unit"],
+    slug: "prospectus",
+    name: "Prospectus",
+    purpose: "Programmes, admission requirements and course outlines.",
+    plans: ["Programmes offered by each department", "Admission and entry requirements", "Course outlines by level and semester", "Graduation requirements and regulations", "Download the prospectus as a PDF"],
     status: "building",
-    href: "/modules/records",
-    staffOnly: true,
+    href: "/modules/prospectus",
   },
+];
+
+/** Parts of each department's page that are still being built (shown on the department pages). */
+export const DEPARTMENT_FEATURES: { icon: IconName; name: string; purpose: string; staffOnly?: boolean }[] = [
+  { icon: "projects", name: "Projects", purpose: "Final-year and postgraduate project topics, supervisors, submissions and defences." },
+  { icon: "seminars", name: "Seminars", purpose: "The department's seminar calendar: presenters, topics, venues and assessment." },
+  { icon: "records", name: "Results and Records", purpose: "Course results, approvals and student records.", staffOnly: true },
 ];
 
 /** The Faculty's departments, shown on the home page (codes match course prefixes). */
