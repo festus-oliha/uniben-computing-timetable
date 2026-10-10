@@ -29,6 +29,15 @@ Officers drag courses around a venue × day grid, and the app flags clashes as t
 - **History** — every change (moves, edits, deletions, courses, lecturers, sign-off, accounts) with who and when.
 - **Sign-off** — the Faculty Time-Table Officer sets the signing date and adds a signature (drawn on screen or
   uploaded as a scan). Both print on the exports; until it's signed, exports show a blank date and signature line.
+- **Examinations** (`/exams`) — examination timetables for Undergraduate (whole faculty), Part-time and M.Sc.
+  (one per department). Dates down the side, sessions across (Morning / Afternoon / Evening, or one M.Sc. session),
+  numbered SESSION 1, 2, 3 … like the official timetable. Add a paper with its venues (e.g. `COS202 (W, T, P1)`),
+  papers written together (`CSC313/CSC301`), part-time year groups (`Y2`), or whole-session blocks (GST, CED).
+  Drag papers between sessions. Clash checks: same students in one session, a course examined twice, and a warning
+  for two papers on one day. Undergraduate timetables list the lecture-timetable courses with no exam yet.
+  Each timetable has its own set-up (dates, session times, notes, signatory), sign-off, publish switch,
+  Word download (A4 portrait) and Print / PDF. Department officers run their own department's timetables and add
+  their own papers to the Faculty one. Students look them up at `/view/exams`.
 - Loaded with the **2026/2027 First Semester** timetable.
 
 ---
@@ -73,6 +82,7 @@ password to pass on privately, and chooses their own password at first sign-in.
 git pull             # get the latest changes
 npm install          # only needed if package.json changed
 npm run db:migrate   # only needed if a new file appeared in drizzle/ (safe to run any time)
+npm run db:seed      # adds any new venues from the seed file (e.g. the examination venues); keeps your edits
 npm run dev          # start the app at http://localhost:3000
 ```
 
@@ -141,7 +151,10 @@ src/
     clashes/            Full clash list
     print/              Paper layout for Print / Save as PDF
     export/docx/        Word download (GET /export/docx)
-    view/               Public timetable (no sign-in) — only published semesters
+    view/               Public timetable (no sign-in) — only published semesters; view/exams for examinations
+    (app)/exams/        Examination timetables: list, board (?tab=setup|sign), print
+    export/exam/[id]/   Examination Word download (public once published)
+    exam-actions.ts     All examination saves (server actions)
     sign/               Sign-off: signing date + drawn or uploaded signature
     actions.ts          All saves/moves/deletes (server actions, validated on the server)
   components/           Screen pieces: TimetableBoard (grid + drag-and-drop), BookingDrawer, tables …
@@ -150,6 +163,9 @@ src/
     clash.test.ts       Tests for the clash engine
     public-view.ts      Which lectures a class / lecturer / venue sees on the public page + tests
     semester.ts         Session format, next-semester suggestion, copy options + tests
+    exam.ts             ★ Examination rules: dates, session numbering, clash checks, public lists + tests
+    programmes.ts       Programmes (UG, PT, M.Sc., Ph.D., PGD) and their default sessions, days and notes
+    exam-data.ts        Database reads for the examination pages
     signoff.ts          Sign-off rules (date format, image checks, print sizing) + tests
     timetable.ts        Days, time slots, departments, colour rules
     export/             Word builder, print layout, and the fixed wording on page 2
@@ -183,3 +199,6 @@ The "Signed" date and signature come from the **Sign-off** tab (stored per semes
 4. ✅ Change history
 5. ✅ Settings: start the next semester, publish, venues
 6. ✅ Public read-only view for students and lecturers, filtered by level, department, lecturer or venue
+7. ✅ Examination timetables (Undergraduate, Part-time, M.Sc.) with clash checks, Word/PDF, sign-off and public look-up
+8. ⏳ Invigilation schedules — chief invigilator + assistants per paper, fair suggestions, duty counts
+9. ⏳ Part-time and M.Sc. lecture timetables (per department)

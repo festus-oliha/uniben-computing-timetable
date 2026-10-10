@@ -20,7 +20,7 @@ export async function getTimetableData(semesterId?: number): Promise<TimetableDa
     ? ((await db.select().from(semesters).where(eq(semesters.id, semesterId)))[0] ?? null)
     : await getCurrentSemester();
   const [venueRows, bookingRows, courseRows, lecturerRows, links] = await Promise.all([
-    db.select().from(venues).orderBy(asc(venues.sortOrder), asc(venues.code)),
+    db.select().from(venues).where(eq(venues.inLectureGrid, true)).orderBy(asc(venues.sortOrder), asc(venues.code)),
     semester ? db.select().from(bookings).where(eq(bookings.semesterId, semester.id)) : Promise.resolve([]),
     db.select().from(courses).orderBy(asc(courses.code)),
     db.select().from(lecturers).orderBy(asc(lecturers.name)),

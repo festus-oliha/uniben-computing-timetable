@@ -8,37 +8,176 @@
    "code": "T",
    "name": "1000 LT",
    "seats": 1000,
-   "sortOrder": 0
+   "sortOrder": 0,
+   "inLectureGrid": true
   },
   {
    "code": "W",
    "name": "500 LT",
    "seats": 500,
-   "sortOrder": 1
+   "sortOrder": 1,
+   "inLectureGrid": true
   },
   {
    "code": "E",
    "name": "Pre-Degree, Physics Laboratory A",
    "seats": 110,
-   "sortOrder": 2
+   "sortOrder": 2,
+   "inLectureGrid": true
   },
   {
    "code": "P1",
    "name": "400 Level CSC Class, Statistics Building",
    "seats": 120,
-   "sortOrder": 3
+   "sortOrder": 3,
+   "inLectureGrid": true
   },
   {
    "code": "P2",
    "name": "300 Level CSC Class, Statistics Building",
    "seats": 120,
-   "sortOrder": 4
+   "sortOrder": 4,
+   "inLectureGrid": true
   },
   {
    "code": "P4",
    "name": "Ground Floor LT for Computing Students, Statistics Building",
    "seats": 98,
-   "sortOrder": 5
+   "sortOrder": 5,
+   "inLectureGrid": true
+  },
+  {
+   "code": "A",
+   "name": "General Laboratory, Ground Floor, Mathematics/Geology Building",
+   "seats": 0,
+   "sortOrder": 20,
+   "inLectureGrid": false
+  },
+  {
+   "code": "C",
+   "name": "Physical Chemistry Laboratory",
+   "seats": 0,
+   "sortOrder": 21,
+   "inLectureGrid": false
+  },
+  {
+   "code": "F",
+   "name": "218 Lecture Theatre \u2018I\u2019",
+   "seats": 0,
+   "sortOrder": 22,
+   "inLectureGrid": false
+  },
+  {
+   "code": "G",
+   "name": "218 Lecture Theatre \u2018II\u2019",
+   "seats": 0,
+   "sortOrder": 23,
+   "inLectureGrid": false
+  },
+  {
+   "code": "J",
+   "name": "Part I, Physics Laboratory",
+   "seats": 0,
+   "sortOrder": 24,
+   "inLectureGrid": false
+  },
+  {
+   "code": "K",
+   "name": "Pre-Degree, Zoology Laboratory",
+   "seats": 0,
+   "sortOrder": 25,
+   "inLectureGrid": false
+  },
+  {
+   "code": "L",
+   "name": "Pre-Degree, Botany Laboratory",
+   "seats": 0,
+   "sortOrder": 26,
+   "inLectureGrid": false
+  },
+  {
+   "code": "M",
+   "name": "Inorganic Chemistry Laboratory",
+   "seats": 0,
+   "sortOrder": 27,
+   "inLectureGrid": false
+  },
+  {
+   "code": "N",
+   "name": "Organic Chemistry Laboratory",
+   "seats": 0,
+   "sortOrder": 28,
+   "inLectureGrid": false
+  },
+  {
+   "code": "Q",
+   "name": "Seminar Room, Chemistry Department",
+   "seats": 0,
+   "sortOrder": 29,
+   "inLectureGrid": false
+  },
+  {
+   "code": "S",
+   "name": "M.Sc. Class, Mathematics",
+   "seats": 0,
+   "sortOrder": 30,
+   "inLectureGrid": false
+  },
+  {
+   "code": "X1",
+   "name": "Biochemistry Laboratory",
+   "seats": 0,
+   "sortOrder": 31,
+   "inLectureGrid": false
+  },
+  {
+   "code": "X2",
+   "name": "Biochemistry Laboratory",
+   "seats": 0,
+   "sortOrder": 32,
+   "inLectureGrid": false
+  },
+  {
+   "code": "X3",
+   "name": "Biochemistry Lecture Theatre",
+   "seats": 0,
+   "sortOrder": 33,
+   "inLectureGrid": false
+  },
+  {
+   "code": "X4",
+   "name": "Biochemistry Lecture Theatre",
+   "seats": 0,
+   "sortOrder": 34,
+   "inLectureGrid": false
+  },
+  {
+   "code": "Z",
+   "name": "Seminar Room, Mathematics Department",
+   "seats": 0,
+   "sortOrder": 35,
+   "inLectureGrid": false
+  },
+  {
+   "code": "U1",
+   "name": "Itsueli Lab. I (Geology Department)",
+   "seats": 0,
+   "sortOrder": 36,
+   "inLectureGrid": false
+  },
+  {
+   "code": "U2",
+   "name": "Itsueli Lab. II (Geology Department)",
+   "seats": 0,
+   "sortOrder": 37,
+   "inLectureGrid": false
+  },
+  {
+   "code": "MSC",
+   "name": "M.Sc. Lecture Classroom, Computer Science",
+   "seats": 0,
+   "sortOrder": 38,
+   "inLectureGrid": false
   }
  ],
  "courses": [

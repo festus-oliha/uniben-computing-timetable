@@ -1,5 +1,6 @@
 import {
   boolean,
+  jsonb,
   integer,
   pgEnum,
   pgTable,
@@ -34,6 +35,8 @@ export const venues = pgTable("venues", {
   name: text("name").notNull(),
   seats: integer("seats").notNull(),
   sortOrder: integer("sort_order").notNull().default(0),
+  /** False for venues used only for examinations (e.g. F, G, M labs) — they don't get a row on the lecture grid. */
+  inLectureGrid: boolean("in_lecture_grid").notNull().default(true),
 });
 
 /** Courses are shared across semesters. `dept` is the code prefix (CSC, CYB, DTS …). */
@@ -51,6 +54,8 @@ export const lecturers = pgTable("lecturers", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull(),
   dept: text("dept"),
+  /** How the name prints on invigilation schedules, e.g. "OSASERI". Empty = surname in capitals. */
+  shortName: text("short_name"),
 });
 
 export const courseLecturers = pgTable(
@@ -151,3 +156,62 @@ export const auditLog = pgTable("audit_log", {
 });
 
 export type AuditEntry = typeof auditLog.$inferSelect;
+
+/* ---------- examinations ---------- */
+
+/** One examination session column, e.g. { name: "Morning Session", time: "8.00A.M. – 11.00A.M." }. */
+export type ExamSession = { name: string; time: string };
+
+/**
+ * An examination timetable: one per semester, programme and (for part-time / postgraduate) department.
+ * programme: "ug" | "pt" | "msc" | "phd" | "pgd"; dept is null for the Faculty-wide undergraduate timetable.
+ */
+export const examTimetables = pgTable("exam_timetables", {
+  id: serial("id").primaryKey(),
+  semesterId: integer("semester_id")
+    .notNull()
+    .references(() => semesters.id, { onDelete: "cascade" }),
+  programme: text("programme").notNull(),
+  dept: text("dept"),
+  title: text("title").notNull(),
+  sessions: jsonb("sessions").$type<ExamSession[]>().notNull(),
+  /** The examination dates, YYYY-MM-DD, in order. Empty dates still print (with their session numbers). */
+  dates: jsonb("dates").$type<string[]>().notNull(),
+  /** Numbered notes printed under the timetable (rules for candidates, venue notes …). */
+  notes: jsonb("notes").$type<string[]>().notNull().default([]),
+  /** Who signs this timetable, e.g. "F. O. Oliha, PhD." / "Faculty of Computing Time-Table Officer". */
+  signatoryName: text("signatory_name").notNull().default(""),
+  signatoryRole: text("signatory_role").notNull().default(""),
+  isPublished: boolean("is_published").notNull().default(false),
+  publishedAt: timestamp("published_at", { withTimezone: true }),
+  signedOn: text("signed_on"),
+  signatureImage: text("signature_image"),
+  signatureWidth: integer("signature_width"),
+  signatureHeight: integer("signature_height"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+/**
+ * One entry in an exam session: a paper ("CSC313/CSC301") or a whole-session block ("GST", "CED").
+ * venues: venue codes, e.g. ["W","T","P1"]. year: part-time year group, e.g. "Y2".
+ * chiefId / invigilatorIds: lecturers (filled in on the Invigilation screen).
+ */
+export const examPapers = pgTable("exam_papers", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  timetableId: integer("timetable_id")
+    .notNull()
+    .references(() => examTimetables.id, { onDelete: "cascade" }),
+  date: text("date").notNull(),
+  session: integer("session").notNull(),
+  label: text("label").notNull(),
+  kind: text("kind").notNull().default("paper"),
+  venues: jsonb("venues").$type<string[]>().notNull().default([]),
+  year: text("year"),
+  note: text("note").notNull().default(""),
+  chiefId: uuid("chief_id").references(() => lecturers.id, { onDelete: "set null" }),
+  invigilatorIds: jsonb("invigilator_ids").$type<string[]>().notNull().default([]),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export type ExamTimetable = typeof examTimetables.$inferSelect;
+export type ExamPaper = typeof examPapers.$inferSelect;

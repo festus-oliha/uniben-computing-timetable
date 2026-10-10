@@ -3,6 +3,7 @@ import { getPublishedSemesters, getTimetableData } from "@/lib/data";
 import { publicEntries, timeRange, type PublicFilter } from "@/lib/public-view";
 import { DEPARTMENTS, FACULTY_DEPTS, levelName } from "@/lib/timetable";
 import { PrintButton } from "@/components/PrintButton";
+import { PublicShell } from "@/components/PublicShell";
 import "./view.css";
 
 export const metadata = {
@@ -208,25 +209,5 @@ export default async function PublicView({ searchParams }: { searchParams: Promi
 }
 
 function Shell({ children, semester }: { children: React.ReactNode; semester?: string }) {
-  return (
-    <div className="pv">
-      <header className="pv-top">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/crest.png" alt="University of Benin crest" />
-        <a href="/" className="pv-home" title="Faculty home page">
-          <small>University of Benin</small>
-          <h1>Faculty of Computing</h1>
-          <p>Lecture Timetable{semester ? ` · ${semester}` : ""}</p>
-        </a>
-      </header>
-      <main className="pv-main">{children}</main>
-      <footer className="pv-foot">
-        <Link href="/">Faculty of Computing</Link> · University of Benin, Benin City
-        <span className="pv-noprint">
-          {" "}
-          · <Link href="/login">Staff sign in</Link>
-        </span>
-      </footer>
-    </div>
-  );
+  return <PublicShell subtitle={`Lecture Timetable${semester ? ` · ${semester}` : ""}`}>{children}</PublicShell>;
 }

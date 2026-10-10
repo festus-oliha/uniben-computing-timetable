@@ -44,3 +44,30 @@ export const DOCUMENT_TEXT = {
     forWhom: "For: Dean, Faculty of Computing.",
   },
 } as const;
+
+/** Fixed wording on examination timetables (from the Faculty's current examination timetable). */
+export const EXAM_TEXT = {
+  closing: "The Dean wishes you success in your examinations.",
+  /** Distribution for the Faculty-wide (undergraduate) examination timetable. */
+  cc: [
+    "The Vice-Chancellor",
+    "The Dean of Computing",
+    "The Dean of Physical Sciences",
+    "Dean of Life Sciences",
+    "Dean of Optometry",
+    "All Heads of Departments, Faculty of Computing",
+    "Dean's Notice Boards (Faculty of Computing)",
+    "Asst. Dean of Computing",
+    "Examination Officer, Faculty of Computing; Physical Sciences",
+    "Director CRPU",
+    "Director GST",
+    "Faculty Officer, Computing",
+    "D.R. (Academics)",
+    "D.R. (Admin.)",
+    "Director, Academic Planning",
+    "Head, UNIBEN Security Zone G",
+    "Chief Security Officer (CSO)",
+  ],
+  /** Distribution for a department's part-time / postgraduate examination timetable. */
+  deptCc: ["The Dean, Faculty of Computing", "Head of Department", "Examination Officer, Faculty of Computing", "Faculty Time-Table Officer", "Departmental Notice Board"],
+} as const;

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { clearSignoff, saveSignoff } from "@/app/actions";
 import { MAX_SIGNATURE_BYTES, formatSignedDate, type Signoff } from "@/lib/signoff";
 import { useToast } from "./Toast";
+import type { ActionResult } from "@/lib/types";
 
 type Mode = "draw" | "upload";
 type Img = { url: string; width: number; height: number } | null;
@@ -42,8 +43,18 @@ function trimmed(canvas: HTMLCanvasElement): Img {
   return { url: out.toDataURL("image/png"), width: w, height: h };
 }
 
-export function SignoffPanel(props: { initial: Signoff; semesterLabel: string; signatory: { name: string; role: string } }) {
+export function SignoffPanel(props: {
+  initial: Signoff;
+  semesterLabel: string;
+  signatory: { name: string; role: string };
+  /** Defaults to the lecture timetable's sign-off; exam timetables pass their own (bound) actions. */
+  onSave?: (s: Signoff) => Promise<ActionResult>;
+  onClear?: () => Promise<ActionResult>;
+  heading?: string;
+}) {
   const { initial, semesterLabel, signatory } = props;
+  const doSave = props.onSave ?? saveSignoff;
+  const doClear = props.onClear ?? clearSignoff;
   const router = useRouter();
   const toast = useToast();
   const [pending, startTransition] = useTransition();
@@ -61,7 +72,7 @@ export function SignoffPanel(props: { initial: Signoff; semesterLabel: string; s
       return;
     }
     startTransition(async () => {
-      const r = await saveSignoff({ signedOn: date || null, image: img?.url ?? null, width: img?.width ?? null, height: img?.height ?? null });
+      const r = await doSave({ signedOn: date || null, image: img?.url ?? null, width: img?.width ?? null, height: img?.height ?? null });
       toast(r.ok ? r.message ?? "Saved." : r.error, !r.ok);
       if (r.ok) router.refresh();
     });
@@ -70,7 +81,7 @@ export function SignoffPanel(props: { initial: Signoff; semesterLabel: string; s
   function clear() {
     if (!confirmClear) return setConfirmClear(true);
     startTransition(async () => {
-      const r = await clearSignoff();
+      const r = await doClear();
       toast(r.ok ? r.message ?? "Removed." : r.error, !r.ok);
       setConfirmClear(false);
       if (r.ok) {
@@ -83,7 +94,7 @@ export function SignoffPanel(props: { initial: Signoff; semesterLabel: string; s
   return (
     <div className="signoff">
       <section className="card">
-        <h2>Sign-off · {semesterLabel}</h2>
+        <h2>{props.heading ?? "Sign-off"} · {semesterLabel}</h2>
         <p className="hint">
           The signing date and signature below are printed on the Word and PDF timetable. They don&apos;t change when the
           timetable is exported or edited. Update them here when you sign a new issue.

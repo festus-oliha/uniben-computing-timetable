@@ -23,6 +23,7 @@ export interface VenueRow {
   seats: number;
   sortOrder: number;
   bookings: number;
+  inLectureGrid: boolean;
 }
 
 export function SettingsPanel({ semesters, venues }: { semesters: SemesterRow[]; venues: VenueRow[] }) {
@@ -43,7 +44,7 @@ export function SettingsPanel({ semesters, venues }: { semesters: SemesterRow[];
     makeCurrent: false,
   });
   const [confirmSwitch, setConfirmSwitch] = useState<number | null>(null);
-  const [newVenue, setNewVenue] = useState({ code: "", name: "", seats: "", sortOrder: String((venues.at(-1)?.sortOrder ?? 0) + 1) });
+  const [newVenue, setNewVenue] = useState({ code: "", name: "", seats: "", sortOrder: String((venues.at(-1)?.sortOrder ?? 0) + 1), examsOnly: false });
 
   const run = (p: Promise<ActionResult>, after?: () => void) =>
     startTransition(async () => {
@@ -175,7 +176,7 @@ export function SettingsPanel({ semesters, venues }: { semesters: SemesterRow[];
 
       <section className="card">
         <h2>Venues</h2>
-        <p className="hint">Order sets where each venue appears on the timetable and printouts (lowest first).</p>
+        <p className="hint">Order sets where each venue appears on the timetable and printouts (lowest first). Untick <b>Lecture grid</b> for venues used only for examinations. Seats 0 = unknown.</p>
         <div className="tblwrap">
           <table className="t">
             <thead>
@@ -184,6 +185,7 @@ export function SettingsPanel({ semesters, venues }: { semesters: SemesterRow[];
                 <th>Description (printed in the venue key)</th>
                 <th>Seats</th>
                 <th>Order</th>
+                <th>Lecture grid</th>
                 <th>Bookings</th>
                 <th />
               </tr>
@@ -200,8 +202,8 @@ export function SettingsPanel({ semesters, venues }: { semesters: SemesterRow[];
           onSubmit={(e) => {
             e.preventDefault();
             run(
-              saveVenue({ code: newVenue.code, name: newVenue.name, seats: Number(newVenue.seats), sortOrder: Number(newVenue.sortOrder), isNew: true }),
-              () => setNewVenue({ code: "", name: "", seats: "", sortOrder: String(Number(newVenue.sortOrder) + 1) }),
+              saveVenue({ code: newVenue.code, name: newVenue.name, seats: Number(newVenue.seats || 0), sortOrder: Number(newVenue.sortOrder), isNew: true, inLectureGrid: !newVenue.examsOnly }),
+              () => setNewVenue({ code: "", name: "", seats: "", sortOrder: String(Number(newVenue.sortOrder) + 1), examsOnly: false }),
             );
           }}
         >
@@ -220,6 +222,10 @@ export function SettingsPanel({ semesters, venues }: { semesters: SemesterRow[];
           <label className="fld" style={{ minWidth: 80 }}>
             <span>Order</span>
             <input id="venue-order" type="number" min={0} value={newVenue.sortOrder} onChange={(e) => setNewVenue({ ...newVenue, sortOrder: e.target.value })} />
+          </label>
+          <label className="toggle-row">
+            <input type="checkbox" checked={newVenue.examsOnly} onChange={(e) => setNewVenue({ ...newVenue, examsOnly: e.target.checked })} />
+            Exams only
           </label>
           <button className="btn primary" type="submit" disabled={pending}>
             Add venue
@@ -251,11 +257,12 @@ function PublishToggle({ s, disabled, onChange }: { s: SemesterRow; disabled: bo
   );
 }
 
-function VenueEditRow({ v, pending, onSave }: { v: VenueRow; pending: boolean; onSave: (x: { code: string; name: string; seats: number; sortOrder: number }) => void }) {
+function VenueEditRow({ v, pending, onSave }: { v: VenueRow; pending: boolean; onSave: (x: { code: string; name: string; seats: number; sortOrder: number; inLectureGrid: boolean }) => void }) {
   const [name, setName] = useState(v.name);
   const [seats, setSeats] = useState(String(v.seats));
   const [order, setOrder] = useState(String(v.sortOrder));
-  const dirty = name !== v.name || seats !== String(v.seats) || order !== String(v.sortOrder);
+  const [grid, setGrid] = useState(v.inLectureGrid);
+  const dirty = name !== v.name || seats !== String(v.seats) || order !== String(v.sortOrder) || grid !== v.inLectureGrid;
   return (
     <tr>
       <td className="code">{v.code}</td>
@@ -268,10 +275,16 @@ function VenueEditRow({ v, pending, onSave }: { v: VenueRow; pending: boolean; o
       <td>
         <input aria-label={`${v.code} order`} className="seats-in num" type="number" min={0} value={order} onChange={(e) => setOrder(e.target.value)} />
       </td>
+      <td>
+        <label className="toggle-row">
+          <input type="checkbox" aria-label={`${v.code} on the lecture grid`} checked={grid} onChange={(e) => setGrid(e.target.checked)} />
+          {grid ? "Yes" : "Exams only"}
+        </label>
+      </td>
       <td className="num">{v.bookings}</td>
       <td>
         {dirty && (
-          <button type="button" className="btn primary" disabled={pending} onClick={() => onSave({ code: v.code, name, seats: Number(seats), sortOrder: Number(order) })}>
+          <button type="button" className="btn primary" disabled={pending} onClick={() => onSave({ code: v.code, name, seats: Number(seats), sortOrder: Number(order), inLectureGrid: grid })}>
             Save
           </button>
         )}

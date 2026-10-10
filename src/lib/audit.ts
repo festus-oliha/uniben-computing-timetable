@@ -7,6 +7,10 @@ import { DAYS, SLOTS } from "./timetable";
 export const AUDIT_GROUPS: Record<string, { label: string; actions: string[] }> = {
   timetable: { label: "Timetable", actions: ["booking.add", "booking.edit", "booking.move", "booking.delete"] },
   courses: { label: "Courses & lecturers", actions: ["course.add", "course.edit", "course.delete", "lecturer.add", "lecturer.remove"] },
+  exams: {
+    label: "Examinations",
+    actions: ["exam.create", "exam.setup", "exam.publish", "exam.delete", "exam.signoff", "exam.paper.add", "exam.paper.edit", "exam.paper.move", "exam.paper.delete"],
+  },
   signoff: { label: "Sign-off", actions: ["signoff.save", "signoff.clear"] },
   accounts: { label: "Accounts", actions: ["user.create", "user.update", "user.reset"] },
   settings: { label: "Settings", actions: ["semester.create", "semester.current", "semester.publish", "venue.add", "venue.edit"] },

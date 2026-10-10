@@ -52,3 +52,14 @@
   .pv-day li { break-inside: avoid; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
 .pv-home { color: inherit; text-decoration: none; }
+.pv-h { font-family: var(--font-display); font-size: 18px; margin: 0 0 10px; }
+.pv-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.pv-list a { display: grid; gap: 2px; padding: 12px 14px; border: 1px solid var(--line); border-left: 4px solid var(--teal); border-radius: 8px; text-decoration: none; color: var(--ink); }
+.pv-list a:hover { background: var(--soft); }
+.pv-list span { font-size: 13px; color: var(--mute); }
+.pv-crumb { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: baseline; margin: 0 0 12px; font-size: 14px; }
+.pv-crumb a { color: var(--teal); font-weight: 600; }
+.pv-crumb a::after { content: " ›"; color: var(--mute); }
+.pv-links { margin: 12px 0 0; font-size: 13px; }
+.pv-links a { color: var(--teal); font-weight: 600; }
+.pv-day .t small { font-weight: 500; opacity: .85; }

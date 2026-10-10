@@ -51,3 +51,54 @@ export interface TimetableData {
 }
 
 export type ActionResult = { ok: true; message?: string } | { ok: false; error: string };
+
+/* ---------- examinations ---------- */
+
+export interface ExamSessionDTO {
+  name: string;
+  time: string;
+}
+
+export interface ExamTimetableDTO {
+  id: number;
+  semesterId: number;
+  programme: string;
+  dept: string | null;
+  title: string;
+  sessions: ExamSessionDTO[];
+  dates: string[];
+  notes: string[];
+  signatoryName: string;
+  signatoryRole: string;
+  isPublished: boolean;
+  signedOn: string | null;
+  hasSignature: boolean;
+}
+
+export interface ExamPaperDTO {
+  id: string;
+  date: string;
+  session: number;
+  label: string;
+  kind: "paper" | "block";
+  venues: string[];
+  year: string | null;
+  note: string;
+  chiefId: string | null;
+  invigilatorIds: string[];
+}
+
+export interface ExamVenueDTO extends VenueDTO {
+  inLectureGrid: boolean;
+}
+
+export interface ExamBoardData {
+  semester: SemesterDTO;
+  timetable: ExamTimetableDTO;
+  papers: ExamPaperDTO[];
+  venues: ExamVenueDTO[];
+  courses: CourseDTO[];
+  lecturers: LecturerDTO[];
+  /** Courses on this semester's lecture timetable — each should get an examination. */
+  taughtCodes: string[];
+}

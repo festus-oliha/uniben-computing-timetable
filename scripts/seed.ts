@@ -4,7 +4,8 @@
  *   npm run db:seed            → loads it if that semester isn't in the database yet
  *   npm run db:seed -- --reset → replaces that semester's bookings with the file's contents
  *
- * Venues and courses are added if missing and never overwritten, so edits made in the app are kept.
+ * Venues (including exam-only venues) and courses are added if missing and never overwritten, so edits made in the app are kept.
+ * Run it again after an update to pick up any new venues; existing bookings are left alone.
  */
 import "./env";
 import { readFileSync } from "node:fs";
@@ -14,7 +15,7 @@ import { bookings, courses, semesters, venues } from "../src/lib/db/schema";
 
 type SeedFile = {
   semester: { session: string; name: string };
-  venues: { code: string; name: string; seats: number; sortOrder: number }[];
+  venues: { code: string; name: string; seats: number; sortOrder: number; inLectureGrid?: boolean }[];
   courses: { code: string; level: number; dept: string; isCommon: boolean }[];
   bookings: {
     venue: string;

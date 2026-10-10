@@ -1,0 +1,51 @@
+/* Paper layout for an examination timetable — A4 portrait, always light. Mirrors the Word export. */
+@page xexam { size: A4 portrait; margin: 9mm 10mm; }
+
+.xp-root { --p-navy: #0b2545; --p-teal: #0e7c7b; --p-ink: #1e293b; --p-mute: #64748b; --p-line: #cbd5e1; color-scheme: light; font-family: Calibri, Carlito, "IBM Plex Sans", Arial, sans-serif; page: xexam; }
+.xp-root .print-toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 14px; }
+.xp-root .print-toolbar .btn { text-decoration: none; color: var(--ink); }
+.xp-root .print-toolbar .btn.primary { color: #fff; }
+.xp-sheet { background: #fff; color: var(--p-ink); max-width: 800px; margin: 0 auto 18px; padding: 22px 26px; box-shadow: 0 2px 14px rgba(0,0,0,.12); overflow-x: auto; }
+.xp-title { display: grid; grid-template-columns: 58px 1fr; gap: 12px; align-items: center; text-align: center; border-bottom: 2px solid var(--p-teal); padding-bottom: 6px; margin-bottom: 8px; }
+.xp-title img { width: 54px; }
+.xp-title h1 { margin: 0; font-size: 20px; color: var(--p-navy); letter-spacing: .04em; }
+.xp-title small { display: block; font-size: 9px; letter-spacing: .22em; font-weight: 700; color: var(--p-mute); }
+.xp-title p { margin: 3px 0 0; font-size: 11px; font-weight: 700; color: var(--p-teal); }
+.xp-title p.dept { color: var(--p-navy); }
+.xp-grid { width: 100%; min-width: 560px; border-collapse: collapse; table-layout: fixed; font-size: 10px; }
+.xp-grid th { background: var(--p-navy); color: #fff; padding: 4px 3px; border: 1px solid #3a5578; font-size: 9.5px; letter-spacing: .05em; }
+.xp-grid th small { display: block; font-weight: 500; color: #d5deea; }
+.xp-grid td { border: 1px solid var(--p-line); padding: 2px 4px 4px; vertical-align: top; text-align: center; }
+.xp-grid td.d { background: #f5f7fa; vertical-align: middle; }
+.xp-grid td.d b { display: block; color: var(--p-navy); }
+.xp-grid td.d span { font-size: 9px; color: var(--p-mute); }
+.xp-grid .sn { display: block; font-size: 7.5px; letter-spacing: .1em; color: var(--p-mute); font-weight: 700; }
+.xp-grid .ln { display: block; font-weight: 700; }
+.xp-grid .blk { display: block; font-weight: 700; letter-spacing: .3em; background: #fcefd2; color: #6e4300; margin-top: 2px; }
+.xp-grid tr.wk td { background: var(--p-teal); color: #fff; font-weight: 700; letter-spacing: .2em; font-size: 9px; text-align: left; padding: 2px 6px; }
+.xp-grid tr { break-inside: avoid; }
+.xp-two { display: grid; grid-template-columns: 1.4fr 1fr; gap: 22px; font-size: 9px; margin-top: 10px; break-inside: avoid; }
+.xp-two h2 { font-size: 10px; letter-spacing: .2em; color: var(--p-navy); border-bottom: 1px solid var(--p-teal); padding-bottom: 2px; margin: 0 0 5px; }
+.xp-notes { list-style: none; padding: 0; margin: 0; }
+.xp-notes li { display: grid; grid-template-columns: 18px 1fr; margin-bottom: 3px; line-height: 1.35; }
+.xp-notes li span { color: var(--p-teal); font-weight: 700; }
+.closing { font-weight: 700; font-style: italic; margin: 6px 0 0; }
+.xp-key { border-collapse: collapse; width: 100%; }
+.xp-key td { border-bottom: 1px solid var(--p-line); padding: 2px 4px; }
+.xp-key td b { color: var(--p-teal); }
+.xp-cc ul { list-style: none; padding: 0 0 0 4px; margin: 2px 0 0; columns: 2; column-gap: 14px; }
+.xp-cc li { margin-bottom: 1px; break-inside: avoid; }
+.xp-sign p { margin: 0 0 2px; }
+.xp-sign .signed, .xp-sign .for { color: var(--p-mute); font-style: italic; }
+.xp-sign .space { height: 26px; }
+.xp-sign .name { border-top: 1px solid var(--p-navy); width: 200px; padding-top: 3px; font-weight: 700; color: var(--p-navy); font-size: 10px; }
+
+@media print {
+  html, body { background: #fff !important; }
+  .top, .tabs, .print-toolbar, .toast { display: none !important; }
+  main { padding: 0 !important; }
+  .xp-sheet { box-shadow: none; padding: 0; margin: 0; max-width: none; overflow: visible; }
+  .xp-grid { min-width: 0; }
+  .xp-grid thead { display: table-header-group; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

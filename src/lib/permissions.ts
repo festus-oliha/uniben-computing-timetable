@@ -64,3 +64,33 @@ export function outsideDeptMessage(a: Actor | null): string {
   if (!a || a.role === "viewer") return "You have view-only access. Ask the Faculty Time-Table Officer to make this change.";
   return `You can only change ${a.dept ?? "your department's"} course lectures. Ask the Faculty Time-Table Officer for anything else.`;
 }
+
+/* ---------- examination timetables ---------- */
+
+/** An exam timetable belongs to the Faculty (dept null — undergraduate) or to one department (part-time, M.Sc., …). */
+export interface ExamScope {
+  dept: string | null;
+}
+
+/** Create, set up (dates, sessions, notes), publish, sign or delete a whole exam timetable. */
+export function canManageExamTimetable(a: Actor | null, t: ExamScope): boolean {
+  if (!a) return false;
+  if (a.role === "admin") return true;
+  return a.role === "dept_officer" && !!a.dept && t.dept === a.dept;
+}
+
+/**
+ * Add, move or edit one paper.
+ * Department timetables: the department's officer edits everything in them.
+ * The Faculty-wide undergraduate timetable: a department officer edits only papers whose courses are all theirs.
+ */
+export function canEditExamPaper(a: Actor | null, t: ExamScope, paper: { kind: string; label: string }, deptOf: DeptOf = deptFromCode): boolean {
+  if (!a) return false;
+  if (canManageExamTimetable(a, t)) return true;
+  if (a.role !== "dept_officer" || !a.dept || t.dept !== null || paper.kind !== "paper") return false;
+  const codes = codesOf(paper.label);
+  return codes.length > 0 && codes.every((c) => deptOf(c) === a.dept);
+}
+
+/** Who can see "add a paper" on a timetable at all. */
+export const canAddExamPapers = (a: Actor | null, t: ExamScope) => canManageExamTimetable(a, t) || (a?.role === "dept_officer" && !!a.dept && t.dept === null);

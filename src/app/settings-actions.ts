@@ -94,6 +94,8 @@ export interface VenueInput {
   seats: number;
   sortOrder: number;
   isNew: boolean;
+  /** False for venues used only for examinations. */
+  inLectureGrid?: boolean;
 }
 
 export async function saveVenue(input: VenueInput): Promise<ActionResult> {
@@ -102,21 +104,22 @@ export async function saveVenue(input: VenueInput): Promise<ActionResult> {
     const name = input.name.trim();
     if (!/^[A-Z0-9]{1,6}$/.test(code)) return { ok: false, error: "Venue codes are 1–6 letters or numbers, e.g. P5." };
     if (!name) return { ok: false, error: "Describe the venue, e.g. 500 LT." };
-    if (!Number.isInteger(input.seats) || input.seats < 1 || input.seats > 5000) return { ok: false, error: "Seats must be a whole number from 1 to 5000." };
+    if (!Number.isInteger(input.seats) || input.seats < 0 || input.seats > 5000) return { ok: false, error: "Seats must be a whole number from 0 (unknown) to 5000." };
     if (!Number.isInteger(input.sortOrder) || input.sortOrder < 0 || input.sortOrder > 999) return { ok: false, error: "Order must be a whole number." };
     const [existing] = await db.select().from(venues).where(eq(venues.code, code));
     if (input.isNew) {
       if (existing) return { ok: false, error: `Venue ${code} already exists.` };
-      await db.insert(venues).values({ code, name, seats: input.seats, sortOrder: input.sortOrder });
+      await db.insert(venues).values({ code, name, seats: input.seats, sortOrder: input.sortOrder, inLectureGrid: input.inLectureGrid ?? true });
       await logChange(me, "venue.add", `Added venue ${code} — ${name} (${input.seats} seats).`);
       return { ok: true, message: `Venue ${code} added.` };
     }
     if (!existing) return { ok: false, error: `Venue ${code} no longer exists.` };
-    await db.update(venues).set({ name, seats: input.seats, sortOrder: input.sortOrder }).where(eq(venues.code, code));
+    await db.update(venues).set({ name, seats: input.seats, sortOrder: input.sortOrder, ...(input.inLectureGrid === undefined ? {} : { inLectureGrid: input.inLectureGrid }) }).where(eq(venues.code, code));
     const changes: string[] = [];
     if (existing.name !== name) changes.push(`name “${existing.name}” → “${name}”`);
     if (existing.seats !== input.seats) changes.push(`seats ${existing.seats} → ${input.seats}`);
     if (existing.sortOrder !== input.sortOrder) changes.push(`order ${existing.sortOrder} → ${input.sortOrder}`);
+    if (input.inLectureGrid !== undefined && existing.inLectureGrid !== input.inLectureGrid) changes.push(input.inLectureGrid ? "now on the lecture grid" : "exams only");
     if (changes.length) await logChange(me, "venue.edit", `Venue ${code}: ${changes.join("; ")}.`);
     return { ok: true, message: `Venue ${code} saved.` };
   });

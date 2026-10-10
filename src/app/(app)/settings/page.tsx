@@ -30,7 +30,7 @@ export default async function SettingsPage() {
         bookings: semCount.get(s.id) ?? 0,
         signedOn: s.signedOn,
       }))}
-      venues={vens.map((v) => ({ code: v.code, name: v.name, seats: v.seats, sortOrder: v.sortOrder, bookings: venueCount.get(v.code) ?? 0 }))}
+      venues={vens.map((v) => ({ code: v.code, name: v.name, seats: v.seats, sortOrder: v.sortOrder, inLectureGrid: v.inLectureGrid, bookings: venueCount.get(v.code) ?? 0 }))}
     />
   );
 }

@@ -49,7 +49,7 @@ export const PROGRAMMES: ProgrammeSection[] = [
     subtitle: "B.Sc. programmes · 100 – 400 Level",
     schedules: [
       { label: "Lecture timetable", hint: "Your weekly lectures by level and department", href: "/view", status: "live" },
-      { label: "Examination timetable", hint: "Dates, times and venues of examinations", status: "soon" },
+      { label: "Examination timetable", hint: "Dates, times and venues of examinations", href: "/view/exams?programme=ug", status: "live" },
     ],
   },
   {
@@ -58,7 +58,7 @@ export const PROGRAMMES: ProgrammeSection[] = [
     subtitle: "M.Sc. · Ph.D. · PGD",
     schedules: [
       { label: "M.Sc. lecture timetable", hint: "Lectures, usually in the M.Sc. Lab", status: "soon" },
-      { label: "M.Sc. examination timetable", hint: "M.Sc. examinations", status: "soon" },
+      { label: "M.Sc. examination timetable", hint: "M.Sc. examinations", href: "/view/exams?programme=msc", status: "live" },
       { label: "Ph.D. timetable", hint: "Ph.D. seminars and course work", status: "soon" },
       { label: "PGD timetable", hint: "Postgraduate Diploma lectures and examinations", status: "soon" },
     ],
@@ -69,7 +69,7 @@ export const PROGRAMMES: ProgrammeSection[] = [
     subtitle: "Part-time degree programmes",
     schedules: [
       { label: "Part-time lecture timetable", hint: "Evening and weekend lectures", status: "soon" },
-      { label: "Part-time examination timetable", hint: "Part-time examinations", status: "soon" },
+      { label: "Part-time examination timetable", hint: "Part-time examinations", href: "/view/exams?programme=pt", status: "live" },
     ],
   },
   {

@@ -4,7 +4,7 @@ import { NextResponse, type NextRequest } from "next/server";
  * Sends anyone without a sign-in cookie to the sign-in page. The home page ("/") and the public pages stay open.
  * (This only checks that a cookie exists; every page and action also checks the session against the database.)
  */
-const PUBLIC = ["/login", "/setup", "/view"];
+const PUBLIC = ["/login", "/setup", "/view", "/export/exam"];
 
 export function middleware(req: NextRequest) {
   const { pathname, search } = req.nextUrl;

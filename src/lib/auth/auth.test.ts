@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { hashPassword, passwordProblem, temporaryPassword, verifyPassword } from "./password";
-import { canEditBooking, canEditCourse, canManageLecturer, canSignOff, canEditTimetable, type Actor } from "../permissions";
+import { canAddExamPapers, canEditBooking, canEditCourse, canEditExamPaper, canManageExamTimetable, canManageLecturer, canSignOff, canEditTimetable, type Actor } from "../permissions";
 
 describe("passwords", () => {
   it("verifies the right password and rejects the wrong one", async () => {
@@ -66,5 +66,34 @@ describe("permissions", () => {
     expect(canEditBooking(viewer, { kind: "course", label: "CSC301" })).toBe(false);
     expect(canEditCourse(viewer, { code: "CSC301", dept: "CSC" })).toBe(false);
     expect(canEditTimetable(null)).toBe(false);
+  });
+});
+
+describe("exam permissions", () => {
+  const admin: Actor = { role: "admin", dept: null };
+  const csc: Actor = { role: "dept_officer", dept: "CSC" };
+  const viewer: Actor = { role: "viewer", dept: null };
+  const ug = { dept: null };
+  const cscPT = { dept: "CSC" };
+  const dtsPT = { dept: "DTS" };
+
+  it("lets a department officer run their own department's exam timetables", () => {
+    expect(canManageExamTimetable(csc, cscPT)).toBe(true);
+    expect(canManageExamTimetable(csc, dtsPT)).toBe(false);
+    expect(canManageExamTimetable(csc, ug)).toBe(false);
+    expect(canEditExamPaper(csc, cscPT, { kind: "paper", label: "MTH101" })).toBe(true);
+  });
+
+  it("limits a department officer to their own papers on the Faculty timetable", () => {
+    expect(canEditExamPaper(csc, ug, { kind: "paper", label: "CSC311" })).toBe(true);
+    expect(canEditExamPaper(csc, ug, { kind: "paper", label: "DTS201" })).toBe(false);
+    expect(canEditExamPaper(csc, ug, { kind: "block", label: "GST" })).toBe(false);
+    expect(canAddExamPapers(csc, ug)).toBe(true);
+  });
+
+  it("gives the Faculty Officer everything and viewers nothing", () => {
+    expect(canManageExamTimetable(admin, dtsPT)).toBe(true);
+    expect(canEditExamPaper(viewer, ug, { kind: "paper", label: "CSC311" })).toBe(false);
+    expect(canAddExamPapers(viewer, cscPT)).toBe(false);
   });
 });

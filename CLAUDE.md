@@ -24,4 +24,8 @@ Next.js 15 (App Router, server actions) · React 19 · TypeScript · Tailwind 4 
 - PGlite allows one process at a time: stop `npm run dev` before running db/user scripts.
 - Every server action that changes data also calls `logChange()` (src/lib/audit.ts) with a plain-language summary.
 - `/` is the public home page (src/app/page.tsx, text in src/lib/site-content.ts); the staff workspace is `/timetable`.
-- Upcoming modules (need samples from the owner): exam timetables, invigilation schedules, PG (M.Sc./Ph.D./PGD) and part-time timetables.
+- Exams: `src/lib/exam.ts` (pure, tested) holds exam clash rules; writes go through `src/app/exam-actions.ts`.
+  An exam timetable has `dept = null` (Faculty-wide undergraduate) or a department (PT, M.Sc. …). Venues with
+  `in_lecture_grid = false` are exam-only and never appear on the lecture grid. Venues are not clash-checked in exams
+  (big halls hold several papers at once).
+- Upcoming modules: invigilation schedules (uses exam_papers.chief_id / invigilator_ids), PT and M.Sc. lecture timetables.
