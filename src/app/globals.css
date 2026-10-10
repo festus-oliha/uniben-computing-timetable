@@ -376,3 +376,19 @@ table.duties tr.zero td { color: var(--mute); }
 .pool b { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--mute); }
 .offlist { list-style: none; padding: 0; margin: 0 0 12px; display: grid; gap: 4px; font-size: 13px; }
 .offlist .linkbtn { margin-left: 8px; }
+
+/* ---------- part-time / postgraduate grid ---------- */
+.pgrid { position: relative; }
+.pgrid .h.sub { font-size: 10px; line-height: 1.25; padding: 5px 3px; }
+.pgrid .h.brk { writing-mode: horizontal-tb; transform: none; font-size: 9px; letter-spacing: 0; }
+.dayname { font-size: 12px !important; letter-spacing: .08em; writing-mode: vertical-rl; transform: rotate(180deg); }
+.vkey { list-style: none; margin: 0; padding: 0; font-size: 12px; display: grid; gap: 3px; }
+.vkey b { display: inline-block; min-width: 36px; font-family: var(--font-mono); color: var(--teal); }
+table.t.alloc input, table.t.alloc select { margin: 2px 0; }
+table.t.alloc .code-in { width: 90px; font-family: var(--font-mono); text-transform: uppercase; }
+table.t.alloc tr.editing td { background: var(--soft); vertical-align: top; }
+.nowrap { white-space: nowrap; }
+.list-edit .li.li-wide { grid-template-columns: 1fr auto; align-items: center; }
+.li-fields { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.li-fields input:not([type="checkbox"]), .li-fields textarea { flex: 1; min-width: 140px; }
+.li-fields input.short-in { flex: 0 0 90px; min-width: 0; }

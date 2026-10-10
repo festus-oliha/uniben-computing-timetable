@@ -49,6 +49,14 @@ Officers drag courses around a venue × day grid, and the app flags clashes as t
   Faculty's "PAPER (Y2, T) **CHIEF**: ASSISTANTS" style, plus each person's duties), Print / PDF, its own sign-off,
   and a publish switch — invigilators then look up their own duties by name at `/view/invigilation`.
   On the Lecturers tab you can paste a whole staff list and set each person's print name (e.g. EGWALI).
+- **Part-time & PG** (`/programmes`) — each department's Part-time, M.Sc., Ph.D. and PGD lecture timetables.
+  Part-time starts as Friday & Saturday × YEAR 1–6, hourly 8:00–1:00, BREAK 1:00–1:30, 1:30–5:30, with venue letters
+  A–F; M.Sc. starts as Monday–Friday, 9am–12pm and 1–4pm in the M.Sc. classroom. Days, rows, periods (and breaks),
+  venue key, calendar and notes are all editable, and a new semester can copy an earlier timetable.
+  Drag classes around; add FREE / PRACTICAL / TUTORIALS; clash checks for a year group, a venue or a lecturer
+  twice at once. A **Course allocation** list (core *, mandatory +, elective E, with lecturers, both semesters)
+  prints with the timetable and drives the lecturer checks. Word / Print in the department's layout, sign-off,
+  publish; students look it up by year at `/view/programme`.
 - Loaded with the **2026/2027 First Semester** timetable.
 
 ---
@@ -167,6 +175,8 @@ src/
     export/exam/[id]/   Examination Word download (public once published)
     exam-actions.ts     All examination saves (server actions)
     invigilation-actions.ts  All invigilation saves (assign, fill, clear, unavailable, hand over, settings)
+    programme-actions.ts     Part-time / postgraduate timetable saves (classes, set-up, course allocation …)
+    (app)/programmes/   Part-time & PG timetables: list, board (?tab=courses|setup|sign), print
     sign/               Sign-off: signing date + drawn or uploaded signature
     actions.ts          All saves/moves/deletes (server actions, validated on the server)
   components/           Screen pieces: TimetableBoard (grid + drag-and-drop), BookingDrawer, tables …
@@ -177,6 +187,7 @@ src/
     semester.ts         Session format, next-semester suggestion, copy options + tests
     exam.ts             ★ Examination rules: dates, session numbering, clash checks, public lists + tests
     invigilation.ts     ★ Invigilation rules: print names, who may be chief, checks, fair assistant suggestions + tests
+    programme.ts        ★ Part-time / PG timetable rules: templates, breaks, clash checks + tests
     programmes.ts       Programmes (UG, PT, M.Sc., Ph.D., PGD) and their default sessions, days and notes
     exam-data.ts        Database reads for the examination pages
     signoff.ts          Sign-off rules (date format, image checks, print sizing) + tests
@@ -214,4 +225,4 @@ The "Signed" date and signature come from the **Sign-off** tab (stored per semes
 6. ✅ Public read-only view for students and lecturers, filtered by level, department, lecturer or venue
 7. ✅ Examination timetables (Undergraduate, Part-time, M.Sc.) with clash checks, Word/PDF, sign-off and public look-up
 8. ✅ Invigilation schedules — chief chosen by the officer, fair assistant suggestions, availability, hand-overs, duty counts
-9. ⏳ Part-time and M.Sc. lecture timetables (per department)
+9. ✅ Part-time, M.Sc., Ph.D. and PGD lecture timetables per department, with course allocation

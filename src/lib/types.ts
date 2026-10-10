@@ -120,3 +120,33 @@ export interface ExamBoardData {
   taughtCodes: string[];
   unavailable: UnavailableDTO[];
 }
+
+/* ---------- part-time and postgraduate lecture timetables ---------- */
+
+export interface ProgrammeTimetableDTO {
+  id: number;
+  semesterId: number;
+  programme: string;
+  dept: string;
+  title: string;
+  days: number[];
+  groups: string[];
+  periods: { label: string; isBreak?: boolean }[];
+  venueKey: { code: string; name: string }[];
+  calendar: { weeks: string; dates: string; activity: string }[];
+  notes: string[];
+  signatoryName: string;
+  signatoryRole: string;
+  isPublished: boolean;
+  signedOn: string | null;
+}
+
+export interface ProgrammeBoardData {
+  semester: SemesterDTO;
+  timetable: ProgrammeTimetableDTO;
+  slots: import("./programme").PSlot[];
+  courses: import("./programme").PCourse[];
+  lecturers: LecturerDTO[];
+  /** Lecturers of each course from the main course list (used when the allocation list names nobody). */
+  courseLecturers: Record<string, string[]>;
+}

@@ -32,4 +32,7 @@ Next.js 15 (App Router, server actions) · React 19 · TypeScript · Tailwind 4 
   The chief invigilator is ALWAYS chosen by the officer in charge — never auto-filled — and can never be a lecturer
   of the paper's course. Suggestions fill empty assistant places only; never overwrite anyone assigned.
   exam_papers.invigilator_ids holds assistants only (chief is chief_id). Only canManageExamTimetable may change it.
-- Upcoming modules: PT and M.Sc. lecture timetables (per department).
+- Part-time / PG lecture timetables: rules in `src/lib/programme.ts` (pure, tested); writes in
+  `src/app/programme-actions.ts`; permission `canManageProgrammeTimetable` (admin or that dept's officer).
+  Days use JS weekday numbers (0 = Sunday); rows are `groups`; periods may be breaks (classes never cross one).
+  Venue letters are per timetable (`venue_key`), separate from the Faculty venue list.

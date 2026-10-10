@@ -1,0 +1,53 @@
+/* Part-time / postgraduate timetable on paper — always light. Mirrors the Word export. */
+@page pland { size: A4 landscape; margin: 8mm 9mm; }
+@page pport { size: A4 portrait; margin: 10mm 11mm; }
+.pp-root { --p-navy: #0b2545; --p-teal: #0e7c7b; --p-ink: #1e293b; --p-mute: #64748b; --p-line: #cbd5e1; color-scheme: light; font-family: Calibri, Carlito, "IBM Plex Sans", Arial, sans-serif; }
+.pp-root.land { page: pland; }
+.pp-root.port { page: pport; }
+.pp-root .print-toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 14px; }
+.pp-root .print-toolbar .btn { text-decoration: none; color: var(--ink); }
+.pp-root .print-toolbar .btn.primary { color: #fff; }
+.pp-sheet { background: #fff; color: var(--p-ink); max-width: 1120px; margin: 0 auto 18px; padding: 18px 22px; box-shadow: 0 2px 14px rgba(0,0,0,.12); overflow-x: auto; }
+.port .pp-sheet { max-width: 800px; }
+.pp-title { display: grid; grid-template-columns: 56px 1fr 56px; gap: 10px; align-items: center; text-align: center; border-bottom: 2px solid var(--p-teal); padding-bottom: 5px; margin-bottom: 8px; }
+.pp-title img { width: 52px; }
+.pp-title h1 { margin: 0; font-size: 17px; color: var(--p-navy); letter-spacing: .04em; }
+.pp-title small { display: block; font-size: 9px; font-weight: 700; letter-spacing: .16em; color: var(--p-mute); }
+.pp-title p { margin: 4px 0 0; font-size: 11px; font-weight: 700; color: var(--p-teal); }
+.pp-grid { width: 100%; min-width: 640px; border-collapse: collapse; table-layout: auto; font-size: 9.5px; }
+.pp-grid th { background: var(--p-navy); color: #fff; padding: 4px 3px; border: 1px solid #3a5578; font-size: 8.5px; font-weight: 700; }
+.pp-grid th.brk { background: var(--p-teal); width: 26px; font-size: 7px; }
+.pp-grid td { border: 1px solid var(--p-line); padding: 3px 4px; height: 20px; text-align: center; vertical-align: middle; }
+.pp-grid tr.first td { border-top: 1.5px solid var(--p-navy); }
+.pp-grid td.d { background: #e8eef4; font-weight: 800; color: var(--p-navy); letter-spacing: .08em; }
+.pp-grid td.g { background: #f5f7fa; font-weight: 700; color: var(--p-navy); white-space: nowrap; }
+.pp-grid td.b { background: var(--p-teal); color: #fff; font-weight: 700; font-size: 7px; letter-spacing: .3em; }
+.pp-grid td.b span { writing-mode: vertical-rl; transform: rotate(180deg); display: inline-block; }
+.pp-grid td.cls { background: #d7efec; color: #0a4f4c; font-weight: 700; border-left: 2.5px solid #0e7c7b; }
+.pp-grid td.act { background: #ece6f7; color: #44337a; font-style: italic; }
+.pp-below { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 26px; font-size: 9.5px; margin-top: 10px; }
+.pp-below h2 { font-size: 9.5px; letter-spacing: .18em; color: var(--p-navy); border-bottom: 1px solid var(--p-teal); margin: 0 0 4px; padding-bottom: 2px; }
+.pp-below h3 { font-size: 9.5px; margin: 6px 0 2px; color: var(--p-teal); }
+.vk { display: flex; flex-wrap: wrap; gap: 3px 16px; margin: 0; }
+.vk b { color: var(--p-teal); }
+.pp-cal { border-collapse: collapse; width: 100%; }
+.pp-cal th { text-align: left; font-size: 8px; color: var(--p-mute); border-bottom: 1px solid var(--p-line); }
+.pp-cal td { border-bottom: 1px solid var(--p-line); padding: 2px 4px; }
+.pp-notes { margin: 0; padding-left: 14px; grid-column: 1 / -1; }
+.pp-alloc { grid-column: 1 / -1; }
+.pp-alloc ol { margin: 0; padding-left: 20px; list-style: decimal; }
+.pp-notes { list-style: disc; }
+.hint-p { color: var(--p-mute); font-style: italic; margin: 4px 0 0; }
+.pp-sign p { margin: 0 0 2px; }
+.pp-sign .signed { color: var(--p-mute); font-style: italic; }
+.pp-sign .space { height: 24px; }
+.pp-sign .name { border-top: 1px solid var(--p-navy); width: 220px; padding-top: 3px; font-weight: 700; color: var(--p-navy); font-size: 10px; }
+
+@media print {
+  html, body { background: #fff !important; }
+  .top, .tabs, .print-toolbar, .toast, .pv-top, .pv-find, .pv-foot, .pv-noprint { display: none !important; }
+  main { padding: 0 !important; }
+  .pp-sheet { box-shadow: none; padding: 0; margin: 0; max-width: none; overflow: visible; }
+  .pp-grid { min-width: 0; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

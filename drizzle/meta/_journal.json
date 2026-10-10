@@ -50,6 +50,13 @@
       "when": 1791640308033,
       "tag": "0006_invigilation",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1791641753112,
+      "tag": "0007_programmes",
+      "breakpoints": true
     }
   ]
 }

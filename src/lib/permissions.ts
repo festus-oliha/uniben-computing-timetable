@@ -94,3 +94,12 @@ export function canEditExamPaper(a: Actor | null, t: ExamScope, paper: { kind: s
 
 /** Who can see "add a paper" on a timetable at all. */
 export const canAddExamPapers = (a: Actor | null, t: ExamScope) => canManageExamTimetable(a, t) || (a?.role === "dept_officer" && !!a.dept && t.dept === null);
+
+/* ---------- part-time and postgraduate lecture timetables ---------- */
+
+/** A department's part-time / postgraduate timetable: the Faculty Officer, or that department's officer. */
+export function canManageProgrammeTimetable(a: Actor | null, t: { dept: string }): boolean {
+  if (!a) return false;
+  if (a.role === "admin") return true;
+  return a.role === "dept_officer" && !!a.dept && a.dept === t.dept;
+}

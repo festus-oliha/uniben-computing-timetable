@@ -57,10 +57,10 @@ export const PROGRAMMES: ProgrammeSection[] = [
     title: "Postgraduate",
     subtitle: "M.Sc. · Ph.D. · PGD",
     schedules: [
-      { label: "M.Sc. lecture timetable", hint: "Lectures, usually in the M.Sc. Lab", status: "soon" },
+      { label: "M.Sc. lecture timetable", hint: "Lectures, usually in the M.Sc. Lab", href: "/view/programme?programme=msc", status: "live" },
       { label: "M.Sc. examination timetable", hint: "M.Sc. examinations", href: "/view/exams?programme=msc", status: "live" },
-      { label: "Ph.D. timetable", hint: "Ph.D. seminars and course work", status: "soon" },
-      { label: "PGD timetable", hint: "Postgraduate Diploma lectures and examinations", status: "soon" },
+      { label: "Ph.D. timetable", hint: "Ph.D. seminars and course work", href: "/view/programme?programme=phd", status: "live" },
+      { label: "PGD timetable", hint: "Postgraduate Diploma lectures", href: "/view/programme?programme=pgd", status: "live" },
     ],
   },
   {
@@ -68,7 +68,7 @@ export const PROGRAMMES: ProgrammeSection[] = [
     title: "Part-time",
     subtitle: "Part-time degree programmes",
     schedules: [
-      { label: "Part-time lecture timetable", hint: "Evening and weekend lectures", status: "soon" },
+      { label: "Part-time lecture timetable", hint: "Friday and Saturday lectures by year", href: "/view/programme?programme=pt", status: "live" },
       { label: "Part-time examination timetable", hint: "Part-time examinations", href: "/view/exams?programme=pt", status: "live" },
     ],
   },

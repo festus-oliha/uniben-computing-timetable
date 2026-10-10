@@ -72,3 +72,7 @@
 .pv-duties .c em { font-style: normal; font-size: 11px; font-weight: 700; margin-left: 8px; text-transform: uppercase; letter-spacing: .06em; }
 .pv-duties .v, .pv-duties .l { font-size: 13px; opacity: .9; }
 @media (max-width: 480px) { .pv-duties li { grid-template-columns: 1fr; } .pv-duties .t { grid-row: auto; } }
+.pv-sheet { overflow-x: auto; max-width: 100%; }
+.pv-main:has(.pv-sheet) { max-width: 1160px; }
+.pv-cal { list-style: none; padding: 0; margin: 0; display: grid; gap: 4px; font-size: 13px; }
+.pv-day li .c em { text-transform: none; letter-spacing: 0; }

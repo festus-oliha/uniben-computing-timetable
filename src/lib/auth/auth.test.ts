@@ -97,3 +97,13 @@ describe("exam permissions", () => {
     expect(canAddExamPapers(viewer, cscPT)).toBe(false);
   });
 });
+
+describe("programme timetable permissions", () => {
+  it("lets only the Faculty Officer and the department's own officer change a department's timetable", async () => {
+    const { canManageProgrammeTimetable } = await import("../permissions");
+    expect(canManageProgrammeTimetable({ role: "admin", dept: null }, { dept: "DTS" })).toBe(true);
+    expect(canManageProgrammeTimetable({ role: "dept_officer", dept: "CSC" }, { dept: "CSC" })).toBe(true);
+    expect(canManageProgrammeTimetable({ role: "dept_officer", dept: "CSC" }, { dept: "DTS" })).toBe(false);
+    expect(canManageProgrammeTimetable({ role: "viewer", dept: null }, { dept: "CSC" })).toBe(false);
+  });
+});

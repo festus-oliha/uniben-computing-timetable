@@ -243,3 +243,70 @@ export const examUnavailability = pgTable("exam_unavailability", {
 
 export type ExamTimetable = typeof examTimetables.$inferSelect;
 export type ExamPaper = typeof examPapers.$inferSelect;
+
+/* ---------- part-time and postgraduate lecture timetables ---------- */
+
+/**
+ * A department's part-time or postgraduate lecture timetable for one semester.
+ * Rows are days × groups (e.g. Friday · YEAR 1); columns are this timetable's own periods.
+ */
+export const programmeTimetables = pgTable("programme_timetables", {
+  id: serial("id").primaryKey(),
+  semesterId: integer("semester_id")
+    .notNull()
+    .references(() => semesters.id, { onDelete: "cascade" }),
+  programme: text("programme").notNull(),
+  dept: text("dept").notNull(),
+  title: text("title").notNull(),
+  /** 0 = Sunday … 6 = Saturday */
+  days: jsonb("days").$type<number[]>().notNull(),
+  groups: jsonb("groups").$type<string[]>().notNull(),
+  periods: jsonb("periods").$type<{ label: string; isBreak?: boolean }[]>().notNull(),
+  /** Venue letters used on this timetable, e.g. { code: "A", name: "1000 LT" } */
+  venueKey: jsonb("venue_key").$type<{ code: string; name: string }[]>().notNull().default([]),
+  calendar: jsonb("calendar").$type<{ weeks: string; dates: string; activity: string }[]>().notNull().default([]),
+  notes: jsonb("notes").$type<string[]>().notNull().default([]),
+  signatoryName: text("signatory_name").notNull().default(""),
+  signatoryRole: text("signatory_role").notNull().default(""),
+  isPublished: boolean("is_published").notNull().default(false),
+  publishedAt: timestamp("published_at", { withTimezone: true }),
+  signedOn: text("signed_on"),
+  signatureImage: text("signature_image"),
+  signatureWidth: integer("signature_width"),
+  signatureHeight: integer("signature_height"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+/** One class or activity (FREE, PRACTICAL, TUTORIALS …) on a programme timetable. */
+export const programmeSlots = pgTable("programme_slots", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  timetableId: integer("timetable_id")
+    .notNull()
+    .references(() => programmeTimetables.id, { onDelete: "cascade" }),
+  day: integer("day").notNull(),
+  group: integer("group_index").notNull().default(0),
+  start: integer("start").notNull(),
+  span: integer("span").notNull().default(1),
+  label: text("label").notNull(),
+  kind: text("kind").notNull().default("course"),
+  venue: text("venue").notNull().default(""),
+  note: text("note").notNull().default(""),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+/** The course allocation list printed with a programme timetable (both semesters for M.Sc.). */
+export const programmeCourses = pgTable("programme_courses", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  timetableId: integer("timetable_id")
+    .notNull()
+    .references(() => programmeTimetables.id, { onDelete: "cascade" }),
+  code: text("code").notNull(),
+  title: text("title").notNull().default(""),
+  /** "core" | "mandatory" | "elective" | "" */
+  category: text("category").notNull().default(""),
+  semester: integer("semester").notNull().default(1),
+  lecturerIds: jsonb("lecturer_ids").$type<string[]>().notNull().default([]),
+  sortOrder: integer("sort_order").notNull().default(0),
+});
+
+export type ProgrammeTimetable = typeof programmeTimetables.$inferSelect;
