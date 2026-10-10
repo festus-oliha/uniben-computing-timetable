@@ -23,3 +23,5 @@ Next.js 15 (App Router, server actions) · React 19 · TypeScript · Tailwind 4 
   (never COS/common, tutorials, PT or other-faculty bookings); viewer is read-only.
 - PGlite allows one process at a time: stop `npm run dev` before running db/user scripts.
 - Every server action that changes data also calls `logChange()` (src/lib/audit.ts) with a plain-language summary.
+- `/` is the public home page (src/app/page.tsx, text in src/lib/site-content.ts); the staff workspace is `/timetable`.
+- Upcoming modules (need samples from the owner): exam timetables, invigilation schedules, PG (M.Sc./Ph.D./PGD) and part-time timetables.

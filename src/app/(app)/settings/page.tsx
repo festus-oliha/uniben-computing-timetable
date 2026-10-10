@@ -10,7 +10,7 @@ export const metadata = { title: "Settings — Faculty of Computing Timetable" }
 
 export default async function SettingsPage() {
   const me = await requireUser();
-  if (!isAdmin(me)) redirect("/");
+  if (!isAdmin(me)) redirect("/timetable");
   const [sems, vens, perSem, perVenue] = await Promise.all([
     db.select().from(semesters).orderBy(desc(semesters.session), desc(semesters.name)),
     db.select().from(venues).orderBy(asc(venues.sortOrder), asc(venues.code)),

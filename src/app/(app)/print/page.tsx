@@ -39,7 +39,7 @@ export default async function PrintPage() {
         <a className="btn" href="/export/docx">
           Download Word (.docx)
         </a>
-        <Link className="btn" href="/">
+        <Link className="btn" href="/timetable">
           Back to timetable
         </Link>
         <span className="hint">In the print dialog choose “Save as PDF”, Landscape, A4, and turn off headers and footers.</span>

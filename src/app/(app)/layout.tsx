@@ -19,12 +19,12 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       <div className="top">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/crest.png" alt="University of Benin crest" />
-        <div className="brand">
+        <a className="brand" href="/" title="Faculty home page">
           <small>University of Benin</small>
           <h1>
             Faculty of Computing <span>Timetable</span>
           </h1>
-        </div>
+        </a>
         {data.semester && (
           <div className="session">
             {data.semester.name}

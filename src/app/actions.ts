@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { eq, inArray } from "drizzle-orm";
+import { eq, ilike, inArray } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { bookings, courseLecturers, courses, lecturers, semesters, venues } from "@/lib/db/schema";
 import { codesOf, fitsInBlock, isCourseCode, levelOf, prefixOf, type Kind } from "@/lib/timetable";
@@ -216,6 +216,38 @@ export async function addCourse(rawCode: string): Promise<ActionResult> {
     await db.insert(courses).values({ code, level: levelOf(code) ?? 1, dept: prefixOf(code) });
     await logChange(me, "course.add", `Added course ${code}.`);
     return done(`${code} added.`);
+  });
+}
+
+/**
+ * Removes a course from the course list (and its lecturer assignment).
+ * Refused while the course still appears on any semester's timetable, so nothing is left pointing at it.
+ */
+export async function deleteCourse(rawCode: string): Promise<ActionResult> {
+  return guard(async (me) => {
+    const code = rawCode.trim().toUpperCase();
+    const [current] = await db.select().from(courses).where(eq(courses.code, code));
+    if (!current) return done(`${code} removed.`);
+    if (!canEditCourse(me, current) || (current.isCommon && !canChangeCourseScope(me))) return fail(outsideDeptMessage(me));
+
+    const candidates = await db
+      .select({ b: bookings, session: semesters.session, semName: semesters.name })
+      .from(bookings)
+      .innerJoin(semesters, eq(semesters.id, bookings.semesterId))
+      .where(ilike(bookings.label, `%${code}%`));
+    const used = candidates.filter((r) => codesOf(r.b.label).includes(code));
+    if (used.length) {
+      const where = used
+        .slice(0, 4)
+        .map((r) => `${slotText(r.b)} (${r.session} ${r.semName})`)
+        .join("; ");
+      return fail(
+        `${code} is still on the timetable in ${used.length} place${used.length > 1 ? "s" : ""}: ${where}${used.length > 4 ? " …" : ""}. Delete those bookings first, then delete the course.`,
+      );
+    }
+    await db.delete(courses).where(eq(courses.code, code)); // lecturer links cascade
+    await logChange(me, "course.delete", `Deleted course ${code} from the course list.`);
+    return done(`${code} deleted.`);
   });
 }
 

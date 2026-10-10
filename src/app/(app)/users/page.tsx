@@ -10,7 +10,7 @@ export const metadata = { title: "Users — Faculty of Computing Timetable" };
 
 export default async function UsersPage() {
   const me = await requireUser();
-  if (!canManageUsers(me)) redirect("/");
+  if (!canManageUsers(me)) redirect("/timetable");
   const rows = await db.select().from(users).orderBy(asc(users.name));
   return (
     <UsersPanel

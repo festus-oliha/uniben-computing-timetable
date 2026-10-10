@@ -213,15 +213,15 @@ function Shell({ children, semester }: { children: React.ReactNode; semester?: s
       <header className="pv-top">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/crest.png" alt="University of Benin crest" />
-        <div>
+        <a href="/" className="pv-home" title="Faculty home page">
           <small>University of Benin</small>
           <h1>Faculty of Computing</h1>
           <p>Lecture Timetable{semester ? ` · ${semester}` : ""}</p>
-        </div>
+        </a>
       </header>
       <main className="pv-main">{children}</main>
       <footer className="pv-foot">
-        Faculty of Computing · University of Benin, Benin City
+        <Link href="/">Faculty of Computing</Link> · University of Benin, Benin City
         <span className="pv-noprint">
           {" "}
           · <Link href="/login">Staff sign in</Link>

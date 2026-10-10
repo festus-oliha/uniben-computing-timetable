@@ -21,7 +21,7 @@ const looksLikeEmail = (e: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
 export async function login(_prev: FormState | null, form: FormData): Promise<FormState> {
   const email = cleanEmail(String(form.get("email") ?? ""));
   const password = String(form.get("password") ?? "");
-  const next = String(form.get("next") ?? "/");
+  const next = String(form.get("next") || "/timetable");
   const values = { email };
   if (!email || !password) return { ok: false, error: "Enter your email and password.", values };
 
@@ -34,7 +34,7 @@ export async function login(_prev: FormState | null, form: FormData): Promise<Fo
   if (!u.isActive) return { ok: false, error: "This account has been switched off. Contact the Faculty Time-Table Officer.", values };
 
   await startSession(u.id);
-  redirect(u.mustChangePassword ? "/account?first=1" : next.startsWith("/") && !next.startsWith("//") ? next : "/");
+  redirect(u.mustChangePassword ? "/account?first=1" : next.startsWith("/") && !next.startsWith("//") && next !== "/" ? next : "/timetable");
 }
 
 export async function logout() {
@@ -62,7 +62,7 @@ export async function setupFirstAdmin(_prev: FormState | null, form: FormData): 
     .returning({ id: users.id });
   await logChange({ id: u.id, name }, "user.create", `Created the first Faculty Time-Table Officer account (${email}).`);
   await startSession(u.id);
-  redirect("/");
+  redirect("/timetable");
 }
 
 export async function changeOwnPassword(_prev: FormState | null, form: FormData): Promise<FormState> {

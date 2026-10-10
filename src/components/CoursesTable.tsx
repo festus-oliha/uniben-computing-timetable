@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { DEPARTMENTS } from "@/lib/timetable";
 import { hoursByCourse } from "@/lib/clash";
 import type { CourseDTO, TimetableData } from "@/lib/types";
-import { addCourse, saveCourse } from "@/app/actions";
+import { addCourse, deleteCourse, saveCourse } from "@/app/actions";
 import { useToast } from "./Toast";
 import { canChangeCourseScope, canEditCourse, type Actor } from "@/lib/permissions";
 
@@ -16,6 +16,20 @@ export function CoursesTable({ data, actor }: { data: TimetableData; actor: Acto
   const [q, setQ] = useState("");
   const [level, setLevel] = useState("");
   const [newCode, setNewCode] = useState("");
+  const [confirmDel, setConfirmDel] = useState<string | null>(null);
+
+  function remove(code: string) {
+    if (confirmDel !== code) {
+      setConfirmDel(code);
+      return;
+    }
+    setConfirmDel(null);
+    startTransition(async () => {
+      const r = await deleteCourse(code);
+      toast(r.ok ? r.message ?? "Deleted." : r.error, !r.ok);
+      if (r.ok) router.refresh();
+    });
+  }
   const hours = useMemo(() => hoursByCourse(data.bookings), [data.bookings]);
 
   const rows = data.courses.filter(
@@ -91,12 +105,13 @@ export function CoursesTable({ data, actor }: { data: TimetableData; actor: Acto
               <th>Units</th>
               <th>Hours on timetable</th>
               <th>Lecturer</th>
+              <th />
             </tr>
           </thead>
           <tbody>
             {rows.length === 0 && (
               <tr>
-                <td colSpan={7} className="empty">
+                <td colSpan={8} className="empty">
                   No courses match.
                 </td>
               </tr>
@@ -170,6 +185,18 @@ export function CoursesTable({ data, actor }: { data: TimetableData; actor: Acto
                         </option>
                       ))}
                     </select>
+                  </td>
+                  <td>
+                    {editable && (!c.isCommon || scope) && (
+                      <button
+                        type="button"
+                        className={`btn danger${confirmDel === c.code ? " sure" : ""}`}
+                        onClick={() => remove(c.code)}
+                        title={h ? "This course is on the timetable. Delete its bookings first." : "Remove this course from the list"}
+                      >
+                        {confirmDel === c.code ? "Confirm delete" : "Delete"}
+                      </button>
+                    )}
                   </td>
                 </tr>
               );

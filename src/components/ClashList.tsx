@@ -26,7 +26,7 @@ export function ClashList({ clashes, limit, onShow }: { clashes: Clash[]; limit?
               Show on timetable
             </button>
           ) : (
-            <Link className="linkbtn" href={`/?show=${encodeURIComponent(c.bookingIds[0])}`}>
+            <Link className="linkbtn" href={`/timetable?show=${encodeURIComponent(c.bookingIds[0])}`}>
               Show on timetable
             </Link>
           )}

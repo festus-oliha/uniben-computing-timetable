@@ -5,12 +5,17 @@ Officers drag courses around a venue × day grid, and the app flags clashes as t
 
 **What it does today**
 
+- **Home page** (`/`, public) — about the Faculty and its departments, and every timetable grouped by programme:
+  Undergraduate, Postgraduate (M.Sc., Ph.D., PGD), Part-time and Invigilation. Wording lives in
+  `src/lib/site-content.ts`; schedules not built yet show "Coming soon".
+- **Workspace** (`/timetable`, staff sign-in) — everything below.
+
 - **Timetable** — the full grid (venues T, W, E, P1, P2, P4 × Monday–Friday, 8 a.m.–6:30 p.m.),
   colour-coded like the printed timetable. Drag a course to move it, click it to edit, click an empty slot to add one.
   Other faculties' bookings in shared halls show as grey striped blocks so nobody books over them.
 - **Clash checks** — venue double-bookings, student clashes (same level and department, or a common course),
   lecturer double-bookings, and lectures running into Friday Jumat (1–2 p.m.).
-- **Courses** — level, department, units, "common to all departments", and the lecturer for each course.
+- **Courses** — add and delete courses (a course still on the timetable can't be deleted); level, department, units, "common to all departments", and the lecturer for each course.
 - **Lecturers** — the teaching staff list, with each person's courses and weekly hours.
 - **Exports** — *Download Word* gives the official timetable as a `.docx` (A4 landscape, 2 pages, faculty design);
   *Print / PDF* opens the same layout for printing or "Save as PDF". Other faculties' bookings print as blanks.
