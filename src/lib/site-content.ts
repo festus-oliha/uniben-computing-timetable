@@ -9,6 +9,8 @@ export const SITE = {
   university: "University of Benin, Benin City",
   universityUrl: "https://www.uniben.edu/",
   faculty: "Faculty of Computing",
+  builtBy: "JVeeSoft-IT",
+  copyrightYear: 2026,
   tagline: "One place for the Faculty's projects, seminars, timetables, staff and records.",
   /** Placeholder wording — replace with the Faculty's official description. */
   about: [

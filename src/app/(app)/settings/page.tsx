@@ -5,21 +5,25 @@ import { bookings, semesters, venues } from "@/lib/db/schema";
 import { requireUser } from "@/lib/auth/session";
 import { isAdmin } from "@/lib/permissions";
 import { SettingsPanel } from "@/components/SettingsPanel";
+import { HomeContentPanel } from "@/components/HomeContentPanel";
+import { getHomeContent } from "@/lib/site-data";
 
 export const metadata = { title: "Settings — FaCoMS Timetable" };
 
 export default async function SettingsPage() {
   const me = await requireUser();
   if (!isAdmin(me)) redirect("/timetable");
-  const [sems, vens, perSem, perVenue] = await Promise.all([
+  const [sems, vens, perSem, perVenue, home] = await Promise.all([
     db.select().from(semesters).orderBy(desc(semesters.session), desc(semesters.name)),
     db.select().from(venues).orderBy(asc(venues.sortOrder), asc(venues.code)),
     db.select({ id: bookings.semesterId, n: count() }).from(bookings).groupBy(bookings.semesterId),
     db.select({ code: bookings.venueCode, n: count() }).from(bookings).groupBy(bookings.venueCode),
+    getHomeContent(),
   ]);
   const semCount = new Map(perSem.map((r) => [r.id, Number(r.n)]));
   const venueCount = new Map(perVenue.map((r) => [r.code, Number(r.n)]));
   return (
+    <>
     <SettingsPanel
       semesters={sems.map((s) => ({
         id: s.id,
@@ -32,5 +36,7 @@ export default async function SettingsPage() {
       }))}
       venues={vens.map((v) => ({ code: v.code, name: v.name, seats: v.seats, sortOrder: v.sortOrder, inLectureGrid: v.inLectureGrid, bookings: venueCount.get(v.code) ?? 0 }))}
     />
+    <HomeContentPanel initial={home} />
+    </>
   );
 }

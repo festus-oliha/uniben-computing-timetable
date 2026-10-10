@@ -1,4 +1,5 @@
 import { FacomsMark } from "./brand/FacomsLogo";
+import { Credit } from "./brand/SiteChrome";
 
 /** Centered card used by the sign-in and first-time setup pages. */
 export function AuthShell({ title, children }: { title: string; children: React.ReactNode }) {
@@ -13,6 +14,9 @@ export function AuthShell({ title, children }: { title: string; children: React.
           </div>
         </header>
         {children}
+        <p className="auth-credit">
+          <Credit />
+        </p>
       </div>
     </div>
   );

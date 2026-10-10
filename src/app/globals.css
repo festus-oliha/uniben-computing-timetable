@@ -425,3 +425,19 @@ table.t.alloc tr.editing td { background: var(--soft); vertical-align: top; }
 .site-foot nav { display: flex; gap: 6px 18px; flex-wrap: wrap; align-items: flex-start; }
 .site-foot a { color: var(--teal); font-weight: 600; text-decoration: none; }
 .site-foot a:hover { text-decoration: underline; }
+
+/* ---------- Settings: home page ---------- */
+.he-grid { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 22px; align-items: start; }
+@media (max-width: 700px) { .he-grid { grid-template-columns: minmax(0, 1fr); } }
+.he-photo { display: grid; gap: 8px; justify-items: start; }
+.he-photo img, .he-empty { width: 180px; height: 220px; object-fit: cover; border-radius: 10px; border: 1px solid var(--line); }
+.he-empty { display: grid; place-items: center; color: var(--mute); background: var(--soft); border-style: dashed; font-size: 13px; }
+.he-photo label.btn { cursor: pointer; }
+.he-fields { display: grid; gap: 12px; }
+.he-fields textarea { background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 8px; width: 100%; resize: vertical; }
+.credit { font-size: 12px; color: var(--mute); }
+.credit b { color: var(--ink); font-weight: 700; }
+.ws-foot { padding: 14px 20px 22px; font-size: 12px; color: var(--mute); border-top: 1px solid var(--line); }
+.ws-foot a { color: var(--teal); font-weight: 600; }
+.auth-credit { margin: 4px 0 0; text-align: center; }
+@media print { .ws-foot { display: none !important; } }

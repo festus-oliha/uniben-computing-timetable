@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { FacomsMark } from "./brand/FacomsLogo";
+import { Credit } from "./brand/SiteChrome";
 
 /** Header and footer of the public (no sign-in) pages. */
 export function PublicShell({ children, subtitle }: { children: React.ReactNode; subtitle: string }) {
@@ -19,6 +20,8 @@ export function PublicShell({ children, subtitle }: { children: React.ReactNode;
       <footer className="pv-foot">
         <Link href="/">FaCoMS</Link> · Faculty of Computing, <a href="https://www.uniben.edu/" target="_blank" rel="noopener">University of Benin</a> ·{" "}
         <Link href="/timetables">All timetables</Link>
+        <br />
+        <Credit />
         <span className="pv-noprint">
           {" "}
           · <Link href="/login">Staff sign in</Link>

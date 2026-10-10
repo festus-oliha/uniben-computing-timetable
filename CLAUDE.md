@@ -28,6 +28,9 @@ Next.js 15 (App Router, server actions) · React 19 · TypeScript · Tailwind 4 
   `src/lib/site-content.ts` (`MODULES`, `SITE`). Timetable module hub: `/timetables`; staff timetable workspace: `/timetable`;
   modules still being built show `/modules/[slug]`. Logo: `src/components/brand/FacomsLogo.tsx` (favicon `src/app/icon.svg`).
   Every public page links to https://www.uniben.edu/. Printed documents keep the UNIBEN crest.
+  The Dean's profile/photo, mission and vision are edited in Settings → Home page (table `site_content`, key "home",
+  rules in `src/lib/home-content.ts`); the home section stays hidden until filled. Footers credit
+  "Software built by JVeeSoft-IT. © 2026" (`Credit` in src/components/brand/SiteChrome.tsx).
 - Exams: `src/lib/exam.ts` (pure, tested) holds exam clash rules; writes go through `src/app/exam-actions.ts`.
   An exam timetable has `dept = null` (Faculty-wide undergraduate) or a department (PT, M.Sc. …). Venues with
   `in_lecture_grid = false` are exam-only and never appear on the lecture grid. Venues are not clash-checked in exams

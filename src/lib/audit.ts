@@ -21,7 +21,7 @@ export const AUDIT_GROUPS: Record<string, { label: string; actions: string[] }> 
   },
   signoff: { label: "Sign-off", actions: ["signoff.save", "signoff.clear"] },
   accounts: { label: "Accounts", actions: ["user.create", "user.update", "user.reset"] },
-  settings: { label: "Settings", actions: ["semester.create", "semester.current", "semester.publish", "venue.add", "venue.edit"] },
+  settings: { label: "Settings", actions: ["semester.create", "semester.current", "semester.publish", "venue.add", "venue.edit", "site.home"] },
 };
 
 /** "THU 10–11 (2 h) in P1" */

@@ -5,6 +5,7 @@ import { ROLE_LABELS } from "@/lib/permissions";
 import { DEPARTMENTS } from "@/lib/timetable";
 import { Nav } from "@/components/Nav";
 import { FacomsMark } from "@/components/brand/FacomsLogo";
+import { Credit } from "@/components/brand/SiteChrome";
 import { logout } from "../auth-actions";
 
 /** Everything behind sign-in: header, tabs and the signed-in person. */
@@ -50,6 +51,9 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       </div>
       <Nav clashCount={errors} isAdmin={me.role === "admin"} />
       <main>{children}</main>
+      <footer className="ws-foot">
+        <a href="/">FaCoMS</a> — Faculty of Computing, University of Benin. <Credit />
+      </footer>
     </>
   );
 }

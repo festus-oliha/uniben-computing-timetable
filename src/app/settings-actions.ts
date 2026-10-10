@@ -3,7 +3,9 @@
 import { revalidatePath } from "next/cache";
 import { and, eq, ne } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { bookings, semesters, venues } from "@/lib/db/schema";
+import { bookings, semesters, siteContent, venues } from "@/lib/db/schema";
+import { homeProblem, normaliseHome, type HomeContent } from "@/lib/home-content";
+import { getHomeContent } from "@/lib/site-data";
 import { getCurrentUser } from "@/lib/auth/session";
 import { isAdmin } from "@/lib/permissions";
 import { logChange } from "@/lib/audit";
@@ -122,5 +124,28 @@ export async function saveVenue(input: VenueInput): Promise<ActionResult> {
     if (input.inLectureGrid !== undefined && existing.inLectureGrid !== input.inLectureGrid) changes.push(input.inLectureGrid ? "now on the lecture grid" : "exams only");
     if (changes.length) await logChange(me, "venue.edit", `Venue ${code}: ${changes.join("; ")}.`);
     return { ok: true, message: `Venue ${code} saved.` };
+  });
+}
+
+/** Saves the Dean's profile, photo, mission and vision shown on the FaCoMS home page. */
+export async function saveHomeContent(input: HomeContent): Promise<ActionResult> {
+  return adminGuard(async (me) => {
+    const v = normaliseHome(input);
+    if (input.dean?.photo && !v.dean.photo) return { ok: false, error: "The photo must be a JPEG or PNG image under 600 KB." };
+    const bad = homeProblem(v);
+    if (bad) return { ok: false, error: bad };
+    const before = await getHomeContent();
+    await db
+      .insert(siteContent)
+      .values({ key: "home", value: v, updatedAt: new Date() })
+      .onConflictDoUpdate({ target: siteContent.key, set: { value: v, updatedAt: new Date() } });
+    const changed: string[] = [];
+    if (before.dean.name !== v.dean.name || before.dean.title !== v.dean.title) changed.push("the Dean's name or title");
+    if (before.dean.photo !== v.dean.photo) changed.push(v.dean.photo ? "the Dean's photo" : "removed the Dean's photo");
+    if (before.dean.profile !== v.dean.profile) changed.push("the Dean's profile");
+    if (before.mission !== v.mission) changed.push("the mission");
+    if (before.vision !== v.vision) changed.push("the vision");
+    if (changed.length) await logChange(me, "site.home", `Home page: updated ${changed.join(", ")}.`);
+    return { ok: true, message: "Home page saved." };
   });
 }

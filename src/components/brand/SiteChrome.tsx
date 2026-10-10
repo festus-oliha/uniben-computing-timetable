@@ -43,6 +43,8 @@ export function SiteFooter() {
         <b>{SITE.name}</b> — {SITE.fullName}
         <br />
         {SITE.faculty}, {SITE.university}
+        <br />
+        <Credit />
       </div>
       <nav aria-label="Footer">
         <Link href="/">Home</Link>
@@ -53,5 +55,14 @@ export function SiteFooter() {
         <Link href="/login">Staff sign in</Link>
       </nav>
     </footer>
+  );
+}
+
+/** "Software built by JVeeSoft-IT. © 2026" — shown in every footer. */
+export function Credit() {
+  return (
+    <span className="credit">
+      Software built by <b>{SITE.builtBy}</b>. © {SITE.copyrightYear}
+    </span>
   );
 }
