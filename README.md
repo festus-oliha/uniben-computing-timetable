@@ -59,6 +59,11 @@ Officers drag courses around a venue × day grid, and the app flags clashes as t
   twice at once. A **Course allocation** list (core *, mandatory +, elective E, with lecturers, both semesters)
   prints with the timetable and drives the lecturer checks. Word / Print in the department's layout, sign-off,
   publish; students look it up by year at `/view/programme`.
+- **Staff Members** — public directory at `/staff` (by department, with photos, ranks, positions, qualifications,
+  research interests and courses taught; no contact details), and the **Staff workspace** at `/workspace/staff` for
+  officers: add or edit people (academic, technical, administrative), photos, staff-only contacts, mark people who
+  have left, **load a staff list** from Excel / CSV or a table pasted from Word, and download the list as Excel.
+  It is the same list used by the timetables and invigilation.
 - Loaded with the **2026/2027 First Semester** timetable.
 
 ---

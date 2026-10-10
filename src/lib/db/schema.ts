@@ -56,6 +56,26 @@ export const lecturers = pgTable("lecturers", {
   dept: text("dept"),
   /** How the name prints on invigilation schedules, e.g. "OSASERI". Empty = surname in capitals. */
   shortName: text("short_name"),
+
+  /* Staff Members module (the same list serves timetables, invigilation and the staff directory) */
+  /** "academic" | "technical" | "administrative" */
+  category: text("category").notNull().default("academic"),
+  rank: text("rank").notNull().default(""),
+  /** e.g. "Head of Department", "Sub-Dean", "Departmental Time-Table Officer" */
+  position: text("position").notNull().default(""),
+  qualifications: text("qualifications").notNull().default(""),
+  interests: text("interests").notNull().default(""),
+  bio: text("bio").notNull().default(""),
+  /** JPEG data URL, resized in the browser. */
+  photo: text("photo"),
+  /* Staff-only details — never shown on public pages */
+  staffNo: text("staff_no").notNull().default(""),
+  email: text("email").notNull().default(""),
+  phone: text("phone").notNull().default(""),
+  office: text("office").notNull().default(""),
+  /** False for staff who have left (kept for history, hidden from the directory). */
+  isActive: boolean("is_active").notNull().default(true),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
 export const courseLecturers = pgTable(

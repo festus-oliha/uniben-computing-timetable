@@ -43,3 +43,9 @@ Next.js 15 (App Router, server actions) · React 19 · TypeScript · Tailwind 4 
   `src/app/programme-actions.ts`; permission `canManageProgrammeTimetable` (admin or that dept's officer).
   Days use JS weekday numbers (0 = Sunday); rows are `groups`; periods may be breaks (classes never cross one).
   Venue letters are per timetable (`venue_key`), separate from the Faculty venue list.
+- Staff Members: the `lecturers` table IS the staff list (timetables, invigilation and the directory share it).
+  Rules in `src/lib/staff.ts` (pure, tested: ranks, categories, departments, import parsing, name matching);
+  writes in `src/app/staff-actions.ts` (permission `canManageLecturer`: admin, or the dept officer for their dept).
+  Public directory `/staff`, profiles `/staff/[id]` never show email/phone/staff no./office (only signed-in staff see them).
+  Photos are served by `/staff-photo/[id]`. Staff workspace: `/workspace/staff` (list, add, import, Excel export).
+  Spreadsheet files are parsed only in the browser (xlsx 0.18.5); the server only receives cleaned rows.

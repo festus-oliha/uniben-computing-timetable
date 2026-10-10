@@ -441,3 +441,39 @@ table.t.alloc tr.editing td { background: var(--soft); vertical-align: top; }
 .ws-foot a { color: var(--teal); font-weight: 600; }
 .auth-credit { margin: 4px 0 0; text-align: center; }
 @media print { .ws-foot { display: none !important; } }
+.ws-switch { display: flex; gap: 4px; background: rgba(255,255,255,.06); border-radius: 8px; padding: 3px; }
+.ws-switch a { color: #c8d4e2; text-decoration: none; font-size: 13px; font-weight: 600; padding: 5px 10px; border-radius: 6px; }
+.ws-switch a:hover { background: rgba(255,255,255,.1); color: #fff; }
+@media (max-width: 640px) { .ws-switch { order: 3; } }
+
+/* ---------- staff workspace ---------- */
+.staff-sum { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.staff-sum button, .staff-sum .total { display: grid; justify-items: start; min-width: 76px; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel); cursor: pointer; text-align: left; }
+.staff-sum button.on { border-color: var(--teal); box-shadow: 0 0 0 1px var(--teal) inset; }
+.staff-sum b { font-family: var(--font-display); font-size: 20px; line-height: 1.1; }
+.staff-sum span { font-size: 11px; color: var(--mute); font-weight: 600; }
+.staff-sum .total { cursor: default; background: var(--navy); border-color: var(--navy); color: #fff; margin-left: auto; }
+.staff-sum .total span { color: #9fb3c8; }
+.av { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; display: inline-grid; place-items: center; }
+.av.ini { background: var(--comp); color: var(--comp-ink); font-family: var(--font-display); font-weight: 800; font-size: 13px; }
+.staff-t td .sub { display: block; color: var(--mute); font-size: 12px; }
+.staff-t td.contact { font-size: 12px; }
+.staff-t td.contact > * { display: block; }
+.staff-t td.contact a { color: var(--teal); }
+.staff-t tr.left td { opacity: .55; }
+.staff-form { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 16px; align-items: start; max-width: 1060px; }
+@media (max-width: 760px) { .staff-form { grid-template-columns: minmax(0, 1fr); } }
+.sf-photo { display: grid; gap: 8px; justify-items: start; }
+.sf-photo img, .sf-ini { width: 180px; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 12px; }
+.sf-ini { display: grid; place-items: center; background: var(--comp); color: var(--comp-ink); font-family: var(--font-display); font-weight: 800; font-size: 48px; }
+.sf-photo label.btn { cursor: pointer; }
+.staff-form form .fld textarea { background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 8px; width: 100%; }
+.teach { margin: 0; padding-left: 18px; display: grid; gap: 4px; font-size: 14px; }
+.imp { display: grid; gap: 0; max-width: 1100px; }
+.imp-src { display: flex; gap: 14px; align-items: flex-start; flex-wrap: wrap; }
+.imp-src label.btn { cursor: pointer; }
+.imp-paste { flex: 1; min-width: 280px; display: grid; gap: 8px; justify-items: start; }
+.imp-paste textarea { width: 100%; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 8px; font-family: var(--font-mono); font-size: 12px; }
+table.imp-map th { vertical-align: top; text-transform: none; letter-spacing: 0; }
+table.imp-map .col-h { display: block; font-size: 12px; color: var(--ink); margin-bottom: 4px; }
+table.imp-map td { font-size: 12px; white-space: nowrap; max-width: 220px; overflow: hidden; text-overflow: ellipsis; }

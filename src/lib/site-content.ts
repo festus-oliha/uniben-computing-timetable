@@ -64,9 +64,9 @@ export const MODULES: ModuleInfo[] = [
     slug: "staff",
     name: "Staff Members",
     purpose: "Who is who in each department, and what they teach.",
-    plans: ["Staff directory by department", "Ranks, offices and contact details", "Courses taught and supervision load", "Research interests and publications"],
-    status: "building",
-    href: "/modules/staff",
+    plans: [],
+    status: "live",
+    href: "/staff",
   },
   {
     slug: "records",

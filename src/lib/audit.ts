@@ -19,6 +19,7 @@ export const AUDIT_GROUPS: Record<string, { label: string; actions: string[] }> 
     label: "Part-time & postgraduate",
     actions: ["prog.create", "prog.setup", "prog.publish", "prog.delete", "prog.signoff", "prog.slot.add", "prog.slot.edit", "prog.slot.move", "prog.slot.delete", "prog.course"],
   },
+  staff: { label: "Staff members", actions: ["staff.add", "staff.edit", "staff.import", "lecturer.add", "lecturer.edit", "lecturer.remove"] },
   signoff: { label: "Sign-off", actions: ["signoff.save", "signoff.clear"] },
   accounts: { label: "Accounts", actions: ["user.create", "user.update", "user.reset"] },
   settings: { label: "Settings", actions: ["semester.create", "semester.current", "semester.publish", "venue.add", "venue.edit", "site.home"] },

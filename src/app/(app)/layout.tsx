@@ -35,6 +35,10 @@ export default async function AppLayout({ children }: { children: React.ReactNod
             <span className={`pubtag${data.semester.isPublished ? " on" : ""}`}>{data.semester.isPublished ? "Published" : "Draft"}</span>
           </div>
         )}
+        <nav className="ws-switch" aria-label="Other workspaces">
+          <a href="/timetable">Timetable</a>
+          <a href="/workspace/staff">Staff</a>
+        </nav>
         <div className="me">
           <b>{me.name}</b>
           <small>

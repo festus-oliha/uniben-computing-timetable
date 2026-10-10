@@ -5,28 +5,7 @@ import { useRouter } from "next/navigation";
 import { saveHomeContent } from "@/app/settings-actions";
 import type { HomeContent } from "@/lib/home-content";
 import { useToast } from "./Toast";
-
-/** Resizes a picked photo to at most 480 px on its longer side and returns a JPEG data URL. */
-function resize(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.onload = () => {
-      const scale = Math.min(1, 480 / Math.max(img.width, img.height));
-      const c = document.createElement("canvas");
-      c.width = Math.round(img.width * scale);
-      c.height = Math.round(img.height * scale);
-      const ctx = c.getContext("2d");
-      if (!ctx) return reject(new Error("no canvas"));
-      ctx.fillStyle = "#fff";
-      ctx.fillRect(0, 0, c.width, c.height);
-      ctx.drawImage(img, 0, 0, c.width, c.height);
-      URL.revokeObjectURL(img.src);
-      resolve(c.toDataURL("image/jpeg", 0.85));
-    };
-    img.onerror = () => reject(new Error("unreadable"));
-    img.src = URL.createObjectURL(file);
-  });
-}
+import { resizePhoto as resize } from "@/lib/client-image";
 
 /** Settings → Home page: the Dean's photo and profile, and the Faculty's mission and vision. */
 export function HomeContentPanel({ initial }: { initial: HomeContent }) {

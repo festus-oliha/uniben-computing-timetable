@@ -176,6 +176,9 @@ export function LecturersPanel({ data, actor }: { data: TimetableData; actor: Ac
           </div>
         </div>
       )}
+      <p className="hint">
+        Full staff records (rank, photo, contacts, research) are kept in the <a href="/workspace/staff">Staff workspace</a>; this list is the same one.
+      </p>
       <p className="hint">Print name is how someone appears on invigilation schedules (e.g. EGWALI). Leave it empty to use the surname.</p>
     </section>
   );

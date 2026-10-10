@@ -150,3 +150,36 @@ export interface ProgrammeBoardData {
   /** Lecturers of each course from the main course list (used when the allocation list names nobody). */
   courseLecturers: Record<string, string[]>;
 }
+
+/* ---------- staff members ---------- */
+
+/** What anyone may see about a staff member. */
+export interface PublicStaffDTO {
+  id: string;
+  name: string;
+  dept: string | null;
+  category: string;
+  rank: string;
+  position: string;
+  qualifications: string;
+  interests: string;
+  bio: string;
+  /** e.g. "/staff-photo/<id>?v=…", or null */
+  photoUrl: string | null;
+}
+
+/** Everything, for signed-in staff and the workspace. */
+export interface StaffDTO extends PublicStaffDTO {
+  shortName: string | null;
+  staffNo: string;
+  email: string;
+  phone: string;
+  office: string;
+  isActive: boolean;
+}
+
+export interface TeachingDTO {
+  code: string;
+  title: string;
+  where: string;
+}
